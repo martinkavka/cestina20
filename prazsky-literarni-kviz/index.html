@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pražský literární kvíz – Čeština 2.0</title>
+    <script>
+        (function (d) {
+            var config = {
+                    kitId: 'wla4qad',
+                    scriptTimeout: 604800,
+                    async: true
+                },
+                h = d.documentElement, t = setTimeout(function () {
+                    h.className = h.className.replace(/\bwf-loading\b/g, "") + " wf-inactive";
+                }, config.scriptTimeout), tk = d.createElement("script"), f = false,
+                s = d.getElementsByTagName("script")[0], a;
+            h.className += " wf-loading";
+            tk.src = 'https://use.typekit.net/' + config.kitId + '.js';
+            tk.async = true;
+            tk.onload = tk.onreadystatechange = function () {
+                a = this.readyState;
+                if (f || a && a != "complete" && a != "loaded") return;
+                f = true;
+                clearTimeout(t);
+                try { Typekit.load(config) } catch (e) {}
+            };
+            s.parentNode.insertBefore(tk, s)
+        })(document);
+    </script>
+    <meta name="description" content="Pražský literární kvíz – 6 km, 20 zastávek, jedna třída. Interaktivní procházka Prahou po stopách české literatury. Ideální aktivita pro školní výlet.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Pražský literární kvíz – Čeština 2.0">
+    <meta property="og:description" content="Výlet, na který se bude vzpomínat – třída se baví, učí se a vy nemusíte nic chystat. Interaktivní kvíz Prahou od 65 Kč/student.">
+    <!-- TODO: až bude známá finální URL, změnit og:image na absolutní cestu (https://cestina20.cz/...) -->
+    <meta property="og:image" content="assets/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="robots" content="index, follow">
+    <meta property="og:locale" content="cs_CZ">
+    <link rel="stylesheet"
+          href="https://cestina20.cz/wp-content/themes/cestina20/css/style.100.min.css?ver=145"
+          type="text/css">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="https://cestina20.cz/wp-content/themes/cestina20/images/favicon/favicon-32x32.png">
+    <script>
+        document.documentElement.className = document.documentElement.className.replace("no-js", "js");
+    </script>
+    <style>
+        /* Landing page – přidané styly, CSS tématu se nemění */
+
+        .plk-hero {
+            background-color: #2d4ea8;
+            background-image: linear-gradient(rgba(26, 38, 96, 0.72), rgba(26, 38, 96, 0.78)), url('assets/praha.jpg');
+            background-size: cover;
+            background-position: center 40%;
+            color: #fff;
+            padding: 60px 0 50px;
+            text-align: center;
+        }
+
+        .plk-hero__title {
+            font-size: 2.6em;
+            font-weight: 700;
+            margin: 0 0 16px;
+            color: #fff;
+            line-height: 1.15;
+        }
+
+        .plk-hero__subtitle {
+            font-size: 1.15em;
+            margin: 0 0 32px;
+            color: rgba(255, 255, 255, 0.88);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.55;
+        }
+
+        .plk-hero .button {
+            font-size: 1.05em;
+            padding: 14px 28px;
+        }
+
+        /* Přehled */
+        .plk-overview {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 4px;
+            font-size: 0.97em;
+        }
+
+        .plk-overview td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #edf0f5;
+            vertical-align: middle;
+        }
+
+        .plk-overview tr:last-child td {
+            border-bottom: none;
+        }
+
+        .plk-overview tr:nth-child(even) td {
+            background: #f7f8fb;
+        }
+
+        .plk-overview__icon {
+            font-size: 1.15em;
+            padding-right: 6px;
+        }
+
+        .plk-overview__label {
+            color: #555;
+            width: 45%;
+        }
+
+        .plk-overview__value {
+            font-weight: 700;
+            color: #223276;
+        }
+
+        /* Kroky */
+        .plk-steps {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0;
+        }
+
+        .plk-steps li {
+            list-style: none !important;
+            padding: 0 !important;
+        }
+
+        .plk-steps li::before,
+        .plk-steps li::after {
+            display: none !important;
+        }
+
+        .plk-steps__item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .plk-steps__num {
+            background: #223276;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9em;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Mockup mobilu */
+        .plk-mockup-wrap {
+            text-align: center;
+            margin: 20px 0 0;
+        }
+
+        .plk-mockup {
+            display: inline-block;
+            width: 280px;
+            height: 540px;
+            border: 8px solid #1a1a1a;
+            border-radius: 36px;
+            overflow: hidden;
+            position: relative;
+            background: #fff;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .plk-mockup::before {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 6px;
+            background: #1a1a1a;
+            border-radius: 3px;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .plk-mockup__screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 28px;
+            background-image: url('assets/nahled-otazky-560.jpg');
+            background-size: 100% auto;
+            background-repeat: no-repeat;
+            background-position: top center;
+            animation: plk-scroll 18s ease-in-out infinite;
+        }
+
+        @keyframes plk-scroll {
+            0%, 8% { background-position: top center; }
+            92%, 100% { background-position: bottom center; }
+        }
+
+        .plk-mockup-caption {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        /* Dvousloupcový layout: text + mockup */
+        .plk-twocol {
+            display: block;
+        }
+
+        .plk-twocol__text {
+            /* na mobilu plná šířka, default */
+        }
+
+        .plk-twocol__mockup {
+            /* na mobilu pod textem, default */
+        }
+
+        @media (min-width: 720px) {
+            .plk-twocol {
+                display: flex;
+                gap: 32px;
+                align-items: flex-start;
+            }
+
+            .plk-twocol__text {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .plk-twocol__mockup {
+                flex-shrink: 0;
+                position: sticky;
+                top: 20px;
+            }
+        }
+
+        /* Inline CTA */
+        .plk-inline-cta {
+            text-align: center;
+            margin: 24px 0;
+            padding: 20px 0;
+            border-top: 1px solid #edf0f5;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .plk-inline-cta .button {
+            font-size: 0.95em;
+            padding: 12px 24px;
+        }
+
+        .plk-inline-cta__note {
+            font-size: 0.82em;
+            color: #888;
+            margin: 8px 0 0;
+        }
+
+        /* Sticky CTA na mobilu */
+        .plk-sticky-cta {
+            display: none;
+        }
+
+        @media (max-width: 720px) {
+            .plk-sticky-cta {
+                display: block;
+                position: fixed;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                background: #fff;
+                border-top: 1px solid #ddd;
+                box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+                padding: 10px 15px;
+                text-align: center;
+            }
+
+            .plk-sticky-cta .button {
+                display: block;
+                width: 100%;
+                font-size: 0.95em;
+                padding: 12px 0;
+            }
+
+            .plk-sticky-cta.is-visible {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            /* Aby footer nebyl schovaný za sticky barem */
+            .footer {
+                padding-bottom: 70px;
+            }
+        }
+
+        /* Ukázka otázky */
+        .plk-sample {
+            background: #f8f6f2;
+            border-left: 4px solid #223276;
+            padding: 20px 24px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .plk-sample__intro {
+            font-weight: 700;
+            color: #223276;
+            font-size: 0.88em;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-top: 0;
+        }
+
+        .plk-sample__question {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #1a2660;
+            border: none;
+            margin: 16px 0;
+            padding: 0;
+            font-style: normal;
+        }
+
+        .plk-sample__question small {
+            font-weight: 400;
+            font-size: 0.78em;
+            color: #666;
+            display: block;
+            margin-top: 6px;
+        }
+
+        .plk-sample__hint {
+            font-size: 0.88em;
+            color: #888;
+            margin-bottom: 0;
+            font-style: italic;
+        }
+
+        /* FAQ */
+        .plk-faq {
+            margin: 0;
+            padding: 0;
+        }
+
+        .plk-faq dt {
+            font-weight: 700;
+            color: #223276;
+            margin-top: 16px;
+        }
+
+        .plk-faq dt:first-child {
+            margin-top: 0;
+        }
+
+        .plk-faq dd {
+            margin: 4px 0 0 0;
+            padding: 0;
+            color: #444;
+        }
+
+        /* Ceník */
+        .plk-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 10px;
+            font-size: 0.95em;
+        }
+
+        .plk-table th {
+            background: #223276;
+            color: #fff;
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 700;
+        }
+
+        .plk-table td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #e8eaf0;
+        }
+
+        .plk-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .plk-table tr:nth-child(even) td {
+            background: #f7f8fb;
+        }
+
+        .plk-table tr.plk-table__featured td {
+            background: #fffbe6;
+            font-weight: 700;
+            border-top: 2px solid #f5c518;
+            border-bottom: 2px solid #f5c518;
+        }
+
+        .plk-badge {
+            display: inline-block;
+            background: #f5c518;
+            color: #333;
+            font-size: 0.72em;
+            font-weight: 700;
+            border-radius: 3px;
+            padding: 2px 6px;
+            margin-left: 6px;
+            vertical-align: middle;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .plk-strike {
+            text-decoration: line-through;
+            color: #999;
+            font-weight: 400;
+            font-size: 0.88em;
+            margin-right: 4px;
+        }
+
+        .plk-note {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        /* Sekce */
+        .plk-section {
+            margin-top: 20px;
+        }
+
+        .plk-section h2 {
+            margin-top: 0;
+        }
+
+        /* CTA blok na konci */
+        .plk-cta {
+            background: #f0f3ff;
+            border: 1px solid #c8d0f0;
+            border-radius: 6px;
+            padding: 32px 28px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .plk-cta h2 {
+            margin-top: 0;
+            color: #223276;
+        }
+
+        .plk-cta .button {
+            font-size: 1.05em;
+            padding: 14px 28px;
+        }
+
+        .plk-cta__note {
+            font-size: 0.88em;
+            color: #666;
+            margin-top: 16px;
+            margin-bottom: 0;
+        }
+
+        /* Obal pro horizontální scroll tabulky na mobilu */
+        .plk-table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Responzivita */
+        @media (max-width: 600px) {
+            .plk-hero__title { font-size: 1.8em; }
+            .plk-hero { padding: 40px 15px 36px; }
+            .plk-table { min-width: 480px; }
+            .plk-table th, .plk-table td { padding: 8px 9px; font-size: 0.88em; }
+            .plk-cta { padding: 24px 16px; }
+        }
+    </style>
+</head>
+<body class="page wp-theme-cestina20">
+
+<header class="header">
+    <div class="container">
+        <a class="header__go_to_content" href="#content" title="Přejít na obsah">Přejít na obsah</a>
+        <a href="https://cestina20.cz/pridat-slovo/" class="header__add__mobile"><span>Přidat slovo</span></a>
+        <a class="header__logo" href="https://cestina20.cz">
+            <img src="https://cestina20.cz/wp-content/themes/cestina20/images/logo-new.svg" alt="Logo">
+        </a>
+        <div class="header__claim">Slovník, který tvoříte vy</div>
+        <form role="search" method="get" class="header__search header__search--desktop" action="https://cestina20.cz/">
+            <label for="header__search--desktop--s">Vyhledávání:</label>
+            <input type="text" value="" name="s" id="header__search--desktop--s" placeholder="Najít slovo..." autocomplete="off">
+            <button class="header__search__button">&nbsp;<span class="header__search__button__label">Hledat</span><span class="header__search__button__icon"></span></button>
+            <div class="header__search__result">
+                <div class="spinner">
+                    <div class="spinner__rect spinner__rect--1"></div>
+                    <div class="spinner__rect spinner__rect--2"></div>
+                    <div class="spinner__rect spinner__rect--3"></div>
+                    <div class="spinner__rect spinner__rect--4"></div>
+                    <div class="spinner__rect spinner__rect--5"></div>
+                </div>
+                <ul class="header__search__result__data"></ul>
+            </div>
+        </form>
+        <span id="header__menu__button" class="header__menu__button"><span>Menu</span></span>
+        <a href="https://cestina20.cz/pridat-slovo/" class="header__add button button--add">Přidat slovo<span>&nbsp;</span></a>
+    </div>
+</header>
+<div id="menu__wrap" class="menu__wrap">
+    <div class="container">
+        <div class="menu__inner">
+            <nav id="header__menu__inner" class="header__menu__inner">
+                <ul class="menu">
+                    <li class="menu-item"><a href="https://cestina20.cz/">Slovo dne</a></li>
+                    <li class="menu-item-has-children menu__letters menu-item">
+                        <a>Dle abecedy</a>
+                        <ul class="sub-menu">
+                            <li><a href="https://cestina20.cz/pismeno/ostatni/">#</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/a/">A</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/b/">B</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/c/">C</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/d/">D</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/e/">E</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/f/">F</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/g/">G</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/h/">H</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/ch/">CH</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/i/">I</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/j/">J</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/k/">K</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/l/">L</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/m/">M</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/n/">N</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/o/">O</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/p/">P</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/q/">Q</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/r/">R</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/s/">S</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/t/">T</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/u/">U</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/v/">V</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/w/">W</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/x/">X</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/y/">Y</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/z/">Z</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item"><a href="https://cestina20.cz/zebricek/nejoblibenejsi/">Nejoblíbenější</a></li>
+                    <li class="menu-item"><a href="https://cestina20.cz/zebricek/nove-pridana/">Nově přidaná</a></li>
+                </ul>
+            </nav>
+            <nav id="header__menu__inner__right" class="header__menu__inner__right">
+                <ul class="menu">
+                    <li class="menu-item menu-item-has-children">
+                        <a href="#">Kniha a TV pořad</a>
+                        <ul class="sub-menu">
+                            <li class="menu-item"><a href="https://cestina20.cz/kniha/">Kniha Hacknutá čeština</a></li>
+                            <li class="menu-item"><a href="https://cestina20.cz/televize-seznam/">TV pořad Hacknutá čeština</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item"><a href="https://cestina20.cz/o-cestine-2-0/">O Češtině 2.0</a></li>
+                    <li class="menu-item"><a href="https://cestina20.cz/kontakt/">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<div id="submenu__wrap" class="submenu__wrap" style="display: none;">
+    <div class="container">
+        <ul class="submenu">
+            <li><a href="https://cestina20.cz/pismeno/ostatni/">#</a></li>
+            <li><a href="https://cestina20.cz/pismeno/a/">A</a></li>
+            <li><a href="https://cestina20.cz/pismeno/b/">B</a></li>
+            <li><a href="https://cestina20.cz/pismeno/c/">C</a></li>
+            <li><a href="https://cestina20.cz/pismeno/d/">D</a></li>
+            <li><a href="https://cestina20.cz/pismeno/e/">E</a></li>
+            <li><a href="https://cestina20.cz/pismeno/f/">F</a></li>
+            <li><a href="https://cestina20.cz/pismeno/g/">G</a></li>
+            <li><a href="https://cestina20.cz/pismeno/h/">H</a></li>
+            <li><a href="https://cestina20.cz/pismeno/ch/">CH</a></li>
+            <li><a href="https://cestina20.cz/pismeno/i/">I</a></li>
+            <li><a href="https://cestina20.cz/pismeno/j/">J</a></li>
+            <li><a href="https://cestina20.cz/pismeno/k/">K</a></li>
+            <li><a href="https://cestina20.cz/pismeno/l/">L</a></li>
+            <li><a href="https://cestina20.cz/pismeno/m/">M</a></li>
+            <li><a href="https://cestina20.cz/pismeno/n/">N</a></li>
+            <li><a href="https://cestina20.cz/pismeno/o/">O</a></li>
+            <li><a href="https://cestina20.cz/pismeno/p/">P</a></li>
+            <li><a href="https://cestina20.cz/pismeno/q/">Q</a></li>
+            <li><a href="https://cestina20.cz/pismeno/r/">R</a></li>
+            <li><a href="https://cestina20.cz/pismeno/s/">S</a></li>
+            <li><a href="https://cestina20.cz/pismeno/t/">T</a></li>
+            <li><a href="https://cestina20.cz/pismeno/u/">U</a></li>
+            <li><a href="https://cestina20.cz/pismeno/v/">V</a></li>
+            <li><a href="https://cestina20.cz/pismeno/w/">W</a></li>
+            <li><a href="https://cestina20.cz/pismeno/x/">X</a></li>
+            <li><a href="https://cestina20.cz/pismeno/y/">Y</a></li>
+            <li><a href="https://cestina20.cz/pismeno/z/">Z</a></li>
+        </ul>
+    </div>
+</div>
+<div class="header__search__wrap--mobile">
+    <div class="container">
+        <form role="search" method="get" class="header__search header__search--mobile" action="https://cestina20.cz/">
+            <label for="header__search--mobile--s">Vyhledávání:</label>
+            <input type="text" value="" name="s" id="header__search--mobile--s" placeholder="Najít slovo..." autocomplete="off">
+            <button class="header__search__button">&nbsp;<span class="header__search__button__label">Hledat</span><span class="header__search__button__icon"></span></button>
+            <div class="header__search__result">
+                <div class="spinner">
+                    <div class="spinner__rect spinner__rect--1"></div>
+                    <div class="spinner__rect spinner__rect--2"></div>
+                    <div class="spinner__rect spinner__rect--3"></div>
+                    <div class="spinner__rect spinner__rect--4"></div>
+                    <div class="spinner__rect spinner__rect--5"></div>
+                </div>
+                <ul class="header__search__result__data"></ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Hero sekce -->
+<div class="plk-hero">
+    <div class="container">
+        <h1 class="plk-hero__title">Pražský literární kvíz</h1>
+        <p class="plk-hero__subtitle">Výlet, na který se bude vzpomínat – třída se baví, učí se a&nbsp;vy nemusíte nic chystat.</p>
+        <a class="button"
+           href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2"
+           target="_blank" rel="noopener">
+            Koupit kvíz pro 1&nbsp;tým – 990&nbsp;Kč
+        </a>
+    </div>
+</div>
+
+<div class="container">
+    <div id="content" class="content">
+        <div id="content__inner" class="content__inner" style="padding-right: 0;">
+            <div class="content__list">
+
+                <!-- Rychlý přehled -->
+                <section class="plk-section">
+                    <h2>Rychlý přehled</h2>
+                    <table class="plk-overview">
+                        <tbody>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#127979;</span> Obtížnost</td>
+                                <td class="plk-overview__value">Studenti SŠ</td>
+                            </tr>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#128205;</span> Začátek</td>
+                                <td class="plk-overview__value">Staroměstské náměstí</td>
+                            </tr>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#127963;</span> Konec</td>
+                                <td class="plk-overview__value">Pražský hrad</td>
+                            </tr>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#128336;</span> Délka trasy</td>
+                                <td class="plk-overview__value">6&nbsp;km / 3&nbsp;hodiny</td>
+                            </tr>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#9997;&#65039;</span> Zastávky</td>
+                                <td class="plk-overview__value">20&nbsp;úloh</td>
+                            </tr>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#128176;</span> Cena</td>
+                                <td class="plk-overview__value">od 310&nbsp;Kč / tým</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Dvousloupcový blok: text vlevo, mockup vpravo -->
+                <div class="plk-twocol plk-section">
+
+                    <div class="plk-twocol__text">
+                        <!-- Popis produktu -->
+                        <section>
+                            <h2>O kvízu</h2>
+                            <p>Projděte se s&nbsp;třídou Prahou a&nbsp;udělejte z&nbsp;toho hru. Studenti procházejí centrum od Staroměstského náměstí až na Pražský hrad, na každé zastávce plní úkol – doplňují jména spisovatelů, řadí díla, hledají odpovědi přímo kolem sebe. Učivo české literatury si osvěží v&nbsp;ulicích místo v&nbsp;lavicích.</p>
+                        </section>
+
+                        <!-- Co získáte -->
+                        <section class="plk-section">
+                            <h2>Co získáte</h2>
+                            <ul class="plk-steps">
+                                <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> 3&nbsp;hodiny, kdy se studenti baví a&nbsp;učí zároveň – bez jediného pohledu na hodinky.</li>
+                                <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> 20&nbsp;interaktivních zastávek navázaných na učivo české literatury.</li>
+                                <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> Soutěž mezi týmy, která přirozeně vtáhne i&nbsp;ty, co literaturu „nebaví".</li>
+                                <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> Nulová příprava pro učitele – stačí koupit, otevřít v&nbsp;mobilu a&nbsp;vyrazit.</li>
+                            </ul>
+                        </section>
+
+                        <!-- Jak to funguje -->
+                        <section class="plk-section">
+                            <h2>Jak to funguje</h2>
+                            <ul class="plk-steps">
+                                <li class="plk-steps__item"><span class="plk-steps__num">1</span> Dorazíte na Staromák a&nbsp;spustíte hru v&nbsp;mobilu.</li>
+                                <li class="plk-steps__item"><span class="plk-steps__num">2</span> Na každé zastávce si přečtete zadání, občas poslechnete audio a&nbsp;splníte úkol.</li>
+                                <li class="plk-steps__item"><span class="plk-steps__num">3</span> Správná odpověď vás posune na další zastávku – celkem jich je 20, až na Pražský hrad.</li>
+                                <li class="plk-steps__item"><span class="plk-steps__num">4</span> Chcete soutěžit? Rozdělte třídu do týmů – každý hraje na svém mobilu.</li>
+                            </ul>
+                        </section>
+                    </div>
+
+                    <!-- Mockup mobilu -->
+                    <div class="plk-twocol__mockup">
+                        <div class="plk-mockup-wrap">
+                            <div class="plk-mockup">
+                                <div class="plk-mockup__screen" role="img" aria-label="Ukázka otázky z Pražského literárního kvízu – Staroměstská exekuce"></div>
+                            </div>
+                            <p class="plk-mockup-caption">Ukázka prvního zastavení</p>
+                        </div>
+                    </div>
+
+                </div><!-- .plk-twocol -->
+
+                <!-- Inline CTA -->
+                <div class="plk-inline-cta">
+                    <a class="button" href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2" target="_blank" rel="noopener">Koupit kvíz pro 1&nbsp;tým – 990&nbsp;Kč</a>
+                    <p class="plk-inline-cta__note">Více týmů? Napište na <a href="mailto:info@hados.cz">info@hados.cz</a></p>
+                </div>
+
+                <!-- Ukázka otázky -->
+                <section class="plk-section">
+                    <h2>Ochutnávka z kvízu</h2>
+                    <div class="plk-sample">
+                        <p class="plk-sample__intro">Zastávka 1 – Staroměstské náměstí</p>
+                        <p>Na tomto místě proběhla 21. června 1621 hromadná poprava 27 vůdců stavovského povstání. Během kvízu si přečtete úryvek z dobového textu a poslechněte si, jak popravy probíhaly. Pak přijde otázka:</p>
+                        <blockquote class="plk-sample__question">
+                            Jak se jmenoval kat, který roku 1621 na tomto místě popravil 27 českých pánů?<br>
+                            <small>Stačí napsat jeho příjmení. A bacha na pravopis!</small>
+                        </blockquote>
+                        <p class="plk-sample__hint">Takhle vypadá každá ze 20 zastávek – kontext, příběh a úkol, který vyřešíte přímo na místě.</p>
+                    </div>
+                </section>
+
+                <!-- FAQ -->
+                <section class="plk-section">
+                    <h2>Časté otázky</h2>
+                    <dl class="plk-faq">
+                        <dt>Dá se kvíz přerušit?</dt>
+                        <dd>Ne, po spuštění běží čas. Máte ale 7&nbsp;hodin – stíháte i&nbsp;oběd.</dd>
+
+                        <dt>Potřebují studenti internet?</dt>
+                        <dd>Jen při načítání úkolů. Hra běží v&nbsp;prohlížeči a&nbsp;dat spotřebuje minimum.</dd>
+
+                        <dt>Kolik lidí může být v&nbsp;jednom týmu?</dt>
+                        <dd>Klidně celá třída, ale všichni plní stejný úkol najednou. Chcete víc zábavy? Rozdělte třídu do menších týmů, ať si zasoutěží.</dd>
+
+                        <dt>Co když prší?</dt>
+                        <dd>Trasa vede venkem. Za deště se jít dá – záleží na vás.</dd>
+
+                        <dt>Dostane učitel výsledky?</dt>
+                        <dd>Ne. Je to hra, ne zkouška.</dd>
+                    </dl>
+                </section>
+
+                <!-- Ceník pro více týmů -->
+                <section class="plk-section">
+                    <h2>Ceník pro více týmů</h2>
+                    <div class="plk-table-wrap">
+                    <table class="plk-table">
+                        <thead>
+                            <tr>
+                                <th>Počet týmů</th>
+                                <th>Cena za tým</th>
+                                <th>Celkem</th>
+                                <th>Ušetříte</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1&nbsp;tým</td>
+                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 990&nbsp;Kč</td>
+                                <td>990&nbsp;Kč</td>
+                                <td>–</td>
+                            </tr>
+                            <tr>
+                                <td>2&nbsp;týmy</td>
+                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 650&nbsp;Kč</td>
+                                <td>1&nbsp;300&nbsp;Kč</td>
+                                <td>680&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>3&nbsp;týmy</td>
+                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 510&nbsp;Kč</td>
+                                <td>1&nbsp;530&nbsp;Kč</td>
+                                <td>1&nbsp;440&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>4&nbsp;týmy</td>
+                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 440&nbsp;Kč</td>
+                                <td>1&nbsp;760&nbsp;Kč</td>
+                                <td>2&nbsp;200&nbsp;Kč</td>
+                            </tr>
+                            <tr class="plk-table__featured">
+                                <td>5&nbsp;týmů <span class="plk-badge">Oblíbené pro třídu</span></td>
+                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 390&nbsp;Kč</td>
+                                <td>1&nbsp;950&nbsp;Kč</td>
+                                <td>3&nbsp;000&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>6&nbsp;týmů</td>
+                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 370&nbsp;Kč</td>
+                                <td>2&nbsp;220&nbsp;Kč</td>
+                                <td>3&nbsp;720&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>7&nbsp;týmů</td>
+                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 350&nbsp;Kč</td>
+                                <td>2&nbsp;450&nbsp;Kč</td>
+                                <td>4&nbsp;480&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>8&nbsp;týmů</td>
+                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 330&nbsp;Kč</td>
+                                <td>2&nbsp;640&nbsp;Kč</td>
+                                <td>5&nbsp;280&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>9&nbsp;týmů</td>
+                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 320&nbsp;Kč</td>
+                                <td>2&nbsp;880&nbsp;Kč</td>
+                                <td>6&nbsp;030&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>10&nbsp;týmů</td>
+                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 310&nbsp;Kč</td>
+                                <td>3&nbsp;100&nbsp;Kč</td>
+                                <td>6&nbsp;800&nbsp;Kč</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <p class="plk-note" style="margin-top: 14px; font-size: 0.92em; color: #444; font-style: normal;"><strong>Průvodce Prahou: 3&nbsp;000–5&nbsp;000&nbsp;Kč. Vstup do muzea: 100&nbsp;Kč/student. PLK: od 65&nbsp;Kč/student – a&nbsp;baví je to víc.</strong><br><span style="color: #888; font-size: 0.92em;">Příklad: třída 30&nbsp;studentů → 5&nbsp;týmů → 1&nbsp;950&nbsp;Kč → 65&nbsp;Kč na studenta.</span></p>
+                    <p class="plk-note">Zaváděcí ceny platí do 30.&nbsp;6.&nbsp;2026. Po 30.&nbsp;6. se cena vrátí na plný ceník 1&nbsp;090&nbsp;Kč/tým. Chcete víc než 1&nbsp;tým? Napište nám na <a href="mailto:info@hados.cz">info@hados.cz</a>.</p>
+                </section>
+
+                <!-- Kdo za tím stojí -->
+                <section class="plk-section">
+                    <h2>Kdo za tím stojí</h2>
+                    <p>Pražský literární kvíz připravili Martin Kavka a&nbsp;Roman Věžník z&nbsp;<a href="https://cestina20.cz/o-cestine-2-0/">Češtiny 2.0</a> – slovníku, který tvoří samotní uživatelé už od roku 2008.</p>
+                </section>
+
+                <!-- CTA sekce -->
+                <div class="plk-cta">
+                    <h2>Připraveni vyrazit?</h2>
+                    <a class="button"
+                       href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2"
+                       target="_blank" rel="noopener">
+                        Koupit kvíz pro 1&nbsp;tým – 990&nbsp;Kč
+                    </a>
+                    <p class="plk-cta__note">Chcete kvíz pro více týmů nebo máte otázky? Napište nám na <a href="mailto:info@hados.cz">info@hados.cz</a></p>
+                </div>
+
+            </div><!-- .content__list -->
+        </div><!-- .content__inner -->
+    </div><!-- .content -->
+</div><!-- .container -->
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer__inner">
+            <p>Čeština 2.0 – slovník, který tvoříte vy od roku 2008. Obsah slovníku můžete volně citovat či dále publikovat s uvedením zdroje.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Sticky CTA – jen mobil -->
+<div class="plk-sticky-cta">
+    <a class="button" href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2" target="_blank" rel="noopener">Koupit kvíz – 990&nbsp;Kč</a>
+</div>
+
+<script type="text/javascript">
+var ef_string = {"ajax_url":"https:\/\/cestina20.cz\/wp-admin\/admin-ajax.php","template_directory":"https:\/\/cestina20.cz\/wp-content\/themes\/cestina20"};
+</script>
+<script src="https://cestina20.cz/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script src="https://cestina20.cz/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<script src="https://cestina20.cz/wp-includes/js/hoverintent-js.min.js?ver=2.2.1"></script>
+<script src="https://cestina20.cz/wp-content/themes/cestina20/js/min/script.100.min.js?ver=145"></script>
+<script>
+    (function () {
+        var hero = document.querySelector('.plk-hero');
+        var sticky = document.querySelector('.plk-sticky-cta');
+        if (!hero || !sticky) return;
+        var observer = new IntersectionObserver(function (entries) {
+            sticky.classList.toggle('is-visible', !entries[0].isIntersecting);
+        }, { threshold: 0 });
+        observer.observe(hero);
+    })();
+</script>
+</body>
+</html>

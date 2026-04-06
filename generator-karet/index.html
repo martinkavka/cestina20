@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generátor slovních karet</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    padding: 32px 24px;
+    min-height: 100vh;
+}
+
+.app {
+    max-width: 1120px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 24px;
+    font-size: 15px;
+}
+
+.input-section {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    margin-bottom: 32px;
+}
+
+.input-section label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.input-section .hint {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.input-section textarea {
+    width: 100%;
+    height: 160px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s;
+}
+
+.input-section textarea:focus {
+    outline: none;
+    border-color: #4a6cf7;
+}
+
+.btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+button {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+}
+
+button:active { transform: scale(0.97); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary {
+    background: #4a6cf7;
+    color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) { background: #3b5de7; }
+
+.btn-secondary {
+    background: #e8ebf0;
+    color: #333;
+}
+
+.btn-secondary:hover:not(:disabled) { background: #dcdfe6; }
+
+.btn-download-all {
+    background: #16a34a;
+    color: #fff;
+}
+
+.btn-download-all:hover:not(:disabled) { background: #15803d; }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+
+.card-wrap {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.card-wrap canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.card-info {
+    padding: 8px 12px 0;
+    font-size: 12px;
+    color: #999;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-actions {
+    display: flex;
+    gap: 8px;
+    padding: 8px 12px 12px;
+}
+
+.card-actions button {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    font-size: 18px;
+    font-weight: 600;
+    color: #4a6cf7;
+}
+
+.loading-overlay.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="app">
+    <h1>Generátor slovních karet</h1>
+    <p class="subtitle">Zadej slova, vygeneruj karty 1080 &times; 1080 px a stáhni je jako PNG.</p>
+
+    <div class="input-section">
+        <label for="words-input">Slova (jedno na řádek)</label>
+        <p class="hint">Volitelně přidej význam do závorky – ovlivní výběr fontu a barev:<br>
+        <code>cringe (trapnost, gen Z slang)</code> &nbsp; <code>červotoč (hmyz, archaismy)</code> &nbsp; <code>šmejd (podvodník, expresivní)</code></p>
+        <textarea id="words-input" placeholder="vajbit (tvořit weby formou vibecodingu)&#10;výlukonoce (omezení dopravy během Velikonoc)&#10;přídveřník (osoba snažící se nenápadně vniknout)&#10;lahvomat (automat na zálohované obaly)&#10;dlouhoběžka (seriál vysílaný po dlouhou dobu)&#10;hotentotština (chaotický, nesrozumitelný projev)"></textarea>
+        <div class="btn-row">
+            <button class="btn-primary" id="btn-generate">Generovat</button>
+            <button class="btn-download-all" id="btn-download-all" disabled>Stáhnout vše (ZIP)</button>
+        </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+</div>
+
+<div class="loading-overlay hidden" id="loading">
+    <span id="loading-text">Načítám fonty...</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    /* ══════════════════════════════════════════════════════════
+       FONT DATABASE — categorized by style
+       Each font: [googleSpec, hasCzech]
+       hasCzech is a HINT — runtime validation is the real check
+       ══════════════════════════════════════════════════════════ */
+
+    // ── CZECH WHITELIST ──
+    // Only fonts manually verified to render Czech diacritics (háčky,
+    // čárky, kroužek) cleanly. Quality > quantity.
+    //
+    // ── ASCII-ONLY ──
+    // Decorative/display fonts used only for words WITHOUT diacritics.
+    // Much larger pool since we don't care about Czech glyph quality.
+
+    // Czech whitelist: ONLY fonts verified to render háčky, čárky, and
+    // kroužek cleanly at large display sizes on Canvas. Every other font
+    // is ASCII-only. Fewer fonts, zero diacritics errors.
+    //
+    // Criteria for Czech inclusion:
+    // - Professional foundry with explicit latin-ext support
+    // - Clean, traditional diacritical marks (no blobby/rounded háčky)
+    // - Tested at bold/heavy weights at 100px+ sizes
+
+    var CZECH_FONTS = [
+        // Sans-serif – clean, modern
+        'Inter:wght@700',
+        'Poppins:wght@700',
+        'Montserrat:wght@700',
+        'Raleway:wght@700',
+        'Work Sans:wght@700',
+        'DM Sans:wght@700',
+        'Outfit:wght@700',
+        'Plus Jakarta Sans:wght@700',
+        'Urbanist:wght@700',
+        'Figtree:wght@700',
+        'Lexend:wght@700',
+        'Josefin Sans:wght@700',
+        'Space Grotesk:wght@700',
+        'Open Sans:wght@700',
+        'Roboto:wght@700',
+        'Lato:wght@700',
+        'Source Sans Pro:wght@700',
+        'Ubuntu:wght@700',
+        'Noto Sans:wght@700',
+        'PT Sans:wght@700',
+        'Exo 2:wght@700',
+        'Titillium Web:wght@700',
+        'Signika Negative:wght@700',
+        'Oxygen:wght@700',
+        'Dosis:wght@700',
+        'Hammersmith One',
+        // Serif – classic, precise
+        'Playfair Display:wght@700',
+        'Merriweather:wght@700',
+        'Lora:wght@700',
+        'EB Garamond:wght@700',
+        'Crimson Text:wght@700',
+        'Spectral:wght@700',
+        'Noto Serif Display:wght@700',
+        'Noto Serif:wght@700',
+        'Libre Baskerville:wght@700',
+        'Bitter:wght@700',
+        'Vollkorn:wght@700',
+        'Cardo:wght@700',
+        'PT Serif:wght@700',
+        'Roboto Slab:wght@700',
+        'Bree Serif:wght@700',
+        'Tinos:wght@700',
+        'Sorts Mill Goudy',
+        // Condensed – tight but clean
+        'Oswald:wght@700',
+        'Bebas Neue',
+        'Roboto Condensed:wght@700',
+        'PT Sans Narrow:wght@700',
+        'Ubuntu Condensed',
+        'Archivo Narrow:wght@700',
+        // Display / decorative (verified Czech)
+        'Righteous',
+        'Paytone One',
+        'Russo One',
+        'Racing Sans One',
+        'Black Ops One',
+        'Audiowide',
+        'Comfortaa:wght@700',
+        'Fredoka:wght@600',
+        'Nunito:wght@700',
+        'Exo:wght@700',
+        'Jockey One',
+        'Kelly Slab',
+        // Handwritten (verified Czech)
+        'Courgette',
+        'Patrick Hand',
+        'Architects Daughter',
+        'Covered By Your Grace',
+        'Indie Flower',
+        'Kaushan Script',
+        'Grand Hotel',
+        'Great Vibes',
+        'Sacramento',
+        'Special Elite'
+    ];
+
+    var FONTS = {
+        street: {
+            czech: [],  // falls back to CZECH_FONTS
+            ascii: [
+                'Permanent Marker', 'Bungee', 'Black Ops One',
+                'Luckiest Guy', 'Passion One:wght@700',
+                'Rubik Vinyl', 'Rubik Wet Paint', 'Rubik Burned',
+                'Rubik Marker Hatch', 'Rubik Glitch',
+                'Creepster', 'Metal Mania', 'Nosifer', 'Eater',
+                'Bungee Shade', 'Climate Crisis'
+            ]
+        },
+        elegant: {
+            czech: [],
+            ascii: [
+                'Abril Fatface', 'Yeseva One', 'DM Serif Display',
+                'Martel:wght@900'
+            ]
+        },
+        playful: {
+            czech: [],
+            ascii: [
+                'Fredoka:wght@600', 'Comfortaa:wght@700',
+                'Nunito:wght@900', 'Baloo 2:wght@800',
+                'Lilita One', 'Titan One', 'Leckerli One',
+                'Righteous', 'Bubblegum Sans', 'Cherry Bomb One',
+                'Bagel Fat One', 'Honk', 'Shrikhand',
+                'Boogaloo', 'Chewy'
+            ]
+        },
+        heavy: {
+            czech: [],
+            ascii: [
+                'Anton', 'Teko:wght@700', 'Russo One',
+                'Archivo Black', 'Staatliches',
+                'Dela Gothic One', 'Yanone Kaffeesatz:wght@700',
+                'Kanit:wght@800', 'Chakra Petch:wght@700',
+                'Big Shoulders Display:wght@800',
+                'Saira Extra Condensed:wght@800',
+                'Alumni Sans:wght@900',
+                'Barlow Condensed:wght@800'
+            ]
+        },
+        modern: {
+            czech: [],
+            ascii: [
+                'Syne:wght@800', 'Rubik:wght@800'
+            ]
+        },
+        handwritten: {
+            czech: [],
+            ascii: [
+                'Pacifico', 'Lobster', 'Satisfy',
+                'Great Vibes', 'Kaushan Script', 'Courgette',
+                'Sacramento', 'Cookie', 'Yellowtail',
+                'Rock Salt', 'Homemade Apple',
+                'Shadows Into Light', 'Caveat:wght@700',
+                'Dancing Script:wght@700'
+            ]
+        },
+        retro: {
+            czech: [],
+            ascii: [
+                'Monoton', 'Faster One', 'Bungee Outline',
+                'Silkscreen:wght@700', 'Press Start 2P',
+                'Pixelify Sans:wght@700', 'Sixtyfour',
+                'Jacquard 12', 'Nabla', 'Audiowide', 'Michroma',
+                'Orbitron:wght@800', 'Electrolize',
+                'Share Tech Mono', 'VT323'
+            ]
+        }
+    };
+
+    /* ══════════════════════════════════════════════════════════
+       COLOR PALETTES — categorized by mood
+       ══════════════════════════════════════════════════════════ */
+
+    var COLORS = {
+        dark: [
+            ['#1A1A2E', '#E94560'], ['#0D0D0D', '#FF3333'],
+            ['#1B1B2F', '#F72585'], ['#000000', '#FFD700'],
+            ['#0F0F0F', '#FF6B35'], ['#1A0A2E', '#FF006E'],
+            ['#2B0A3D', '#FF4ECD'], ['#0A0A0A', '#00FF87'],
+            ['#1C1C1C', '#FFEA00'], ['#0D1117', '#58A6FF'],
+            ['#1A1A2E', '#00FFF5'], ['#0F0F23', '#FFD700'],
+            ['#2B2D42', '#EF233C'], ['#D90429', '#EDF2F4'],
+            ['#9B2226', '#FFFFFF'], ['#AE2012', '#E9D8A6'],
+            ['#13111C', '#A78BFA'], ['#1E1B4B', '#FDE68A'],
+            ['#0C0A1D', '#34D399'], ['#170D00', '#F59E0B'],
+            ['#1A0000', '#FF8A80'], ['#0B132B', '#5BC0EB'],
+            ['#1F0318', '#F9A8D4'], ['#0D0D0D', '#AAFF00'],
+            ['#1A1423', '#E0AAFF'], ['#0D0D0D', '#FF4081'],
+            ['#180A28', '#00E5FF'], ['#2D0320', '#FFD166'],
+            ['#0A1628', '#7FDBFF'], ['#1B0A00', '#FF6D00'],
+            ['#0D1B1E', '#41EAD4'], ['#1A1A1A', '#C084FC']
+        ],
+        warm: [
+            ['#FF6B6B', '#FFFFFF'], ['#FF4500', '#FFFFFF'],
+            ['#FF9F1C', '#1A1A2E'], ['#FFB703', '#023047'],
+            ['#FB8500', '#023047'], ['#F4A261', '#264653'],
+            ['#E63946', '#F1FAEE'], ['#FF595E', '#1A1A2E'],
+            ['#FFCA3A', '#1A1A2E'], ['#FFC300', '#1A1A2E'],
+            ['#FF7B00', '#FFFFFF'], ['#F77F00', '#1A1A2E'],
+            ['#FCBF49', '#003049'], ['#EAE2B7', '#003049'],
+            ['#D62828', '#FCF6BD'], ['#E76F51', '#FFFFFF'],
+            ['#F97316', '#FFFFFF'], ['#DC2626', '#FEF3C7'],
+            ['#EA580C', '#FFF7ED'], ['#B91C1C', '#FDE68A'],
+            ['#FBBF24', '#451A03'], ['#FCA5A5', '#7F1D1D'],
+            ['#FDE047', '#1C1917'], ['#FB923C', '#1E1B4B'],
+            ['#F87171', '#1E1B4B'], ['#FDBA74', '#1F2937'],
+            ['#FEF08A', '#1E3A5F'], ['#E11D48', '#FFF1F2'],
+            ['#C2410C', '#FFF7ED'], ['#FF6F61', '#FFFFFF']
+        ],
+        cool: [
+            ['#0F3460', '#E8D21D'], ['#16213E', '#00FFF5'],
+            ['#023E8A', '#CAF0F8'], ['#03045E', '#90E0EF'],
+            ['#1D3557', '#E63946'], ['#457B9D', '#F1FAEE'],
+            ['#1982C4', '#FFFFFF'], ['#118AB2', '#FFFFFF'],
+            ['#3D5A80', '#EE6C4D'], ['#4CC9F0', '#3A0CA3'],
+            ['#0077B6', '#FFFFFF'], ['#00B4D8', '#03045E'],
+            ['#023047', '#FFB703'], ['#005F73', '#E9D8A6'],
+            ['#0A2463', '#FFFAFF'], ['#247BA0', '#FFFFFF'],
+            ['#1E40AF', '#DBEAFE'], ['#0E7490', '#ECFEFF'],
+            ['#164E63', '#67E8F9'], ['#1E3A5F', '#A5F3FC'],
+            ['#0C4A6E', '#BAE6FD'], ['#1D4ED8', '#EFF6FF'],
+            ['#155E75', '#CFFAFE'], ['#0369A1', '#E0F2FE'],
+            ['#374151', '#60A5FA'], ['#1F2937', '#93C5FD'],
+            ['#0F172A', '#38BDF8'], ['#1E293B', '#7DD3FC'],
+            ['#334155', '#A5B4FC'], ['#0B1120', '#22D3EE']
+        ],
+        nature: [
+            ['#283618', '#FEFAE0'], ['#606C38', '#FEFAE0'],
+            ['#DDA15E', '#283618'], ['#BC6C25', '#FEFAE0'],
+            ['#001219', '#EE9B00'], ['#2A9D8F', '#FFFFFF'],
+            ['#264653', '#E9C46A'], ['#06D6A0', '#073B4C'],
+            ['#073B4C', '#06D6A0'], ['#8AC926', '#1A1A2E'],
+            ['#386641', '#F2E8CF'], ['#6A994E', '#F2E8CF'],
+            ['#A7C957', '#1A1A2E'], ['#344E41', '#DAD7CD'],
+            ['#3A5A40', '#DAD7CD'], ['#588157', '#FFFFFF'],
+            ['#14532D', '#BBF7D0'], ['#064E3B', '#A7F3D0'],
+            ['#1A3C34', '#6EE7B7'], ['#365314', '#D9F99D'],
+            ['#3F6212', '#ECFCCB'], ['#166534', '#DCFCE7'],
+            ['#713F12', '#FEF3C7'], ['#78350F', '#FDE68A'],
+            ['#92400E', '#FEF3C7'], ['#1B4332', '#B7E4C7'],
+            ['#2D6A4F', '#D8F3DC'], ['#40916C', '#F0FFF4'],
+            ['#52796F', '#CAD2C5'], ['#354F52', '#84A98C']
+        ],
+        vibrant: [
+            ['#7F00FF', '#FFFFFF'], ['#8338EC', '#FFBE0B'],
+            ['#F72585', '#FFFFFF'], ['#7209B7', '#4CC9F0'],
+            ['#B5179E', '#FEE440'], ['#3A0CA3', '#FFFFFF'],
+            ['#560BAD', '#72EFDD'], ['#FF006E', '#FFDA1F'],
+            ['#480CA8', '#F8F0E3'], ['#6A4C93', '#FFFFFF'],
+            ['#9B5DE5', '#F15BB5'], ['#F15BB5', '#FEE440'],
+            ['#00BBF9', '#FFFFFF'], ['#00F5D4', '#1A1A2E'],
+            ['#FEE440', '#9B5DE5'], ['#C77DFF', '#FFFFFF'],
+            ['#A855F7', '#F5F3FF'], ['#D946EF', '#FFFFFF'],
+            ['#EC4899', '#FDF2F8'], ['#8B5CF6', '#EDE9FE'],
+            ['#06B6D4', '#FFFFFF'], ['#14B8A6', '#F0FDFA'],
+            ['#F43F5E', '#FFF1F2'], ['#10B981', '#1A1A2E'],
+            ['#6366F1', '#EEF2FF'], ['#E879F9', '#1A1A2E'],
+            ['#22D3EE', '#0E1A2E'], ['#2DD4BF', '#1A1A2E'],
+            ['#FB7185', '#1A1A2E'], ['#818CF8', '#1E1B4B']
+        ],
+        muted: [
+            ['#FAF0CA', '#0D3B66'], ['#2D033B', '#E5B8F4'],
+            ['#EDAFB8', '#3D2645'], ['#3D2645', '#EDAFB8'],
+            ['#F2E9E4', '#4A4E69'], ['#4A4E69', '#F2E9E4'],
+            ['#22223B', '#C9ADA7'], ['#8D99AE', '#2B2D42'],
+            ['#EDF2F4', '#D90429'], ['#2EC4B6', '#011627'],
+            ['#CA6702', '#001219'], ['#DDB892', '#3D2645'],
+            ['#B8B8FF', '#1A1A2E'], ['#E8D5B7', '#2B2D42'],
+            ['#F5EBE0', '#6B705C'], ['#D5C6E0', '#2D2A32'],
+            ['#FFF0F5', '#831843'], ['#F0F4FF', '#1E3A5F'],
+            ['#FEFCE8', '#713F12'], ['#F0FDF4', '#14532D'],
+            ['#F5F3FF', '#4C1D95'], ['#FFF7ED', '#9A3412'],
+            ['#ECFDF5', '#064E3B'], ['#FDF4FF', '#86198F'],
+            ['#EFF6FF', '#1E40AF'], ['#FEF2F2', '#991B1B'],
+            ['#F1F5F9', '#334155'], ['#E2E8F0', '#1E293B'],
+            ['#D4C8BE', '#2C1810'], ['#C5B9A8', '#1A1A2E']
+        ]
+    };
+
+    /* ── Procedural color generator for extra variety ── */
+
+    function hslToHex(h, s, l) {
+        h /= 360; s /= 100; l /= 100;
+        var r, g, b;
+        if (s === 0) { r = g = b = l; } else {
+            var hue2rgb = function (p, q, t) {
+                if (t < 0) t += 1; if (t > 1) t -= 1;
+                if (t < 1/6) return p + (q - p) * 6 * t;
+                if (t < 1/2) return q;
+                if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
+            };
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+        }
+        var toHex = function (x) { var hex = Math.round(x * 255).toString(16); return hex.length === 1 ? '0' + hex : hex; };
+        return '#' + toHex(r) + toHex(g) + toHex(b);
+    }
+
+    // Relative luminance for contrast calculation
+    function luminance(hex) {
+        var r = parseInt(hex.slice(1,3), 16) / 255;
+        var g = parseInt(hex.slice(3,5), 16) / 255;
+        var b = parseInt(hex.slice(5,7), 16) / 255;
+        r = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+        g = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+        b = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+
+    function contrastRatio(hex1, hex2) {
+        var l1 = luminance(hex1), l2 = luminance(hex2);
+        var lighter = Math.max(l1, l2), darker = Math.min(l1, l2);
+        return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    function generateColorPair(mood) {
+        var h, s, l, bgH, bgS, bgL, txtH, txtS, txtL;
+        var ranges = {
+            dark:    { bgL: [3, 18],  bgS: [40, 90], txtL: [55, 85], txtS: [70, 100] },
+            warm:    { bgL: [45, 65], bgS: [75, 100], txtL: [5, 20],  txtS: [0, 30] },
+            cool:    { bgL: [10, 35], bgS: [50, 90], txtL: [80, 95], txtS: [20, 60] },
+            nature:  { bgL: [15, 40], bgS: [30, 70], txtL: [85, 95], txtS: [10, 40] },
+            vibrant: { bgL: [35, 55], bgS: [80, 100], txtL: [95, 100], txtS: [0, 10] },
+            muted:   { bgL: [88, 97], bgS: [15, 50], txtL: [10, 30], txtS: [30, 70] }
+        };
+        var r = ranges[mood] || ranges.vibrant;
+        var rand = function (min, max) { return min + Math.random() * (max - min); };
+
+        // Try up to 20 times to get good contrast
+        for (var attempt = 0; attempt < 20; attempt++) {
+            bgH = Math.floor(Math.random() * 360);
+            bgS = rand(r.bgS[0], r.bgS[1]);
+            bgL = rand(r.bgL[0], r.bgL[1]);
+
+            // Text hue: complementary or analogous
+            txtH = Math.random() < 0.5 ? (bgH + 180 + rand(-30, 30)) % 360 : (bgH + rand(-40, 40)) % 360;
+            if (txtH < 0) txtH += 360;
+            txtS = rand(r.txtS[0], r.txtS[1]);
+            txtL = rand(r.txtL[0], r.txtL[1]);
+
+            var bg = hslToHex(bgH, bgS, bgL);
+            var txt = hslToHex(txtH, txtS, txtL);
+
+            if (contrastRatio(bg, txt) >= 4.5) {
+                return [bg, txt];
+            }
+        }
+        // Fallback: white on dark or dark on light
+        var bg2 = hslToHex(bgH, bgS, bgL);
+        return bgL < 50 ? [bg2, '#FFFFFF'] : [bg2, '#1A1A2E'];
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       SEMANTIC KEYWORD → CATEGORY MAPPING
+       Uses substring stems for fuzzy matching
+       ══════════════════════════════════════════════════════════ */
+
+    var SEMANTIC_RULES = [
+        {
+            // slang, street, vulgar, aggressive expression
+            stems: ['slang', 'hovorov', 'vulg', 'sprost', 'nadáv', 'ulic', 'street', 'rap', 'hip-hop', 'punk', 'graffiti', 'drsn', 'subkultur', 'argot', 'žargon'],
+            style: ['street', 'heavy'],
+            mood: ['dark', 'vibrant']
+        },
+        {
+            // gen Z, internet, modern, digital
+            stems: ['gen z', 'gen-z', 'internet', 'online', 'sociální sít', 'meme', 'tiktok', 'instagram', 'digitál', 'moderní', 'neologism', 'anglicism', 'vibe', 'coding', 'web', 'aplikac', 'aplik'],
+            style: ['modern', 'street'],
+            mood: ['vibrant', 'cool']
+        },
+        {
+            // archaic, literary, poetic, old
+            stems: ['archai', 'knižní', 'literár', 'básn', 'poetick', 'zastara', 'středověk', 'histori', 'starý', 'staré', 'staro', 'dávn'],
+            style: ['elegant', 'handwritten'],
+            mood: ['muted', 'nature']
+        },
+        {
+            // technology, IT, science, computers
+            stems: ['technolog', 'tech', 'počítač', 'softwar', 'hardwar', 'vědec', 'odborn', 'terminolog', 'robot', 'kyber', 'automat', 'stroj', 'elektr', 'program'],
+            style: ['retro', 'modern'],
+            mood: ['cool', 'dark']
+        },
+        {
+            // nature, animals, plants, environment, ecology
+            stems: ['přírod', 'zvíř', 'rostlin', 'hmyz', 'les', 'moře', 'hora', 'květin', 'strom', 'ptá', 'ryb', 'země', 'bio', 'eko', 'recykl', 'záloh', 'obal', 'láhev', 'lahv', 'petk', 'plechov'],
+            style: ['handwritten', 'playful'],
+            mood: ['nature', 'muted']
+        },
+        {
+            // positive, joyful, love
+            stems: ['pozitivní', 'radost', 'štěstí', 'lás', 'hezk', 'krásn', 'mil', 'přátelsk', 'laskav', 'srdce', 'úsměv', 'vesel', 'oslav', 'svát'],
+            style: ['playful', 'handwritten'],
+            mood: ['warm', 'vibrant']
+        },
+        {
+            // negative, sad, dark, fear
+            stems: ['negativní', 'smut', 'smrt', 'temn', 'depres', 'strach', 'úzkost', 'bolest', 'samot', 'tma', 'ponur', 'melanch'],
+            style: ['elegant', 'heavy'],
+            mood: ['dark', 'muted']
+        },
+        {
+            // expressive, aggressive, intense
+            stems: ['expresivní', 'agresiv', 'hněv', 'zlost', 'zuřiv', 'nenávist', 'křik', 'důrazn', 'rázn', 'pejorativ', 'podvod', 'šmejd', 'zlodě', 'krádež'],
+            style: ['heavy', 'street'],
+            mood: ['dark', 'warm']
+        },
+        {
+            // funny, playful, humor, absurd
+            stems: ['vtipn', 'humor', 'legra', 'hrav', 'dětsk', 'zábav', 'komic', 'žert', 'srand', 'absurd', 'iron', 'satiric', 'slovo hříčk', 'hříčk'],
+            style: ['playful', 'street'],
+            mood: ['vibrant', 'warm']
+        },
+        {
+            // food, drink, cooking
+            stems: ['jídl', 'pití', 'vařen', 'kuchyň', 'restaurac', 'alkoho', 'piv', 'vín', 'káv', 'chutn', 'gurmán', 'recept'],
+            style: ['playful', 'handwritten'],
+            mood: ['warm', 'nature']
+        },
+        {
+            // relationships, love, romance
+            stems: ['vztah', 'sex', 'erotik', 'flirt', 'rand', 'dating', 'partner', 'manžel', 'svatb', 'nevěr', 'rozvod'],
+            style: ['handwritten', 'elegant'],
+            mood: ['warm', 'vibrant']
+        },
+        {
+            // work, office, corporate, bureaucracy
+            stems: ['prác', 'kancelář', 'byrokrac', 'úřad', 'firemn', 'korporát', 'manažer', 'byznys', 'business', 'ekonom', 'peníz', 'financ'],
+            style: ['modern', 'heavy'],
+            mood: ['cool', 'muted']
+        },
+        {
+            // sport, competition
+            stems: ['sport', 'fotbal', 'hokej', 'tenis', 'fitness', 'gym', 'běh', 'cykl', 'soutěž', 'zápas', 'výhr', 'prohr'],
+            style: ['heavy', 'modern'],
+            mood: ['warm', 'vibrant']
+        },
+        {
+            // dialect, Moravian, folk
+            stems: ['nářeč', 'dialekt', 'morav', 'slezsk', 'hanáck', 'valašsk', 'chodsk', 'lidov', 'folklór'],
+            style: ['handwritten', 'playful'],
+            mood: ['nature', 'warm']
+        },
+        {
+            // elegant, luxury, sophisticated
+            stems: ['elegant', 'luxus', 'sofistik', 'nobles', 'vznešen', 'formáln', 'ušlechtil'],
+            style: ['elegant', 'modern'],
+            mood: ['muted', 'cool']
+        },
+        {
+            // retro, vintage, nostalgia
+            stems: ['retro', 'vintage', 'osmdesát', 'sedmdesát', 'šedesát', 'nostalg', 'staromód', 'oldschool'],
+            style: ['retro', 'elegant'],
+            mood: ['muted', 'warm']
+        },
+        {
+            // music, bands, concerts
+            stems: ['hudb', 'muzik', 'zpěv', 'píseň', 'kapel', 'koncert', 'festival', 'jazz', 'rock', 'metal', 'elektron', 'dj'],
+            style: ['street', 'retro'],
+            mood: ['vibrant', 'dark']
+        },
+        {
+            // military, war
+            stems: ['vojensk', 'armád', 'válk', 'zbraň', 'boj', 'bitv', 'voják', 'uniform', 'strateg'],
+            style: ['heavy', 'retro'],
+            mood: ['dark', 'cool']
+        },
+        {
+            // transport, vehicles, travel
+            stems: ['doprav', 'vlak', 'autobus', 'tramvaj', 'metro', 'cestov', 'jízd', 'silnic', 'dálnic', 'letiště', 'letadl', 'lodí', 'loď'],
+            style: ['modern', 'heavy'],
+            mood: ['cool', 'warm']
+        },
+        {
+            // TV, film, series, media, entertainment
+            stems: ['seriál', 'televiz', 'film', 'kino', 'vysílá', 'epizod', 'díl', 'pořad', 'média', 'žurnál', 'zpráv', 'redakc'],
+            style: ['modern', 'retro'],
+            mood: ['vibrant', 'cool']
+        },
+        {
+            // sneaky, criminal, shady, deceptive
+            stems: ['nenápadn', 'vnikn', 'přístup', 'tajn', 'skryt', 'krimin', 'ilegal', 'nelegál', 'lstiv', 'úskočn', 'mazán', 'prohnan', 'vyčkáv', 'dveř'],
+            style: ['street', 'heavy'],
+            mood: ['dark', 'muted']
+        },
+        {
+            // language, speech, communication, chaos
+            stems: ['jazyk', 'řeč', 'mluv', 'projev', 'srozumiteln', 'nesrozumiteln', 'chaotick', 'chaos', 'zmatek', 'nepořád', 'zmaten', 'blábol', 'hatmati'],
+            style: ['street', 'playful'],
+            mood: ['vibrant', 'dark']
+        },
+        {
+            // shopping, commerce, stores, machines
+            stems: ['obchod', 'nakup', 'nákup', 'prodej', 'prodejna', 'supermarket', 'samoobsluh', 'pokladn', 'e-shop', 'eshop'],
+            style: ['modern', 'playful'],
+            mood: ['warm', 'cool']
+        },
+        {
+            // holidays, celebrations, seasonal
+            stems: ['velikonoc', 'vánoce', 'vánočn', 'silvestr', 'narozenin', 'oslav', 'svátek', 'sváte', 'prázdnin', 'dovolen'],
+            style: ['playful', 'handwritten'],
+            mood: ['warm', 'vibrant']
+        },
+        {
+            // housing, buildings, home
+            stems: ['bydlen', 'dům', 'byt', 'stavb', 'budov', 'architekt', 'objekt', 'vstup', 'vchod'],
+            style: ['modern', 'heavy'],
+            mood: ['cool', 'muted']
+        },
+        {
+            // compound/blend words, neologisms, wordplay
+            stems: ['složenin', 'kontaminac', 'blend', 'novotvar', 'portmanteau'],
+            style: ['playful', 'modern'],
+            mood: ['vibrant', 'warm']
+        }
+    ];
+
+    var ALL_STYLES = ['street', 'elegant', 'playful', 'heavy', 'modern', 'handwritten', 'retro'];
+    var ALL_MOODS = ['dark', 'warm', 'cool', 'nature', 'vibrant', 'muted'];
+
+    /* ══════════════════════════════════════════════════════════
+       CZECH DETECTION & RUNTIME FONT VALIDATION
+       ══════════════════════════════════════════════════════════ */
+
+    var CZECH_REGEX = /[áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]/;
+
+    function hasCzechChars(word) {
+        return CZECH_REGEX.test(word);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       PARSING & MATCHING
+       ══════════════════════════════════════════════════════════ */
+
+    function parseLine(line) {
+        // Remove leading "- " or "• " bullet
+        line = line.replace(/^\s*[-–•]\s*/, '');
+        var match = line.match(/^(.+?)\s*\((.+)\)\s*$/);
+        if (match) {
+            return { word: match[1].trim(), hint: match[2].trim().toLowerCase() };
+        }
+        return { word: line.trim(), hint: '' };
+    }
+
+    function detectCategories(hint) {
+        if (!hint) return { styles: null, moods: null };
+
+        var matchedStyles = {};
+        var matchedMoods = {};
+        var found = false;
+
+        for (var i = 0; i < SEMANTIC_RULES.length; i++) {
+            var rule = SEMANTIC_RULES[i];
+            for (var k = 0; k < rule.stems.length; k++) {
+                if (hint.indexOf(rule.stems[k]) !== -1) {
+                    found = true;
+                    rule.style.forEach(function (s) { matchedStyles[s] = (matchedStyles[s] || 0) + 1; });
+                    rule.mood.forEach(function (m) { matchedMoods[m] = (matchedMoods[m] || 0) + 1; });
+                    break;
+                }
+            }
+        }
+
+        if (!found) return { styles: null, moods: null };
+
+        var sortedStyles = Object.keys(matchedStyles).sort(function (a, b) { return matchedStyles[b] - matchedStyles[a]; });
+        var sortedMoods = Object.keys(matchedMoods).sort(function (a, b) { return matchedMoods[b] - matchedMoods[a]; });
+
+        return {
+            styles: sortedStyles.slice(0, 3),
+            moods: sortedMoods.slice(0, 3)
+        };
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       FONT & COLOR SELECTION
+       ══════════════════════════════════════════════════════════ */
+
+    function shuffle(arr) {
+        var a = arr.slice();
+        for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+        }
+        return a;
+    }
+
+    function pickRandom(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function getFontCandidates(needsCzech, preferredStyles) {
+        if (needsCzech) {
+            // For Czech words: always use the central curated list.
+            // No category-specific Czech fonts — quality over variety.
+            return shuffle(CZECH_FONTS.slice());
+        }
+        // For ASCII words: use style-specific pools (much larger variety)
+        var styles = preferredStyles || shuffle(ALL_STYLES).slice(0, 2);
+        var candidates = [];
+        styles.forEach(function (s) {
+            if (FONTS[s]) {
+                candidates = candidates.concat(CZECH_FONTS);
+                candidates = candidates.concat(FONTS[s].ascii);
+            }
+        });
+        if (candidates.length < 3) {
+            ALL_STYLES.forEach(function (s) {
+                candidates = candidates.concat(FONTS[s].ascii);
+            });
+            candidates = candidates.concat(CZECH_FONTS);
+        }
+        return shuffle(candidates);
+    }
+
+    function pickColors(preferredMoods) {
+        var moods = preferredMoods || shuffle(ALL_MOODS).slice(0, 2);
+        // 60% curated palette, 40% procedurally generated
+        if (Math.random() < 0.6) {
+            var candidates = [];
+            moods.forEach(function (m) {
+                if (COLORS[m]) candidates = candidates.concat(COLORS[m]);
+            });
+            if (candidates.length < 3) {
+                ALL_MOODS.forEach(function (m) {
+                    candidates = candidates.concat(COLORS[m]);
+                });
+            }
+            return pickRandom(candidates);
+        } else {
+            return generateColorPair(moods[0] || pickRandom(ALL_MOODS));
+        }
+    }
+
+    function pickCombo(word, hint) {
+        var needsCzech = hasCzechChars(word);
+        var cats = detectCategories(hint);
+        var candidates = getFontCandidates(needsCzech, cats.styles);
+        var fontSpec = candidates[0];
+        var colors = pickColors(cats.moods);
+        return {
+            word: word,
+            hint: hint,
+            fontSpec: fontSpec,
+            bg: colors[0],
+            text: colors[1],
+            detectedStyles: cats.styles,
+            detectedMoods: cats.moods
+        };
+    }
+
+    function pickCombinations(entries) {
+        var results = [];
+        for (var i = 0; i < entries.length; i++) {
+            results.push(pickCombo(entries[i].word, entries[i].hint));
+        }
+
+        // Deduplicate: no two cards should share same font+bg
+        for (var j = 1; j < results.length; j++) {
+            var attempts = 0;
+            while (attempts < 30) {
+                var dup = false;
+                for (var k = 0; k < j; k++) {
+                    if (results[j].fontSpec === results[k].fontSpec && results[j].bg === results[k].bg) {
+                        dup = true;
+                        break;
+                    }
+                }
+                if (!dup) break;
+                var r = pickCombo(results[j].word, results[j].hint);
+                results[j].fontSpec = r.fontSpec;
+                results[j].bg = r.bg;
+                results[j].text = r.text;
+                attempts++;
+            }
+        }
+
+        return results;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       FONT LOADING
+       ══════════════════════════════════════════════════════════ */
+
+    var loadedFonts = {};
+
+    function fontFamily(spec) {
+        return spec.split(':')[0];
+    }
+
+    // Extract numeric weight from spec like "Poppins:wght@800" → 800
+    // Defaults to 400 if no weight specified (the font's default)
+    function fontWeight(spec) {
+        var m = spec.match(/:wght@(\d+)/);
+        return m ? parseInt(m[1], 10) : 400;
+    }
+
+    function googleFontUrl(spec) {
+        var family = spec.replace(/ /g, '+');
+        return 'https://fonts.googleapis.com/css2?family=' + family + '&display=swap&subset=latin-ext';
+    }
+
+    // All Czech diacritical chars — used to force latin-ext subset download
+    var CZECH_PROBE_TEXT = 'áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ';
+
+    function loadFont(spec) {
+        if (loadedFonts[spec]) return loadedFonts[spec];
+        var family = fontFamily(spec);
+        var weight = fontWeight(spec);
+        var promise = new Promise(function (resolve) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = googleFontUrl(spec);
+            link.onload = function () {
+                // CRITICAL: Google Fonts CSS2 uses unicode-range subsetting.
+                // The latin-ext subset (háčky, čárky) is only downloaded when
+                // the browser sees these chars in DOM text. Canvas.fillText()
+                // does NOT trigger this download. So we insert a hidden DOM
+                // element with Czech chars to force the subset download.
+                var probe = document.createElement('span');
+                probe.setAttribute('aria-hidden', 'true');
+                probe.style.cssText = 'position:absolute;left:-9999px;top:-9999px;' +
+                    'font-family:"' + family + '",sans-serif;' +
+                    'font-weight:' + weight + ';font-size:48px;visibility:hidden;';
+                probe.textContent = CZECH_PROBE_TEXT;
+                document.body.appendChild(probe);
+
+                if (document.fonts && document.fonts.load) {
+                    // Wait for the font (including latin-ext subset) to load
+                    document.fonts.load(weight + ' 48px "' + family + '"', CZECH_PROBE_TEXT).then(function () {
+                        resolve({ family: family, weight: weight });
+                    }).catch(function () {
+                        resolve({ family: family, weight: weight });
+                    });
+                } else {
+                    setTimeout(function () { resolve({ family: family, weight: weight }); }, 800);
+                }
+            };
+            link.onerror = function () { resolve({ family: family, weight: weight }); };
+            document.head.appendChild(link);
+        });
+        loadedFonts[spec] = promise;
+        return promise;
+    }
+
+    async function loadCardFont(card) {
+        return await loadFont(card.fontSpec);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       CANVAS RENDERING
+       ══════════════════════════════════════════════════════════ */
+
+    var SIZE = 1080;
+
+    function makeFontStr(weight, size, family) {
+        return weight + ' ' + size + 'px "' + family + '", sans-serif';
+    }
+
+    function renderCard(canvas, word, fontFamilyName, weight, bgColor, textColor) {
+        canvas.width = SIZE;
+        canvas.height = SIZE;
+        var ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, SIZE, SIZE);
+
+        var targetWidth = SIZE * 0.675;
+        var minWidth = SIZE * 0.58;
+        var maxWidth = SIZE * 0.77;
+        var fontSize, fontStr, measured;
+
+        var lo = 20, hi = 600;
+        for (var i = 0; i < 30; i++) {
+            fontSize = Math.round((lo + hi) / 2);
+            fontStr = makeFontStr(weight, fontSize, fontFamilyName);
+            ctx.font = fontStr;
+            measured = ctx.measureText(word);
+            if (measured.width < targetWidth) lo = fontSize;
+            else hi = fontSize;
+            if (hi - lo <= 1) break;
+        }
+
+        fontSize = lo;
+        fontStr = makeFontStr(weight, fontSize, fontFamilyName);
+        ctx.font = fontStr;
+        measured = ctx.measureText(word);
+
+        if (measured.width > maxWidth && fontSize > 24) {
+            while (measured.width > maxWidth && fontSize > 24) {
+                fontSize--;
+                fontStr = makeFontStr(weight, fontSize, fontFamilyName);
+                ctx.font = fontStr;
+                measured = ctx.measureText(word);
+            }
+        } else if (measured.width < minWidth && fontSize < 580) {
+            while (measured.width < minWidth && fontSize < 580) {
+                fontSize++;
+                fontStr = makeFontStr(weight, fontSize, fontFamilyName);
+                ctx.font = fontStr;
+                measured = ctx.measureText(word);
+            }
+            if (measured.width > maxWidth) fontSize--;
+            fontStr = makeFontStr(weight, fontSize, fontFamilyName);
+            ctx.font = fontStr;
+        }
+
+        ctx.fillStyle = textColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(word, SIZE / 2, SIZE / 2);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       DOM & INTERACTION
+       ══════════════════════════════════════════════════════════ */
+
+    var cards = [];
+    var grid = document.getElementById('grid');
+    var loading = document.getElementById('loading');
+    var loadingText = document.getElementById('loading-text');
+    var btnGenerate = document.getElementById('btn-generate');
+    var btnDownloadAll = document.getElementById('btn-download-all');
+    var wordsInput = document.getElementById('words-input');
+
+    function showLoading(msg) {
+        loadingText.textContent = msg || 'Načítám fonty...';
+        loading.classList.remove('hidden');
+    }
+
+    function hideLoading() {
+        loading.classList.add('hidden');
+    }
+
+    function downloadCanvas(canvas, filename) {
+        canvas.toBlob(function (blob) {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        }, 'image/png');
+    }
+
+    function sanitizeFilename(word) {
+        return word.toLowerCase()
+            .replace(/[áà]/g, 'a').replace(/[čć]/g, 'c').replace(/ď/g, 'd')
+            .replace(/[éě]/g, 'e').replace(/[íì]/g, 'i').replace(/ň/g, 'n')
+            .replace(/[óò]/g, 'o').replace(/ř/g, 'r').replace(/š/g, 's')
+            .replace(/ť/g, 't').replace(/[úů]/g, 'u').replace(/ý/g, 'y')
+            .replace(/ž/g, 'z').replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_')
+            .replace(/^_|_$/g, '');
+    }
+
+    function formatInfo(card) {
+        var parts = [fontFamily(card.fontSpec)];
+        if (card.detectedStyles) parts.push('styl: ' + card.detectedStyles.join(', '));
+        if (card.detectedMoods) parts.push('nálada: ' + card.detectedMoods.join(', '));
+        return parts.join(' · ');
+    }
+
+    function buildCardEl(card, index) {
+        var wrap = document.createElement('div');
+        wrap.className = 'card-wrap';
+        wrap.dataset.index = index;
+
+        var canvas = document.createElement('canvas');
+        card.canvas = canvas;
+        wrap.appendChild(canvas);
+
+        var info = document.createElement('div');
+        info.className = 'card-info';
+        info.textContent = formatInfo(card);
+        card.infoEl = info;
+        wrap.appendChild(info);
+
+        var actions = document.createElement('div');
+        actions.className = 'card-actions';
+
+        var btnRegen = document.createElement('button');
+        btnRegen.className = 'btn-secondary';
+        btnRegen.textContent = 'Přegenerovat';
+        btnRegen.addEventListener('click', function () {
+            regenerateCard(index);
+        });
+
+        var btnDl = document.createElement('button');
+        btnDl.className = 'btn-primary';
+        btnDl.textContent = 'Stáhnout PNG';
+        btnDl.addEventListener('click', function () {
+            var c = cards[index];
+            downloadCanvas(c.canvas, sanitizeFilename(c.word) + '.png');
+        });
+
+        actions.appendChild(btnRegen);
+        actions.appendChild(btnDl);
+        wrap.appendChild(actions);
+
+        return wrap;
+    }
+
+    async function renderCardAsync(card) {
+        var fontInfo = await loadCardFont(card);
+        card.fontFamily = fontInfo.family;
+        card.fontWeight = fontInfo.weight;
+        if (card.infoEl) card.infoEl.textContent = formatInfo(card);
+        renderCard(card.canvas, card.word, fontInfo.family, fontInfo.weight, card.bg, card.text);
+    }
+
+    async function regenerateCard(index) {
+        var oldCard = cards[index];
+        var combo = pickCombo(oldCard.word, oldCard.hint);
+        combo.canvas = oldCard.canvas;
+        combo.infoEl = oldCard.infoEl;
+        cards[index] = combo;
+
+        showLoading('Načítám font...');
+        await renderCardAsync(combo);
+        hideLoading();
+    }
+
+    async function generate() {
+        var raw = wordsInput.value.trim();
+        if (!raw) return;
+
+        var lines = raw.split('\n').map(function (w) { return w.trim(); }).filter(Boolean);
+        if (lines.length === 0) return;
+
+        var entries = lines.map(parseLine);
+
+        btnGenerate.disabled = true;
+        btnDownloadAll.disabled = true;
+        showLoading('Generuji karty (' + entries.length + ' slov)...');
+
+        grid.innerHTML = '';
+        cards = [];
+
+        var combos = pickCombinations(entries);
+
+        for (var i = 0; i < combos.length; i++) {
+            cards.push(combos[i]);
+            grid.appendChild(buildCardEl(combos[i], i));
+        }
+
+        // Pre-load all initially chosen fonts in parallel
+        var fontSpecs = [];
+        var seen = {};
+        for (var j = 0; j < combos.length; j++) {
+            if (!seen[combos[j].fontSpec]) {
+                fontSpecs.push(combos[j].fontSpec);
+                seen[combos[j].fontSpec] = true;
+            }
+        }
+
+        loadingText.textContent = 'Načítám ' + fontSpecs.length + ' fontů...';
+        await Promise.all(fontSpecs.map(function (spec) { return loadFont(spec); }));
+
+        // Render with validation (may load additional fonts if validation fails)
+        loadingText.textContent = 'Rendruji karty...';
+        await new Promise(function (r) { requestAnimationFrame(r); });
+
+        for (var k = 0; k < cards.length; k++) {
+            await renderCardAsync(cards[k]);
+        }
+
+        hideLoading();
+        btnGenerate.disabled = false;
+        btnDownloadAll.disabled = false;
+    }
+
+    async function downloadAll() {
+        if (cards.length === 0) return;
+        btnDownloadAll.disabled = true;
+        showLoading('Balím ZIP...');
+
+        var zip = new JSZip();
+        var promises = cards.map(function (card, i) {
+            return new Promise(function (resolve) {
+                card.canvas.toBlob(function (blob) {
+                    var name = sanitizeFilename(card.word) + '.png';
+                    var count = 0;
+                    cards.slice(0, i).forEach(function (c) {
+                        if (sanitizeFilename(c.word) === sanitizeFilename(card.word)) count++;
+                    });
+                    if (count > 0) name = name.replace('.png', '_' + (count + 1) + '.png');
+                    zip.file(name, blob);
+                    resolve();
+                }, 'image/png');
+            });
+        });
+
+        await Promise.all(promises);
+
+        var content = await zip.generateAsync({ type: 'blob' });
+        var url = URL.createObjectURL(content);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'karty.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+
+        hideLoading();
+        btnDownloadAll.disabled = false;
+    }
+
+    btnGenerate.addEventListener('click', generate);
+    btnDownloadAll.addEventListener('click', downloadAll);
+
+    wordsInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            generate();
+        }
+    });
+})();
+</script>
+</body>
+</html>
