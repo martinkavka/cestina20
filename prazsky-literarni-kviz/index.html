@@ -166,13 +166,15 @@
         .plk-mockup {
             display: inline-block;
             width: 280px;
-            height: 540px;
+            height: 606px;
             border: 8px solid #1a1a1a;
-            border-radius: 36px;
+            border-radius: 52px;
             overflow: hidden;
             position: relative;
-            background: #fff;
+            background: #000;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+            transform: translateZ(0);
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
         }
 
         .plk-mockup::before {
@@ -192,17 +194,15 @@
         .plk-mockup__screen {
             width: 100%;
             height: 100%;
-            border-radius: 28px;
-            background-image: url('assets/nahled-otazky-560.jpg');
-            background-size: 100% auto;
-            background-repeat: no-repeat;
-            background-position: top center;
-            animation: plk-scroll 18s ease-in-out infinite;
+            overflow: hidden;
         }
 
-        @keyframes plk-scroll {
-            0%, 8% { background-position: top center; }
-            92%, 100% { background-position: bottom center; }
+        .plk-mockup__screen video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            clip-path: inset(0 round 28px);
         }
 
         .plk-mockup-caption {
@@ -716,7 +716,11 @@
                     <div class="plk-twocol__mockup">
                         <div class="plk-mockup-wrap">
                             <div class="plk-mockup">
-                                <div class="plk-mockup__screen" role="img" aria-label="Ukázka otázky z Pražského literárního kvízu – Staroměstská exekuce"></div>
+                                <div class="plk-mockup__screen">
+                                    <video autoplay loop muted playsinline aria-label="Ukázka hry Pražský literární kvíz">
+                                        <source src="assets/ukazka-hry-web.mp4" type="video/mp4">
+                                    </video>
+                                </div>
                             </div>
                             <p class="plk-mockup-caption">Ukázka prvního zastavení</p>
                         </div>
