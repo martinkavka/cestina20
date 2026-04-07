@@ -21,7 +21,9 @@ cestina20/
 │   └── assets/
 │       ├── praha.jpg            # hero background (1000x750, 236 KB)
 │       ├── nahled-otazky.png    # original screenshot (do not serve directly)
-│       ├── nahled-otazky-560.jpg # optimized screenshot for mockup (1000px, 118 KB)
+│       ├── nahled-otazky-560.jpg # optimized screenshot (kept as fallback, not used in HTML)
+│       ├── ukazka-hry.MP4       # original screen recording (do not serve directly)
+│       ├── ukazka-hry-web.mp4   # compressed video for mockup (7.5 MB, h264/aac)
 │       ├── og-image.png         # OG image original (1200x630)
 │       └── og-image.jpg         # OG image optimized (200 KB)
 ├── generator-karet/         # Word card image generator (internal tool)
@@ -85,6 +87,31 @@ The theme JS (`script.100.min.js`) depends on jQuery and hoverintent. The `ef_st
 - Do not serve original full-size assets directly. Resize images with `sips` to the needed display size (2x for retina) and convert to JPEG with quality 85%.
 - Example: `sips -Z 1000 original.png --out optimized.jpg -s format jpeg -s formatOptions 85`
 - Each project's `assets/` directory holds both originals and optimized versions. Reference the optimized versions in HTML/CSS.
+
+## Video optimization
+
+- Compress screen recordings with `ffmpeg` before serving. Target: single-digit MB for a ~1 minute screencast.
+- Example: `ffmpeg -i original.MP4 -c:v libx264 -crf 28 -preset slow -c:a aac -b:a 128k output-web.mp4`
+- Use a different output filename than the input to avoid macOS case-insensitive filesystem conflicts.
+
+## Phone mockup (PLK)
+
+The `.plk-mockup` CSS component simulates an iPhone frame around a video. Key values tuned for iPhone 14 screen recordings at 1170×2532 px displayed at 280px width:
+
+- Mockup size: `280 × 606px` (matches iPhone 14 aspect ratio exactly)
+- `border-radius: 56px` — tuned to cover iPhone 14 screen corner radius and prevent light background bleeding through corners; do not reduce
+- Video uses `autoplay loop muted playsinline` and `object-fit: cover`
+- Video playback rate set to `0.85` via JS (`document.getElementById('plk-mockup-video').playbackRate = 0.85`) to smooth out screen recording jitter
+
+## Deployment
+
+The repository is deployed via GitHub Pages at `https://martinkavka.github.io/cestina20/`. To update after changes:
+```bash
+git add .
+git commit -m "Popis změny"
+git push
+```
+Pages update automatically within 1–2 minutes.
 
 ## Header padding
 
