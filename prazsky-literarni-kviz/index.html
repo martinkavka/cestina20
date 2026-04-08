@@ -1255,12 +1255,19 @@ var ef_string = {"ajax_url":"https:\/\/cestina20.cz\/wp-admin\/admin-ajax.php","
             var subject = encodeURIComponent('Objednávka Pražského literárního kvízu');
             var body = encodeURIComponent(
                 'Dobrý den,\n\n' +
-                'chtěl/a bych objednat Pražský literární kvíz:\n\n' +
+                'chtěl/a bych objednat Pražský literární kvíz a zároveň požádat o vystavení zálohové faktury.\n\n' +
+                '--- Objednávka ---\n' +
                 'Počet týmů: ' + teams + '\n' +
                 'Počet studentů: ' + students + '\n' +
                 'Cena za tým: ' + fmt(pricePerTeam) + ' Kč\n' +
                 'Celkem: ' + fmt(total) + ' Kč\n' +
                 'Na studenta: ' + fmt(perStudent) + ' Kč\n\n' +
+                '--- Fakturační údaje ---\n' +
+                'Název školy / organizace: \n' +
+                'IČO: \n' +
+                'Adresa: \n' +
+                'Kontaktní osoba: \n' +
+                'Telefon: \n\n' +
                 'Děkuji.'
             );
             orderBtn.href = 'mailto:info@hados.cz?subject=' + subject + '&body=' + body;
