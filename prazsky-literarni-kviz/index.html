@@ -82,6 +82,12 @@
             padding: 14px 28px;
         }
 
+        .plk-hero__price {
+            margin: 12px 0 0;
+            font-size: 0.95em;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
         /* Přehled */
         .plk-overview {
             width: 100%;
@@ -202,7 +208,7 @@
             height: 100%;
             object-fit: cover;
             display: block;
-            clip-path: inset(0 round 28px);
+            clip-path: inset(2px 2px round 48px);
         }
 
         .plk-mockup-caption {
@@ -212,36 +218,51 @@
             font-style: italic;
         }
 
-        /* Dvousloupcový layout: text + mockup */
-        .plk-twocol {
+        /* Sekce s videem – přes celou šířku karty */
+        .plk-video-feature {
+            margin: 20px -25px 0;
+            padding: 36px 25px 40px;
+            background: #f0f3ff;
+            text-align: center;
+        }
+
+        .plk-video-feature h2 {
+            margin-top: 0;
+            color: #223276;
+        }
+
+        .plk-video-feature__intro {
+            color: #555;
+            margin: 0 auto 28px;
+            max-width: 520px;
+            font-size: 0.97em;
+            line-height: 1.55;
+        }
+
+        .plk-mockup--large {
+            width: 320px;
+            height: 693px;
+        }
+
+        @media (max-width: 600px) {
+            .plk-video-feature {
+                margin-left: -15px;
+                margin-right: -15px;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+
+        /* Mapa trasy */
+        .plk-map {
+            margin: 20px 0 0;
+        }
+
+        .plk-map__img {
+            width: 100%;
             display: block;
-        }
-
-        .plk-twocol__text {
-            /* na mobilu plná šířka, default */
-        }
-
-        .plk-twocol__mockup {
-            /* na mobilu pod textem, default */
-        }
-
-        @media (min-width: 720px) {
-            .plk-twocol {
-                display: flex;
-                gap: 32px;
-                align-items: flex-start;
-            }
-
-            .plk-twocol__text {
-                flex: 1;
-                min-width: 0;
-            }
-
-            .plk-twocol__mockup {
-                flex-shrink: 0;
-                position: sticky;
-                top: 20px;
-            }
+            border-radius: 6px;
+            border: 1px solid #e0e4f0;
         }
 
         /* Inline CTA */
@@ -420,19 +441,245 @@
             letter-spacing: 0.03em;
         }
 
-        .plk-strike {
-            text-decoration: line-through;
-            color: #999;
-            font-weight: 400;
-            font-size: 0.88em;
-            margin-right: 4px;
-        }
-
         .plk-note {
             font-size: 0.85em;
             color: #888;
             margin-top: 6px;
             font-style: italic;
+        }
+
+        /* Srovnání cen */
+        .plk-comparison {
+            margin-top: 28px;
+            padding: 24px;
+            background: #f8f6f2;
+            border-radius: 6px;
+        }
+
+        .plk-comparison h3 {
+            margin: 0 0 14px;
+            color: #223276;
+            font-size: 1.05em;
+        }
+
+        .plk-comparison__list {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 24px;
+        }
+
+        .plk-comparison__list li {
+            padding: 0 !important;
+            font-size: 0.95em;
+            color: #444;
+        }
+
+        .plk-comparison__list li::before,
+        .plk-comparison__list li::after {
+            display: none !important;
+        }
+
+        .plk-comparison__price {
+            font-weight: 700;
+            color: #223276;
+        }
+
+        .plk-comparison__price--plk {
+            color: #15851d;
+        }
+
+        .plk-comparison__note {
+            margin: 12px 0 0;
+            font-size: 0.88em;
+            color: #888;
+        }
+
+        .plk-map + p {
+            margin-top: 16px;
+        }
+
+        /* Callout box */
+        .plk-callout {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: #eef6ee;
+            border: 1px solid #c4dfc4;
+            border-radius: 6px;
+            padding: 20px 24px;
+            margin-top: 20px;
+        }
+
+        .plk-callout__icon {
+            font-size: 1.8em;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .plk-callout__title {
+            font-weight: 700;
+            color: #1a5c1a;
+            margin: 0 0 4px;
+            font-size: 1.05em;
+        }
+
+        .plk-callout__text {
+            margin: 0;
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        /* Konfigurátor týmů */
+        .plk-calc {
+            background: #f7f8fb;
+            border: 1px solid #e0e4f0;
+            border-radius: 6px;
+            padding: 28px 24px;
+            margin-top: 24px;
+        }
+
+        .plk-calc h3 {
+            margin: 0 0 20px;
+            color: #223276;
+            font-size: 1.15em;
+        }
+
+        .plk-calc__row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .plk-calc__label {
+            flex: 0 0 160px;
+            font-size: 0.95em;
+            color: #444;
+        }
+
+        .plk-calc__stepper {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .plk-calc__btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #c8d0f0;
+            background: #fff;
+            color: #223276;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+        }
+
+        .plk-calc__btn:hover {
+            background: #e8ecff;
+        }
+
+        .plk-calc__btn:first-child {
+            border-radius: 4px 0 0 4px;
+        }
+
+        .plk-calc__btn:last-child {
+            border-radius: 0 4px 4px 0;
+        }
+
+        .plk-calc__value {
+            width: 52px;
+            height: 36px;
+            border: 1px solid #c8d0f0;
+            border-left: none;
+            border-right: none;
+            text-align: center;
+            font-size: 1em;
+            font-weight: 700;
+            color: #223276;
+            background: #fff;
+        }
+
+        .plk-calc__input {
+            width: 80px;
+            height: 36px;
+            border: 1px solid #c8d0f0;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1em;
+            color: #223276;
+            padding: 0 8px;
+        }
+
+        .plk-calc__result {
+            background: #fff;
+            border: 1px solid #e0e4f0;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 32px;
+        }
+
+        .plk-calc__result-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .plk-calc__result-label {
+            font-size: 0.8em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .plk-calc__result-value {
+            font-size: 1.25em;
+            font-weight: 700;
+            color: #223276;
+        }
+
+        .plk-calc__result-value--highlight {
+            color: #15851d;
+        }
+
+        .plk-calc__order {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .plk-calc__order .button {
+            font-size: 1em;
+            padding: 12px 28px;
+        }
+
+        @media (max-width: 600px) {
+            .plk-calc__row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+            .plk-calc__label {
+                flex: none;
+            }
+
+            .plk-calc__result {
+                gap: 12px 20px;
+            }
+
+            .plk-callout {
+                padding: 16px;
+            }
         }
 
         /* Sekce */
@@ -462,6 +709,13 @@
         .plk-cta .button {
             font-size: 1.05em;
             padding: 14px 28px;
+        }
+
+        .plk-cta__price {
+            font-size: 1.15em;
+            color: #223276;
+            font-weight: 700;
+            margin: 0 0 16px;
         }
 
         .plk-cta__note {
@@ -637,8 +891,9 @@
         <a class="button"
            href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2"
            target="_blank" rel="noopener">
-            Koupit kvíz pro 1&nbsp;tým – 990&nbsp;Kč
+            Koupit kvíz
         </a>
+        <p class="plk-hero__price">od 65&nbsp;Kč / student</p>
     </div>
 </div>
 
@@ -674,68 +929,80 @@
                             </tr>
                             <tr>
                                 <td class="plk-overview__label"><span class="plk-overview__icon">&#128176;</span> Cena</td>
-                                <td class="plk-overview__value">od 310&nbsp;Kč / tým</td>
+                                <td class="plk-overview__value">od 65&nbsp;Kč / student</td>
                             </tr>
                         </tbody>
                     </table>
                 </section>
 
-                <!-- Dvousloupcový blok: text vlevo, mockup vpravo -->
-                <div class="plk-twocol plk-section">
-
-                    <div class="plk-twocol__text">
-                        <!-- Popis produktu -->
-                        <section>
-                            <h2>Praha jako vaše hřiště</h2>
-                            <p>Centrum Prahy je plné literárních příběhů, které většina lidí přejde bez povšimnutí. Kvíz vám je pomůže najít – budete se bavit, ať už přijíždíte z druhého konce republiky, nebo máte školu pár minut od Staromáku.</p>
-                        </section>
-
-                        <!-- Co získáte -->
-                        <section class="plk-section">
-                            <h2>Co získáte</h2>
-                            <ul class="plk-steps">
-                                <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> 3&nbsp;hodiny, kdy se studenti baví a&nbsp;učí zároveň – bez jediného pohledu na hodinky.</li>
-                                <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> 20&nbsp;interaktivních zastávek navázaných na učivo české literatury.</li>
-                                <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> Soutěž týmů přirozeně vtáhne i ty, které literatura „nebaví".</li>
-                                <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> Žádná příprava pro učitele – stačí koupit, otevřít v&nbsp;mobilu a&nbsp;vyrazit.</li>
-                            </ul>
-                        </section>
-
-                        <!-- Jak to funguje -->
-                        <section class="plk-section">
-                            <h2>Jak to funguje</h2>
-                            <ul class="plk-steps">
-                                <li class="plk-steps__item"><span class="plk-steps__num">1</span> Dorazíte na Staromák a&nbsp;spustíte hru v&nbsp;mobilu.</li>
-                                <li class="plk-steps__item"><span class="plk-steps__num">2</span> Na každé zastávce si přečtete zadání, občas poslechnete audio a&nbsp;splníte úkol.</li>
-                                <li class="plk-steps__item"><span class="plk-steps__num">3</span> Správná odpověď vás posune na další zastávku – celkem jich je 20, postupně dojdete až na Pražský hrad.</li>
-                                <li class="plk-steps__item"><span class="plk-steps__num">4</span> Chcete soutěžit? Rozdělte třídu do týmů – každý tým hraje na svém mobilu.</li>
-                            </ul>
-                        </section>
-                    </div>
-
-                    <!-- Mockup mobilu -->
-                    <div class="plk-twocol__mockup">
-                        <div class="plk-mockup-wrap">
-                            <div class="plk-mockup">
-                                <div class="plk-mockup__screen">
-                                    <video autoplay loop muted playsinline aria-label="Ukázka hry Pražský literární kvíz" id="plk-mockup-video">
-                                        <source src="assets/ukazka-hry-web.mp4" type="video/mp4">
-                                    </video>
-                                    <script>
-                                        document.getElementById('plk-mockup-video').playbackRate = 0.85;
-                                    </script>
-                                </div>
+                <!-- Ukázka hry – video mockup -->
+                <section class="plk-video-feature">
+                    <h2>Jak vypadá hra</h2>
+                    <p class="plk-video-feature__intro">Otázka, kontext, mapa – přesně takhle to vypadá na každé ze 20 zastávek.</p>
+                    <div class="plk-mockup-wrap">
+                        <div class="plk-mockup plk-mockup--large">
+                            <div class="plk-mockup__screen">
+                                <video autoplay loop muted playsinline aria-label="Ukázka hry Pražský literární kvíz" id="plk-mockup-video">
+                                    <source src="assets/ukazka-hry-web.mp4" type="video/mp4">
+                                </video>
                             </div>
-                            <p class="plk-mockup-caption">Otázka, odpověď, mapa – takto vypadá hra uvnitř.</p>
                         </div>
                     </div>
+                </section>
 
-                </div><!-- .plk-twocol -->
+                <!-- Popis produktu -->
+                <section class="plk-section">
+                    <h2>Praha jako vaše hřiště</h2>
+                    <p>Centrum Prahy je plné literárních příběhů, které většina lidí přejde bez povšimnutí. Kvíz vám je pomůže najít – budete se bavit, ať už přijíždíte z druhého konce republiky, nebo máte školu pár minut od Staromáku.</p>
+                </section>
+
+                <!-- Co získáte -->
+                <section class="plk-section">
+                    <h2>Co získáte</h2>
+                    <ul class="plk-steps">
+                        <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> 3&nbsp;hodiny, kdy se studenti baví a&nbsp;učí zároveň – bez jediného pohledu na hodinky.</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> 20&nbsp;interaktivních zastávek navázaných na učivo české literatury.</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> Soutěž týmů přirozeně vtáhne i ty, které literatura „nebaví".</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> Žádná příprava pro učitele – stačí koupit, otevřít v&nbsp;mobilu a&nbsp;vyrazit.</li>
+                    </ul>
+                </section>
+
+                <!-- Časový callout -->
+                <div class="plk-callout">
+                    <span class="plk-callout__icon">&#128336;</span>
+                    <div>
+                        <p class="plk-callout__title">Na hru máte celý den – 12 hodin</p>
+                        <p class="plk-callout__text">Není potřeba spěchat. Zastavte se na oběd, prohlédněte si město, dejte si pauzu. Trasa má 6&nbsp;km a&nbsp;zabere přibližně 3&nbsp;hodiny – zbytek dne je váš.</p>
+                    </div>
+                </div>
+
+                <!-- Jak to funguje -->
+                <section class="plk-section">
+                    <h2>Jak to funguje</h2>
+                    <ul class="plk-steps">
+                        <li class="plk-steps__item"><span class="plk-steps__num">1</span> Dorazíte na Staromák a&nbsp;spustíte hru v&nbsp;mobilu.</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">2</span> Na každé zastávce si přečtete zadání, občas poslechnete audio a&nbsp;splníte úkol.</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">3</span> Správná odpověď vás posune na další zastávku – celkem jich je 20, postupně dojdete až na Pražský hrad.</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">4</span> Chcete soutěžit? Rozdělte třídu do týmů – každý tým hraje na svém mobilu.</li>
+                    </ul>
+                </section>
+
+                <!-- Náhled trasy -->
+                <section class="plk-section">
+                    <h2>Kudy vede trasa</h2>
+                    <p>Kvíz startuje na Staroměstském náměstí a vede nejhezčími pasážemi Prahy – Josefovem, Malou Stranou, přes Karlův most – až na Pražský hrad. Celkem 6&nbsp;km, 20&nbsp;zastávek, přibližně 3&nbsp;hodiny chůze.</p>
+
+                    <div class="plk-map">
+                        <img src="assets/mapa-trasy.jpg" alt="Mapa trasy Pražského literárního kvízu – 20 zastávek od Staroměstského náměstí na Pražský hrad" class="plk-map__img">
+                    </div>
+
+                    <p>Trasa je doporučená, ne povinná. Přizpůsobte ji tomu, co chcete studentům ukázat – zastávky lze přeskakovat nebo doplnit o vlastní zastavení. Na celou hru máte 12&nbsp;hodin, takže vše v&nbsp;pohodě stihnete.</p>
+                </section>
 
                 <!-- Inline CTA -->
                 <div class="plk-inline-cta">
-                    <a class="button" href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2" target="_blank" rel="noopener">Koupit kvíz pro 1&nbsp;tým – 990&nbsp;Kč</a>
-                    <p class="plk-inline-cta__note">Více týmů? Napište na <a href="mailto:info@hados.cz">info@hados.cz</a></p>
+                    <a class="button" href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2" target="_blank" rel="noopener">Koupit kvíz</a>
+                    <p class="plk-inline-cta__note">od 65&nbsp;Kč / student · Více týmů? Napište na <a href="mailto:info@hados.cz">info@hados.cz</a></p>
                 </div>
 
                 <!-- Ukázka otázky -->
@@ -757,7 +1024,7 @@
                     <h2>Časté otázky</h2>
                     <dl class="plk-faq">
                         <dt>Dá se kvíz přerušit?</dt>
-                        <dd>Ne, po spuštění běží čas. Máte ale 7&nbsp;hodin – stíháte i&nbsp;oběd.</dd>
+                        <dd>Ne, po spuštění běží čas. Máte ale <strong>celý den – 12&nbsp;hodin</strong>. Klidně se zastavte na oběd, projděte si město vlastním tempem a&nbsp;užijte výlet bez spěchu. Stihnete to v&nbsp;pohodě.</dd>
 
                         <dt>Potřebují studenti internet?</dt>
                         <dd>Jen při načítání úkolů. Hra běží v&nbsp;prohlížeči a&nbsp;dat spotřebuje minimum.</dd>
@@ -767,6 +1034,9 @@
 
                         <dt>Co když prší?</dt>
                         <dd>Pražský literární kvíz je venkovní aktivita. Zvládnete ji i za deště, ale záleží na vás.</dd>
+
+                        <dt>Kdy můžeme vyrazit?</dt>
+                        <dd>Kdykoliv. Kvíz funguje celý rok, v&nbsp;jakýkoliv měsíc a&nbsp;kdykoliv během dne – ráno, dopoledne, odpoledne i&nbsp;večer. Nejsou tam vstupenky, otevírací doby ani jiné omezení, která by výlet zkomplikovala. Zaplatíte, otevřete v&nbsp;mobilu a&nbsp;jdete.</dd>
 
                         <dt>Dostanu výsledky všech týmů?</dt>
                         <dd>Ne. Berte to hlavně jako hru, ne jako zkoušku.</dd>
@@ -783,75 +1053,117 @@
                                 <th>Počet týmů</th>
                                 <th>Cena za tým</th>
                                 <th>Celkem</th>
-                                <th>Ušetříte</th>
+                                <th>Ušetříte oproti 1&times;990&nbsp;Kč</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>1&nbsp;tým</td>
-                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 990&nbsp;Kč</td>
+                                <td>990&nbsp;Kč</td>
                                 <td>990&nbsp;Kč</td>
                                 <td>–</td>
                             </tr>
                             <tr>
                                 <td>2&nbsp;týmy</td>
-                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 650&nbsp;Kč</td>
+                                <td>650&nbsp;Kč</td>
                                 <td>1&nbsp;300&nbsp;Kč</td>
                                 <td>680&nbsp;Kč</td>
                             </tr>
                             <tr>
                                 <td>3&nbsp;týmy</td>
-                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 510&nbsp;Kč</td>
+                                <td>510&nbsp;Kč</td>
                                 <td>1&nbsp;530&nbsp;Kč</td>
                                 <td>1&nbsp;440&nbsp;Kč</td>
                             </tr>
                             <tr>
                                 <td>4&nbsp;týmy</td>
-                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 440&nbsp;Kč</td>
+                                <td>440&nbsp;Kč</td>
                                 <td>1&nbsp;760&nbsp;Kč</td>
                                 <td>2&nbsp;200&nbsp;Kč</td>
                             </tr>
                             <tr class="plk-table__featured">
                                 <td>5&nbsp;týmů <span class="plk-badge">Oblíbené pro třídu</span></td>
-                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 390&nbsp;Kč</td>
+                                <td>390&nbsp;Kč</td>
                                 <td>1&nbsp;950&nbsp;Kč</td>
                                 <td>3&nbsp;000&nbsp;Kč</td>
                             </tr>
                             <tr>
                                 <td>6&nbsp;týmů</td>
-                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 370&nbsp;Kč</td>
+                                <td>370&nbsp;Kč</td>
                                 <td>2&nbsp;220&nbsp;Kč</td>
                                 <td>3&nbsp;720&nbsp;Kč</td>
                             </tr>
                             <tr>
                                 <td>7&nbsp;týmů</td>
-                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 350&nbsp;Kč</td>
+                                <td>350&nbsp;Kč</td>
                                 <td>2&nbsp;450&nbsp;Kč</td>
                                 <td>4&nbsp;480&nbsp;Kč</td>
                             </tr>
                             <tr>
                                 <td>8&nbsp;týmů</td>
-                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 330&nbsp;Kč</td>
+                                <td>330&nbsp;Kč</td>
                                 <td>2&nbsp;640&nbsp;Kč</td>
                                 <td>5&nbsp;280&nbsp;Kč</td>
                             </tr>
                             <tr>
                                 <td>9&nbsp;týmů</td>
-                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 320&nbsp;Kč</td>
+                                <td>320&nbsp;Kč</td>
                                 <td>2&nbsp;880&nbsp;Kč</td>
                                 <td>6&nbsp;030&nbsp;Kč</td>
                             </tr>
                             <tr>
                                 <td>10&nbsp;týmů</td>
-                                <td><span class="plk-strike">1&nbsp;090&nbsp;Kč</span> 310&nbsp;Kč</td>
+                                <td>310&nbsp;Kč</td>
                                 <td>3&nbsp;100&nbsp;Kč</td>
                                 <td>6&nbsp;800&nbsp;Kč</td>
                             </tr>
                         </tbody>
                     </table>
                     </div>
-                    <p class="plk-note" style="margin-top: 14px; font-size: 0.92em; color: #444; font-style: normal;"><strong>Průvodce Prahou: 3&nbsp;000–5&nbsp;000&nbsp;Kč. Vstup do muzea: 100&nbsp;Kč/student. PLK: od 65&nbsp;Kč/student – a&nbsp;baví je to víc.</strong><br><span style="color: #888; font-size: 0.92em;">Příklad: třída 30&nbsp;studentů → 5&nbsp;týmů → 1&nbsp;950&nbsp;Kč → 65&nbsp;Kč na studenta.</span></p>
-                    <p class="plk-note">Zaváděcí ceny platí do 30.&nbsp;6.&nbsp;2026. Po 30.&nbsp;6. se cena vrátí na plný ceník 1&nbsp;090&nbsp;Kč/tým. Chcete víc než 1&nbsp;tým? Napište nám na <a href="mailto:info@hados.cz">info@hados.cz</a>.</p>
+                    <div class="plk-comparison">
+                        <h3>Kolik stojí jiné aktivity v&nbsp;Praze?</h3>
+                        <ul class="plk-comparison__list">
+                            <li>Průvodce Prahou: <span class="plk-comparison__price">3&nbsp;000–5&nbsp;000&nbsp;Kč</span> za skupinu</li>
+                            <li>Vstup do muzea: <span class="plk-comparison__price">100&nbsp;Kč</span> / student</li>
+                            <li>Únikovka: <span class="plk-comparison__price">3&nbsp;000–5&nbsp;000&nbsp;Kč</span> za skupinu</li>
+                            <li>Pražský literární kvíz: <span class="plk-comparison__price plk-comparison__price--plk">od 65&nbsp;Kč</span> / student</li>
+                        </ul>
+                        <p class="plk-comparison__note">Příklad: třída 30&nbsp;studentů → 5&nbsp;týmů → 1&nbsp;950&nbsp;Kč → 65&nbsp;Kč na studenta.</p>
+                    </div>
+
+                    <!-- Konfigurátor týmů -->
+                    <div class="plk-calc" id="plk-calc">
+                        <h3>Spočítejte si to pro svou třídu</h3>
+                        <div class="plk-calc__row">
+                            <span class="plk-calc__label">Počet týmů</span>
+                            <div class="plk-calc__stepper">
+                                <button type="button" class="plk-calc__btn" id="plk-teams-minus" aria-label="Méně týmů">&minus;</button>
+                                <input type="text" class="plk-calc__value" id="plk-teams" value="5" readonly>
+                                <button type="button" class="plk-calc__btn" id="plk-teams-plus" aria-label="Více týmů">+</button>
+                            </div>
+                        </div>
+                        <div class="plk-calc__row">
+                            <span class="plk-calc__label">Počet studentů</span>
+                            <input type="number" class="plk-calc__input" id="plk-students" value="30" min="1" max="200">
+                        </div>
+                        <div class="plk-calc__result" id="plk-calc-result">
+                            <div class="plk-calc__result-item">
+                                <span class="plk-calc__result-label">Cena za tým</span>
+                                <span class="plk-calc__result-value" id="plk-r-per-team">390 Kč</span>
+                            </div>
+                            <div class="plk-calc__result-item">
+                                <span class="plk-calc__result-label">Celkem</span>
+                                <span class="plk-calc__result-value" id="plk-r-total">1 950 Kč</span>
+                            </div>
+                            <div class="plk-calc__result-item">
+                                <span class="plk-calc__result-label">Na studenta</span>
+                                <span class="plk-calc__result-value plk-calc__result-value--highlight" id="plk-r-per-student">65 Kč</span>
+                            </div>
+                        </div>
+                        <div class="plk-calc__order">
+                            <a class="button" id="plk-order-btn" href="mailto:info@hados.cz">Objednat</a>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Kdo za tím stojí -->
@@ -863,10 +1175,11 @@
                 <!-- CTA sekce -->
                 <div class="plk-cta">
                     <h2>Připraveni vyrazit?</h2>
+                    <p class="plk-cta__price">od 65&nbsp;Kč / student</p>
                     <a class="button"
                        href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2"
                        target="_blank" rel="noopener">
-                        Koupit kvíz pro 1&nbsp;tým – 990&nbsp;Kč
+                        Koupit kvíz
                     </a>
                     <p class="plk-cta__note">Chcete kvíz pro více týmů nebo máte otázky? Napište nám na <a href="mailto:info@hados.cz">info@hados.cz</a></p>
                 </div>
@@ -886,7 +1199,7 @@
 
 <!-- Sticky CTA – jen mobil -->
 <div class="plk-sticky-cta">
-    <a class="button" href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2" target="_blank" rel="noopener">Koupit kvíz – 990&nbsp;Kč</a>
+    <a class="button" href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2" target="_blank" rel="noopener">Koupit kvíz · od 65&nbsp;Kč / student</a>
 </div>
 
 <script type="text/javascript">
@@ -897,6 +1210,9 @@ var ef_string = {"ajax_url":"https:\/\/cestina20.cz\/wp-admin\/admin-ajax.php","
 <script src="https://cestina20.cz/wp-includes/js/hoverintent-js.min.js?ver=2.2.1"></script>
 <script src="https://cestina20.cz/wp-content/themes/cestina20/js/min/script.100.min.js?ver=145"></script>
 <script>
+    var vid = document.getElementById('plk-mockup-video');
+    if (vid) vid.playbackRate = 0.85;
+
     (function () {
         var hero = document.querySelector('.plk-hero');
         var sticky = document.querySelector('.plk-sticky-cta');
@@ -905,6 +1221,63 @@ var ef_string = {"ajax_url":"https:\/\/cestina20.cz\/wp-admin\/admin-ajax.php","
             sticky.classList.toggle('is-visible', !entries[0].isIntersecting);
         }, { threshold: 0 });
         observer.observe(hero);
+    })();
+
+    /* Konfigurátor týmů */
+    (function () {
+        var prices = [0, 990, 650, 510, 440, 390, 370, 350, 330, 320, 310];
+        var teamsEl = document.getElementById('plk-teams');
+        var studentsEl = document.getElementById('plk-students');
+        var minusBtn = document.getElementById('plk-teams-minus');
+        var plusBtn = document.getElementById('plk-teams-plus');
+        var perTeamEl = document.getElementById('plk-r-per-team');
+        var totalEl = document.getElementById('plk-r-total');
+        var perStudentEl = document.getElementById('plk-r-per-student');
+        var orderBtn = document.getElementById('plk-order-btn');
+
+        if (!teamsEl) return;
+
+        function fmt(n) {
+            return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
+        }
+
+        function update() {
+            var teams = parseInt(teamsEl.value, 10) || 1;
+            var students = parseInt(studentsEl.value, 10) || 1;
+            var pricePerTeam = prices[teams] || prices[prices.length - 1];
+            var total = pricePerTeam * teams;
+            var perStudent = Math.ceil(total / students);
+
+            perTeamEl.textContent = fmt(pricePerTeam) + ' Kč';
+            totalEl.textContent = fmt(total) + ' Kč';
+            perStudentEl.textContent = fmt(perStudent) + ' Kč';
+
+            var subject = encodeURIComponent('Objednávka Pražského literárního kvízu');
+            var body = encodeURIComponent(
+                'Dobrý den,\n\n' +
+                'chtěl/a bych objednat Pražský literární kvíz:\n\n' +
+                'Počet týmů: ' + teams + '\n' +
+                'Počet studentů: ' + students + '\n' +
+                'Cena za tým: ' + fmt(pricePerTeam) + ' Kč\n' +
+                'Celkem: ' + fmt(total) + ' Kč\n' +
+                'Na studenta: ' + fmt(perStudent) + ' Kč\n\n' +
+                'Děkuji.'
+            );
+            orderBtn.href = 'mailto:info@hados.cz?subject=' + subject + '&body=' + body;
+        }
+
+        minusBtn.addEventListener('click', function () {
+            var v = parseInt(teamsEl.value, 10) || 1;
+            if (v > 1) { teamsEl.value = v - 1; update(); }
+        });
+
+        plusBtn.addEventListener('click', function () {
+            var v = parseInt(teamsEl.value, 10) || 1;
+            if (v < 10) { teamsEl.value = v + 1; update(); }
+        });
+
+        studentsEl.addEventListener('input', update);
+        update();
     })();
 </script>
 </body>
