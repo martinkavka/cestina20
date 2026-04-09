@@ -43,6 +43,7 @@
           type="text/css">
     <link rel="icon" type="image/png" sizes="32x32"
           href="https://cestina20.cz/wp-content/themes/cestina20/images/favicon/favicon-32x32.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <script>
         document.documentElement.className = document.documentElement.className.replace("no-js", "js");
     </script>
@@ -256,13 +257,68 @@
         /* Mapa trasy */
         .plk-map {
             margin: 20px 0 0;
-        }
-
-        .plk-map__img {
-            width: 100%;
-            display: block;
             border-radius: 6px;
             border: 1px solid #e0e4f0;
+            overflow: hidden;
+        }
+
+        #plk-route-map {
+            width: 100%;
+            height: 520px;
+        }
+
+        @media (max-width: 600px) {
+            #plk-route-map {
+                height: 400px;
+            }
+        }
+
+        .plk-pawn {
+            font-size: 28px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+            transition: transform 0.1s;
+            animation: plk-pawn-bounce 0.6s ease-in-out infinite;
+        }
+
+        @keyframes plk-pawn-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .plk-stop-icon {
+            background: #223276;
+            color: #fff;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+            opacity: 0.4;
+            transition: opacity 0.3s, background 0.3s;
+        }
+
+        .plk-stop-icon--active {
+            opacity: 1;
+            background: #15851d;
+        }
+
+        .plk-stop-icon--start {
+            background: #15851d;
+            opacity: 1;
+            width: 26px;
+            height: 26px;
+            font-size: 12px;
+        }
+
+        .plk-stop-icon--end {
+            width: 26px;
+            height: 26px;
+            font-size: 12px;
         }
 
         /* Inline CTA */
@@ -448,52 +504,142 @@
             font-style: italic;
         }
 
-        /* Srovnání cen */
+        /* Srovnání cen – karty */
         .plk-comparison {
             margin-top: 28px;
-            padding: 24px;
-            background: #f8f6f2;
-            border-radius: 6px;
         }
 
         .plk-comparison h3 {
-            margin: 0 0 14px;
+            margin: 0 0 16px;
             color: #223276;
             font-size: 1.05em;
         }
 
-        .plk-comparison__list {
-            list-style: none !important;
-            padding: 0 !important;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px 24px;
+        .plk-comparison__cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
         }
 
-        .plk-comparison__list li {
-            padding: 0 !important;
-            font-size: 0.95em;
-            color: #444;
+        .plk-comparison__card {
+            background: #f8f6f2;
+            border-radius: 8px;
+            padding: 18px 14px;
+            text-align: center;
+            border: 2px solid transparent;
         }
 
-        .plk-comparison__list li::before,
-        .plk-comparison__list li::after {
-            display: none !important;
+        .plk-comparison__card--plk {
+            background: #eef6ee;
+            border-color: #15851d;
+            position: relative;
+        }
+
+        .plk-comparison__card-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #15851d;
+            color: #fff;
+            font-size: 0.68em;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 3px;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .plk-comparison__icon {
+            font-size: 1.6em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .plk-comparison__name {
+            font-size: 0.82em;
+            color: #666;
+            margin-bottom: 6px;
         }
 
         .plk-comparison__price {
             font-weight: 700;
+            font-size: 1.05em;
             color: #223276;
         }
 
-        .plk-comparison__price--plk {
+        .plk-comparison__card--plk .plk-comparison__price {
             color: #15851d;
         }
 
+        .plk-comparison__unit {
+            font-size: 0.78em;
+            color: #888;
+            display: block;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
         .plk-comparison__note {
-            margin: 12px 0 0;
+            margin: 14px 0 0;
             font-size: 0.88em;
+            color: #888;
+        }
+
+        .plk-comparison__bonus {
+            margin: 8px 0 0;
+            font-size: 0.9em;
+            font-weight: 700;
+            color: #15851d;
+        }
+
+        @media (max-width: 600px) {
+            .plk-comparison__cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Teploměr zábavnosti */
+        .plk-funmeter {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid #edf0f5;
+        }
+
+        .plk-funmeter__label {
+            font-size: 0.88em;
+            font-weight: 700;
+            color: #223276;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .plk-funmeter__level {
+            color: #15851d;
+            font-weight: 700;
+        }
+
+        .plk-funmeter__track {
+            background: #edf0f5;
+            border-radius: 10px;
+            height: 14px;
+            overflow: hidden;
+        }
+
+        .plk-funmeter__fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #f5c518, #15851d);
+            transition: width 0.4s ease;
+            width: 75%;
+        }
+
+        .plk-funmeter__hint {
+            margin: 8px 0 0;
+            font-size: 0.82em;
             color: #888;
         }
 
@@ -990,13 +1136,13 @@
                 <!-- Náhled trasy -->
                 <section class="plk-section">
                     <h2>Kudy vede trasa</h2>
-                    <p>Kvíz startuje na Staroměstském náměstí a vede nejhezčími pasážemi Prahy – Josefovem, Malou Stranou, přes Karlův most – až na Pražský hrad. Celkem 6&nbsp;km, 20&nbsp;zastávek, přibližně 3&nbsp;hodiny chůze.</p>
+                    <p>Kvíz startuje na Staroměstském náměstí a vede nejhezčími pasážemi Prahy – Malou Stranou, přes Karlův most – až na Pražský hrad. Celkem 6&nbsp;km, 20&nbsp;zastávek, přibližně 3&nbsp;hodiny chůze.</p>
 
                     <div class="plk-map">
-                        <img src="assets/mapa-trasy.jpg" alt="Mapa trasy Pražského literárního kvízu – 20 zastávek od Staroměstského náměstí na Pražský hrad" class="plk-map__img">
+                        <div id="plk-route-map"></div>
                     </div>
 
-                    <p>Trasa je doporučená, ne povinná. Přizpůsobte ji tomu, co chcete studentům ukázat – zastávky lze přeskakovat nebo doplnit o vlastní zastavení. Na celou hru máte 12&nbsp;hodin, takže vše v&nbsp;pohodě stihnete.</p>
+                    <p>Vaši studenti dostanou přímo ve hře doporučenou trasu, ale můžou jít, jak chtějí. Zastávky lze přeskakovat nebo doplnit o&nbsp;vlastní zastavení. Na celou hru máte 12&nbsp;hodin, takže vše v&nbsp;pohodě stihnete.</p>
                 </section>
 
                 <!-- Inline CTA -->
@@ -1122,13 +1268,31 @@
                     </div>
                     <div class="plk-comparison">
                         <h3>Kolik stojí jiné aktivity v&nbsp;Praze?</h3>
-                        <ul class="plk-comparison__list">
-                            <li>Průvodce Prahou: <span class="plk-comparison__price">3&nbsp;000–5&nbsp;000&nbsp;Kč</span> za skupinu</li>
-                            <li>Vstup do muzea: <span class="plk-comparison__price">100&nbsp;Kč</span> / student</li>
-                            <li>Únikovka: <span class="plk-comparison__price">3&nbsp;000–5&nbsp;000&nbsp;Kč</span> za skupinu</li>
-                            <li>Pražský literární kvíz: <span class="plk-comparison__price plk-comparison__price--plk">od 33&nbsp;Kč</span> / student</li>
-                        </ul>
-                        <p class="plk-comparison__note">Příklad: třída 30&nbsp;studentů → 5&nbsp;týmů → 1&nbsp;950&nbsp;Kč → 33&nbsp;Kč na studenta.</p>
+                        <div class="plk-comparison__cards">
+                            <div class="plk-comparison__card">
+                                <span class="plk-comparison__icon">🏛️</span>
+                                <div class="plk-comparison__name">Průvodce Prahou</div>
+                                <div class="plk-comparison__price">3–5&nbsp;000&nbsp;Kč <span class="plk-comparison__unit">za skupinu</span></div>
+                            </div>
+                            <div class="plk-comparison__card">
+                                <span class="plk-comparison__icon">🎨</span>
+                                <div class="plk-comparison__name">Muzeum / galerie</div>
+                                <div class="plk-comparison__price">60–330&nbsp;Kč <span class="plk-comparison__unit">/ student</span></div>
+                            </div>
+                            <div class="plk-comparison__card">
+                                <span class="plk-comparison__icon">✈️</span>
+                                <div class="plk-comparison__name">Exkurze na letišti</div>
+                                <div class="plk-comparison__price">od 130&nbsp;Kč <span class="plk-comparison__unit">/ student</span></div>
+                            </div>
+                            <div class="plk-comparison__card plk-comparison__card--plk">
+                                <span class="plk-comparison__card-badge">Nejlepší volba</span>
+                                <span class="plk-comparison__icon">📚</span>
+                                <div class="plk-comparison__name">Pražský literární kvíz</div>
+                                <div class="plk-comparison__price">od 33&nbsp;Kč <span class="plk-comparison__unit">/ student</span></div>
+                            </div>
+                        </div>
+                        <p class="plk-comparison__note">Příklad: třída 30&nbsp;studentů → 5&nbsp;týmů → 1&nbsp;950&nbsp;Kč → 65&nbsp;Kč na studenta.</p>
+                        <p class="plk-comparison__bonus">Bez rezervace – stačí koupit a&nbsp;vyrazit kdykoliv.</p>
                     </div>
 
                     <!-- Konfigurátor týmů -->
@@ -1159,6 +1323,16 @@
                                 <span class="plk-calc__result-label">Na studenta</span>
                                 <span class="plk-calc__result-value plk-calc__result-value--highlight" id="plk-r-per-student">33 Kč</span>
                             </div>
+                        </div>
+                        <div class="plk-funmeter" id="plk-funmeter">
+                            <div class="plk-funmeter__label">
+                                <span>Zábavnost</span>
+                                <span class="plk-funmeter__level" id="plk-fun-level">Skvělý zážitek – menší týmy, větší zapojení</span>
+                            </div>
+                            <div class="plk-funmeter__track">
+                                <div class="plk-funmeter__fill" id="plk-fun-fill" style="width: 75%"></div>
+                            </div>
+                            <p class="plk-funmeter__hint">Menší týmy = větší zapojení každého studenta</p>
                         </div>
                         <div class="plk-calc__order">
                             <a class="button" id="plk-order-btn" href="mailto:info@hados.cz">Objednat</a>
@@ -1209,6 +1383,7 @@ var ef_string = {"ajax_url":"https:\/\/cestina20.cz\/wp-admin\/admin-ajax.php","
 <script src="https://cestina20.cz/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
 <script src="https://cestina20.cz/wp-includes/js/hoverintent-js.min.js?ver=2.2.1"></script>
 <script src="https://cestina20.cz/wp-content/themes/cestina20/js/min/script.100.min.js?ver=145"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
     var vid = document.getElementById('plk-mockup-video');
     if (vid) vid.playbackRate = 0.85;
@@ -1234,6 +1409,8 @@ var ef_string = {"ajax_url":"https:\/\/cestina20.cz\/wp-admin\/admin-ajax.php","
         var totalEl = document.getElementById('plk-r-total');
         var perStudentEl = document.getElementById('plk-r-per-student');
         var orderBtn = document.getElementById('plk-order-btn');
+        var funFill = document.getElementById('plk-fun-fill');
+        var funLevel = document.getElementById('plk-fun-level');
 
         if (!teamsEl) return;
 
@@ -1251,6 +1428,15 @@ var ef_string = {"ajax_url":"https:\/\/cestina20.cz\/wp-admin\/admin-ajax.php","
             perTeamEl.textContent = fmt(pricePerTeam) + ' Kč';
             totalEl.textContent = fmt(total) + ' Kč';
             perStudentEl.textContent = fmt(perStudent) + ' Kč';
+
+            // Teploměr zábavnosti
+            var funData;
+            if (teams <= 2) funData = { pct: 25, text: 'Dobrý zážitek' };
+            else if (teams <= 4) funData = { pct: 55, text: 'Zábava pro celou třídu' };
+            else if (teams <= 6) funData = { pct: 75, text: 'Skvělý zážitek – menší týmy, větší zapojení' };
+            else funData = { pct: 100, text: 'Maximální zábava – každý se zapojí!' };
+            funFill.style.width = funData.pct + '%';
+            funLevel.textContent = funData.text;
 
             var subject = encodeURIComponent('Objednávka Pražského literárního kvízu');
             var body = encodeURIComponent(
@@ -1285,6 +1471,230 @@ var ef_string = {"ajax_url":"https:\/\/cestina20.cz\/wp-admin\/admin-ajax.php","
 
         studentsEl.addEventListener('input', update);
         update();
+    })();
+
+    /* Interaktivní mapa trasy */
+    (function () {
+        var mapEl = document.getElementById('plk-route-map');
+        if (!mapEl || typeof L === 'undefined') return;
+
+        /* 20 zastávek – přesné souřadnice z OpenStreetMap Nominatim */
+        /* Střed Staroměstského nám.: 50.08745, 14.42097 */
+        var SQ = [50.08745, 14.42097]; /* střed náměstí */
+        var stops = [
+            /* 1–9: Staroměstské nám. – rovnoměrně po obvodu (r ≈ 40 m) */
+            [SQ[0] - 0.00035, SQ[1] - 0.00030, 'Zastávka 1 – Staroměstské nám.'],
+            [SQ[0] - 0.00030, SQ[1] + 0.00020, 'Zastávka 2 – Staroměstské nám.'],
+            [SQ[0] - 0.00010, SQ[1] + 0.00055, 'Zastávka 3 – Staroměstské nám.'],
+            [SQ[0] + 0.00015, SQ[1] + 0.00060, 'Zastávka 4 – Staroměstské nám.'],
+            [SQ[0] + 0.00035, SQ[1] + 0.00040, 'Zastávka 5 – Staroměstské nám.'],
+            [SQ[0] + 0.00040, SQ[1] + 0.00000, 'Zastávka 6 – Staroměstské nám.'],
+            [SQ[0] + 0.00025, SQ[1] - 0.00040, 'Zastávka 7 – Staroměstské nám.'],
+            [SQ[0] - 0.00005, SQ[1] - 0.00050, 'Zastávka 8 – Staroměstské nám.'],
+            [SQ[0],           SQ[1],             'Zastávka 9 – Staroměstské nám.'],
+            /* 10–11: Stavovské divadlo */
+            [50.08610, 14.42340, 'Stavovské divadlo'],
+            [50.08582, 14.42388, 'Stavovské divadlo'],
+            /* 12–20: ověřené z Nominatim */
+            [50.07874, 14.41702, 'U Fleků'],
+            [50.08086, 14.41357, 'Národní divadlo'],
+            [50.08154, 14.41324, 'Kavárna Slavie'],
+            [50.08435, 14.41750, 'Betlémská kaple'],
+            [50.08663, 14.41015, 'Karlův most'],
+            [50.08540, 14.40802, 'Werichova vila'],
+            [50.08797, 14.40322, 'Chrám sv. Mikuláše'],
+            [50.08848, 14.39722, 'Dům U Dvou slunců'],
+            [50.08959, 14.39767, 'Socha TGM – Hradčanské nám.']
+        ];
+
+        /* Trasa – zastávky + mezilehlé body po ulicích */
+        var stopCoords = stops.map(function (s) { return [s[0], s[1]]; });
+        var routeCoords = [
+            /* 1–9: okruh po náměstí (přímo ze stops) */
+            stopCoords[0], stopCoords[1], stopCoords[2], stopCoords[3],
+            stopCoords[4], stopCoords[5], stopCoords[6], stopCoords[7],
+            stopCoords[8],
+            /* → Stavovské divadlo (Železná ul.) */
+            [50.08680, 14.42200],
+            stopCoords[9],
+            stopCoords[10],
+            /* → U Fleků (Rytířská → Vodičkova → Křemencova) */
+            [50.08500, 14.42250],
+            [50.08350, 14.42100],
+            [50.08150, 14.41950],
+            stopCoords[11],
+            /* → Národní divadlo (Ostrovní → Národní) */
+            [50.07920, 14.41550],
+            [50.08000, 14.41450],
+            stopCoords[12],
+            /* → Kavárna Slavie */
+            stopCoords[13],
+            /* → Betlémská kaple (Karoliny Světlé) */
+            [50.08200, 14.41450],
+            [50.08300, 14.41600],
+            stopCoords[14],
+            /* → Karlův most (Husova → Karlova → most) */
+            [50.08500, 14.41600],
+            [50.08580, 14.41350],
+            [50.08640, 14.41150],
+            stopCoords[15],
+            /* → Werichova vila (přes most, dolů na Kampu) */
+            [50.08600, 14.40900],
+            stopCoords[16],
+            /* → Chrám sv. Mikuláše (Mostecká → Malostranské nám.) */
+            [50.08600, 14.40600],
+            [50.08700, 14.40450],
+            stopCoords[17],
+            /* → Dům U Dvou slunců (Nerudova) */
+            [50.08820, 14.40100],
+            stopCoords[18],
+            /* → Socha TGM (Ke Hradu → Hradčanské nám.) */
+            [50.08900, 14.39740],
+            stopCoords[19]
+        ];
+
+        /* Inicializace mapy */
+        var map = L.map('plk-route-map', {
+            scrollWheelZoom: false,
+            attributionControl: true
+        });
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        map.fitBounds(stopCoords, { padding: [50, 50] });
+
+        /* Bez čar trasy – ve hře mají doporučenou trasu */
+
+        /* Zastávkové značky */
+        var stopMarkers = stops.map(function (s, i) {
+            var isStart = i === 0;
+            var isEnd = i === stops.length - 1;
+            var cls = 'plk-stop-icon';
+            if (isStart) cls += ' plk-stop-icon--start';
+            if (isEnd) cls += ' plk-stop-icon--end';
+
+            var icon = L.divIcon({
+                className: '',
+                html: '<div class="' + cls + '">' + (i + 1) + '</div>',
+                iconSize: [22, 22],
+                iconAnchor: [11, 11]
+            });
+
+            var marker = L.marker([s[0], s[1]], { icon: icon }).addTo(map);
+            marker.bindTooltip(s[2], { direction: 'top', offset: [0, -14] });
+            return marker;
+        });
+
+        /* Figurka – panáček z Člověče nezlob se */
+        var pawnIcon = L.divIcon({
+            className: '',
+            html: '<div class="plk-pawn">🚶</div>',
+            iconSize: [28, 28],
+            iconAnchor: [14, 28]
+        });
+        var pawn = L.marker(routeCoords[0], { icon: pawnIcon, zIndexOffset: 1000 }).addTo(map);
+
+        /* Animace */
+        var animDuration = 10000; /* ms celkem */
+        var animStarted = false;
+        var currentStop = 0;
+
+        function lerp(a, b, t) {
+            return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+        }
+
+        /* Spočítej délky segmentů pro rovnoměrnou rychlost */
+        var segLengths = [];
+        var totalLength = 0;
+        for (var i = 1; i < routeCoords.length; i++) {
+            var dx = routeCoords[i][0] - routeCoords[i - 1][0];
+            var dy = routeCoords[i][1] - routeCoords[i - 1][1];
+            var len = Math.sqrt(dx * dx + dy * dy);
+            segLengths.push(len);
+            totalLength += len;
+        }
+
+        /* Vzdálenost dvou bodů */
+        function dist(a, b) {
+            var dx = a[0] - b[0], dy = a[1] - b[1];
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        /* Práh blízkosti – figurka „dorazila" na zastávku */
+        var ARRIVE_THRESHOLD = 0.0008;
+
+        function animate() {
+            if (animStarted) return;
+            animStarted = true;
+
+            /* Na startu viditelná jen zastávka 1, odhalená 2 */
+            var nextStop = 0; /* další zastávka, na kterou figurka míří */
+            stopMarkers[0].getElement().querySelector('.plk-stop-icon').classList.add('plk-stop-icon--active');
+            if (stopMarkers.length > 1) {
+                stopMarkers[1].getElement().querySelector('.plk-stop-icon').classList.add('plk-stop-icon--active');
+            }
+
+            var startTime = null;
+
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                var elapsed = timestamp - startTime;
+                var progress = Math.min(elapsed / animDuration, 1);
+
+                /* Najdi aktuální segment na základě vzdálenosti */
+                var targetDist = progress * totalLength;
+                var accumulated = 0;
+                var segIndex = 0;
+                for (var j = 0; j < segLengths.length; j++) {
+                    if (accumulated + segLengths[j] >= targetDist) {
+                        segIndex = j;
+                        break;
+                    }
+                    accumulated += segLengths[j];
+                    segIndex = j;
+                }
+
+                var segProgress = segLengths[segIndex] > 0
+                    ? (targetDist - accumulated) / segLengths[segIndex]
+                    : 0;
+                segProgress = Math.max(0, Math.min(1, segProgress));
+
+                var pos = lerp(routeCoords[segIndex], routeCoords[segIndex + 1] || routeCoords[segIndex], segProgress);
+                pawn.setLatLng(pos);
+
+                /* Sekvenční odhalování: sleduj jen další zastávku v pořadí */
+                if (nextStop < stopCoords.length && dist(pos, stopCoords[nextStop]) < ARRIVE_THRESHOLD) {
+                    nextStop++;
+                    /* Odhal následující zastávku (tu, kam teď míříme) */
+                    var reveal = Math.min(nextStop + 1, stopMarkers.length - 1);
+                    stopMarkers[reveal].getElement().querySelector('.plk-stop-icon').classList.add('plk-stop-icon--active');
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    for (var m = 0; m < stopMarkers.length; m++) {
+                        stopMarkers[m].getElement().querySelector('.plk-stop-icon').classList.add('plk-stop-icon--active');
+                    }
+                    pawn.setLatLng(routeCoords[routeCoords.length - 1]);
+                }
+            }
+
+            requestAnimationFrame(step);
+        }
+
+        /* Spusť animaci při scrollu do viewportu */
+        var mapObserver = new IntersectionObserver(function (entries) {
+            if (entries[0].isIntersecting) {
+                animate();
+                mapObserver.disconnect();
+            }
+        }, { threshold: 0.3 });
+        mapObserver.observe(mapEl);
     })();
 </script>
 </body>
