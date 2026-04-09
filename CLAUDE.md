@@ -25,7 +25,8 @@ cestina20/
 │       ├── ukazka-hry.MP4       # original screen recording (do not serve directly)
 │       ├── ukazka-hry-web.mp4   # compressed video for mockup (7.5 MB, h264/aac)
 │       ├── og-image.png         # OG image original (1200x630)
-│       └── og-image.jpg         # OG image optimized (200 KB)
+│       ├── og-image.jpg         # OG image optimized (200 KB)
+│       └── mapa-trasy.jpg       # route map screenshot (1900x1188, 625 KB) – no longer used in HTML, replaced by Leaflet map
 ├── generator-karet/         # Word card image generator (internal tool)
 │   └── index.html
 └── dalsi-projekt/           # future projects follow the same pattern
@@ -96,12 +97,14 @@ The theme JS (`script.100.min.js`) depends on jQuery and hoverintent. The `ef_st
 
 ## Phone mockup (PLK)
 
-The `.plk-mockup` CSS component simulates an iPhone frame around a video. Key values tuned for iPhone 14 screen recordings at 1170×2532 px displayed at 280px width:
+The `.plk-mockup` CSS component simulates an iPhone frame around a video. Key values tuned for iPhone 14 screen recordings at 1170×2532 px:
 
-- Mockup size: `280 × 606px` (matches iPhone 14 aspect ratio exactly)
-- `border-radius: 56px` — tuned to cover iPhone 14 screen corner radius and prevent light background bleeding through corners; do not reduce
+- Base mockup size: `280 × 606px`; large variant `.plk-mockup--large`: `320 × 693px`
+- `border-radius: 56px` on the frame — do not reduce
+- Video uses `clip-path: inset(2px 2px round 56px)` to prevent light background bleeding through corners. The 2px inset keeps the black border visually symmetric around the video
 - Video uses `autoplay loop muted playsinline` and `object-fit: cover`
-- Video playback rate set to `0.85` via JS (`document.getElementById('plk-mockup-video').playbackRate = 0.85`) to smooth out screen recording jitter
+- Video playback rate set to `0.85` via JS to smooth out screen recording jitter
+- The mockup is now in a standalone full-width section (`.plk-video-feature`) positioned right after "Rychlý přehled", not in a two-column layout
 
 ## Deployment
 
@@ -137,8 +140,36 @@ If a font still renders diacritics poorly despite this fix, remove it from `CZEC
 
 ## Product: Pražský literární kvíz (PLK)
 
-- CTA purchase link: `https://go.aharta.com/api.stripe.php?mode=game_activation&c=gE6I8RIGWM&g=2`
+- CTA purchase link (1 team): `https://go.aharta.com/api.stripe.php?mode=game_activation&c=gE6I8RIGWM&g=2`
 - Contact email: `info@hados.cz`
 - Created by Martin Kavka and Roman Věžník (Čeština 2.0)
-- Multi-team purchases are handled via email (no multi-team Stripe links yet)
-- Introductory pricing valid until 30. 6. 2026
+- Multi-team purchases are handled via email with a JS-powered team configurator (`#plk-calc`) that generates a `mailto:` link with order summary and invoice fields
+- Pricing: degressive per-team pricing (990 Kč for 1 team down to 310 Kč/team for 10 teams); key messaging uses "od 33 Kč / student" as the anchor price (example: 30 students → 5 teams → 1 950 Kč → 65 Kč/student)
+- Time limit: 12 hours (full day) — emphasize that there is no rush
+- Route: Staroměstské náměstí → Pražský hrad, 6 km, 20 stops, ~3 hours walking; route is recommended, not mandatory
+- Target audience for copy: **teachers** (they buy), not students (they play). Frame benefits for the decision-maker.
+- Key selling point vs. competition: no reservation needed — buy and go anytime
+
+### PLK page components
+
+- **Price comparison cards** (`.plk-comparison`): 4 cards in a row comparing PLK price with other Prague activities (tour guide, museum/gallery, airport excursion). PLK card highlighted green with "Nejlepší volba" badge. Below: "Bez rezervace" note in green.
+- **Fun meter** (`.plk-funmeter`): Animated progress bar inside `#plk-calc` that reacts to team count. More teams = higher bar + better label. Motivates splitting the class into smaller groups. Text: "Menší týmy = větší zapojení každého studenta".
+- **Interactive route map**: Leaflet.js map (CARTO Voyager tiles) replacing the static `mapa-trasy.jpg`. 20 numbered stop markers with GPS coordinates from OpenStreetMap Nominatim. Walking figure (🚶) animates along the route on scroll-into-view; stops light up sequentially as the figure arrives. No route lines drawn (they'd cut through buildings) — students get the recommended route in-game.
+
+### PLK route stops (exact GPS from Nominatim)
+
+1–9: Staroměstské náměstí (clustered around center 50.08745, 14.42097)
+10–11: Stavovské divadlo (50.08596, 14.42364)
+12: U Fleků (50.07874, 14.41702)
+13: Národní divadlo (50.08086, 14.41357)
+14: Kavárna Slavie (50.08154, 14.41324)
+15: Betlémská kaple (50.08435, 14.41750)
+16: Karlův most (50.08663, 14.41015)
+17: Werichova vila (50.08540, 14.40802)
+18: Chrám sv. Mikuláše (50.08797, 14.40322)
+19: Dům U Dvou slunců, Nerudova 47 (50.08848, 14.39722)
+20: Socha TGM – Hradčanské nám. (50.08959, 14.39767)
+
+### External JS dependencies (PLK)
+
+- **Leaflet 1.9.4** — loaded from unpkg CDN (CSS + JS) with SRI hashes. Used for the interactive route map only. `scrollWheelZoom: false` to prevent hijacking page scroll.
