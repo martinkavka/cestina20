@@ -509,10 +509,17 @@
             margin-top: 28px;
         }
 
-        .plk-comparison h3 {
+        .plk-comparison h3,
+        .plk-config h3 {
             margin: 0 0 16px;
             color: #223276;
             font-size: 1.05em;
+        }
+        .plk-config {
+            margin-top: 28px;
+        }
+        .plk-config__lead {
+            margin: 0 0 4px;
         }
 
         .plk-comparison__cards {
@@ -601,48 +608,6 @@
         }
 
         /* Teploměr zábavnosti */
-        .plk-funmeter {
-            margin-top: 20px;
-            padding-top: 18px;
-            border-top: 1px solid #edf0f5;
-        }
-
-        .plk-funmeter__label {
-            font-size: 0.88em;
-            font-weight: 700;
-            color: #223276;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .plk-funmeter__level {
-            color: #15851d;
-            font-weight: 700;
-        }
-
-        .plk-funmeter__track {
-            background: #edf0f5;
-            border-radius: 10px;
-            height: 14px;
-            overflow: hidden;
-        }
-
-        .plk-funmeter__fill {
-            height: 100%;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #f5c518, #15851d);
-            transition: width 0.4s ease;
-            width: 75%;
-        }
-
-        .plk-funmeter__hint {
-            margin: 8px 0 0;
-            font-size: 0.82em;
-            color: #888;
-        }
-
         .plk-map + p {
             margin-top: 16px;
         }
@@ -679,150 +644,7 @@
             line-height: 1.5;
         }
 
-        /* Konfigurátor týmů */
-        .plk-calc {
-            background: #f7f8fb;
-            border: 1px solid #e0e4f0;
-            border-radius: 6px;
-            padding: 28px 24px;
-            margin-top: 24px;
-        }
-
-        .plk-calc h3 {
-            margin: 0 0 20px;
-            color: #223276;
-            font-size: 1.15em;
-        }
-
-        .plk-calc__row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .plk-calc__label {
-            flex: 0 0 160px;
-            font-size: 0.95em;
-            color: #444;
-        }
-
-        .plk-calc__stepper {
-            display: flex;
-            align-items: center;
-            gap: 0;
-        }
-
-        .plk-calc__btn {
-            width: 36px;
-            height: 36px;
-            border: 1px solid #c8d0f0;
-            background: #fff;
-            color: #223276;
-            font-size: 1.2em;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.15s;
-        }
-
-        .plk-calc__btn:hover {
-            background: #e8ecff;
-        }
-
-        .plk-calc__btn:first-child {
-            border-radius: 4px 0 0 4px;
-        }
-
-        .plk-calc__btn:last-child {
-            border-radius: 0 4px 4px 0;
-        }
-
-        .plk-calc__value {
-            width: 52px;
-            height: 36px;
-            border: 1px solid #c8d0f0;
-            border-left: none;
-            border-right: none;
-            text-align: center;
-            font-size: 1em;
-            font-weight: 700;
-            color: #223276;
-            background: #fff;
-        }
-
-        .plk-calc__input {
-            width: 80px;
-            height: 36px;
-            border: 1px solid #c8d0f0;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 1em;
-            color: #223276;
-            padding: 0 8px;
-        }
-
-        .plk-calc__result {
-            background: #fff;
-            border: 1px solid #e0e4f0;
-            border-radius: 6px;
-            padding: 16px 20px;
-            margin-top: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px 32px;
-        }
-
-        .plk-calc__result-item {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .plk-calc__result-label {
-            font-size: 0.8em;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-
-        .plk-calc__result-value {
-            font-size: 1.25em;
-            font-weight: 700;
-            color: #223276;
-        }
-
-        .plk-calc__result-value--highlight {
-            color: #15851d;
-        }
-
-        .plk-calc__order {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .plk-calc__order .button {
-            font-size: 1em;
-            padding: 12px 28px;
-        }
-
         @media (max-width: 600px) {
-            .plk-calc__row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-            }
-
-            .plk-calc__label {
-                flex: none;
-            }
-
-            .plk-calc__result {
-                gap: 12px 20px;
-            }
-
             .plk-callout {
                 padding: 16px;
             }
@@ -1295,49 +1117,23 @@
                         <p class="plk-comparison__bonus">Bez rezervace – stačí koupit a&nbsp;vyrazit kdykoliv.</p>
                     </div>
 
-                    <!-- Konfigurátor týmů -->
-                    <div class="plk-calc" id="plk-calc">
-                        <h3>Spočítejte si to pro svou třídu</h3>
-                        <div class="plk-calc__row">
-                            <span class="plk-calc__label">Počet týmů</span>
-                            <div class="plk-calc__stepper">
-                                <button type="button" class="plk-calc__btn" id="plk-teams-minus" aria-label="Méně týmů">&minus;</button>
-                                <input type="text" class="plk-calc__value" id="plk-teams" value="5" readonly>
-                                <button type="button" class="plk-calc__btn" id="plk-teams-plus" aria-label="Více týmů">+</button>
-                            </div>
-                        </div>
-                        <div class="plk-calc__row">
-                            <span class="plk-calc__label">Počet studentů</span>
-                            <input type="number" class="plk-calc__input" id="plk-students" value="30" min="1" max="200">
-                        </div>
-                        <div class="plk-calc__result" id="plk-calc-result">
-                            <div class="plk-calc__result-item">
-                                <span class="plk-calc__result-label">Cena za tým</span>
-                                <span class="plk-calc__result-value" id="plk-r-per-team">390 Kč</span>
-                            </div>
-                            <div class="plk-calc__result-item">
-                                <span class="plk-calc__result-label">Celkem</span>
-                                <span class="plk-calc__result-value" id="plk-r-total">1 950 Kč</span>
-                            </div>
-                            <div class="plk-calc__result-item">
-                                <span class="plk-calc__result-label">Na studenta</span>
-                                <span class="plk-calc__result-value plk-calc__result-value--highlight" id="plk-r-per-student">33 Kč</span>
-                            </div>
-                        </div>
-                        <div class="plk-funmeter" id="plk-funmeter">
-                            <div class="plk-funmeter__label">
-                                <span>Zábavnost</span>
-                                <span class="plk-funmeter__level" id="plk-fun-level">Skvělý zážitek – menší týmy, větší zapojení</span>
-                            </div>
-                            <div class="plk-funmeter__track">
-                                <div class="plk-funmeter__fill" id="plk-fun-fill" style="width: 75%"></div>
-                            </div>
-                            <p class="plk-funmeter__hint">Menší týmy = větší zapojení každého studenta</p>
-                        </div>
-                        <div class="plk-calc__order">
-                            <a class="button" id="plk-order-btn" href="mailto:info@hados.cz">Objednat</a>
-                        </div>
+                    <!-- Konfigurátor týmů + objednávka (Benosaurus embed) -->
+                    <div class="plk-config">
+                        <h3>Objednáváte více týmů nebo potřebujete fakturu?</h3>
+                        <p class="plk-config__lead">Spočítejte si cenu pro svou třídu a&nbsp;rovnou si kvíz objednejte.</p>
+                        <iframe id="benosaurus-form"
+                                title="Konfigurátor a objednávka Pražského literárního kvízu"
+                                src="https://naveromag.cz/benosaurus/objednavka/plk1-8d005281?embed=1&amp;compact=1"
+                                loading="lazy"
+                                style="width: 100%; border: none; overflow: hidden; margin: 8px 0 0;"></iframe>
                     </div>
+                    <script>
+                        window.addEventListener('message', function (e) {
+                            if (e.data && e.data.type === 'benosaurus-resize') {
+                                document.getElementById('benosaurus-form').style.height = e.data.height + 'px';
+                            }
+                        });
+                    </script>
                 </section>
 
                 <!-- Kdo za tím stojí -->
@@ -1355,7 +1151,7 @@
                        target="_blank" rel="noopener">
                         Koupit kvíz
                     </a>
-                    <p class="plk-cta__note">Chcete kvíz pro více týmů nebo máte otázky? Napište nám na <a href="mailto:info@hados.cz">info@hados.cz</a></p>
+                    <p class="plk-cta__note">Rychlá platba kartou pro jeden tým. Objednáváte pro víc týmů nebo potřebujete fakturu? <a href="#benosaurus-form">Použijte konfigurátor výš</a>. Otázky? <a href="mailto:info@hados.cz">info@hados.cz</a></p>
                 </div>
 
             </div><!-- .content__list -->
@@ -1396,81 +1192,6 @@ var ef_string = {"ajax_url":"https:\/\/cestina20.cz\/wp-admin\/admin-ajax.php","
             sticky.classList.toggle('is-visible', !entries[0].isIntersecting);
         }, { threshold: 0 });
         observer.observe(hero);
-    })();
-
-    /* Konfigurátor týmů */
-    (function () {
-        var prices = [0, 990, 650, 510, 440, 390, 370, 350, 330, 320, 310];
-        var teamsEl = document.getElementById('plk-teams');
-        var studentsEl = document.getElementById('plk-students');
-        var minusBtn = document.getElementById('plk-teams-minus');
-        var plusBtn = document.getElementById('plk-teams-plus');
-        var perTeamEl = document.getElementById('plk-r-per-team');
-        var totalEl = document.getElementById('plk-r-total');
-        var perStudentEl = document.getElementById('plk-r-per-student');
-        var orderBtn = document.getElementById('plk-order-btn');
-        var funFill = document.getElementById('plk-fun-fill');
-        var funLevel = document.getElementById('plk-fun-level');
-
-        if (!teamsEl) return;
-
-        function fmt(n) {
-            return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
-        }
-
-        function update() {
-            var teams = parseInt(teamsEl.value, 10) || 1;
-            var students = parseInt(studentsEl.value, 10) || 1;
-            var pricePerTeam = prices[teams] || prices[prices.length - 1];
-            var total = pricePerTeam * teams;
-            var perStudent = Math.ceil(total / students);
-
-            perTeamEl.textContent = fmt(pricePerTeam) + ' Kč';
-            totalEl.textContent = fmt(total) + ' Kč';
-            perStudentEl.textContent = fmt(perStudent) + ' Kč';
-
-            // Teploměr zábavnosti
-            var funData;
-            if (teams <= 2) funData = { pct: 25, text: 'Dobrý zážitek' };
-            else if (teams <= 4) funData = { pct: 55, text: 'Zábava pro celou třídu' };
-            else if (teams <= 6) funData = { pct: 75, text: 'Skvělý zážitek – menší týmy, větší zapojení' };
-            else funData = { pct: 100, text: 'Maximální zábava – každý se zapojí!' };
-            funFill.style.width = funData.pct + '%';
-            funLevel.textContent = funData.text;
-
-            var subject = encodeURIComponent('Objednávka Pražského literárního kvízu');
-            var body = encodeURIComponent(
-                'Dobrý den,\n\n' +
-                'chtěl/a bych objednat Pražský literární kvíz a zároveň požádat o vystavení zálohové faktury.\n\n' +
-                '--- Objednávka ---\n' +
-                'Počet týmů: ' + teams + '\n' +
-                'Počet studentů: ' + students + '\n' +
-                'Cena za tým: ' + fmt(pricePerTeam) + ' Kč\n' +
-                'Celkem: ' + fmt(total) + ' Kč\n' +
-                'Na studenta: ' + fmt(perStudent) + ' Kč\n\n' +
-                '--- Doplňte prosím vaše fakturační údaje ---\n' +
-                'Název školy / organizace: \n' +
-                'IČO: \n' +
-                'Adresa: \n' +
-                'Kontaktní osoba: \n' +
-                'Telefon: \n\n' +
-                'Děkuji.'
-            );
-            orderBtn.href = 'mailto:info@hados.cz?subject=' + subject + '&body=' + body;
-        }
-
-        minusBtn.addEventListener('click', function () {
-            var v = parseInt(teamsEl.value, 10) || 1;
-            if (v > 1) { teamsEl.value = v - 1; update(); }
-        });
-
-        plusBtn.addEventListener('click', function () {
-            var v = parseInt(teamsEl.value, 10) || 1;
-            if (v < 10) { teamsEl.value = v + 1; update(); }
-        });
-
-        studentsEl.addEventListener('input', update);
-        update();
     })();
 
     /* Interaktivní mapa trasy */
