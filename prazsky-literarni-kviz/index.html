@@ -509,17 +509,13 @@
             margin-top: 28px;
         }
 
-        .plk-comparison h3,
-        .plk-config h3 {
+        .plk-comparison h3 {
             margin: 0 0 16px;
             color: #223276;
             font-size: 1.05em;
         }
         .plk-config {
             margin-top: 28px;
-        }
-        .plk-config__lead {
-            margin: 0 0 4px;
         }
 
         .plk-comparison__cards {
@@ -659,40 +655,6 @@
             margin-top: 0;
         }
 
-        /* CTA blok na konci */
-        .plk-cta {
-            background: #f0f3ff;
-            border: 1px solid #c8d0f0;
-            border-radius: 6px;
-            padding: 32px 28px;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .plk-cta h2 {
-            margin-top: 0;
-            color: #223276;
-        }
-
-        .plk-cta .button {
-            font-size: 1.05em;
-            padding: 14px 28px;
-        }
-
-        .plk-cta__price {
-            font-size: 1.15em;
-            color: #223276;
-            font-weight: 700;
-            margin: 0 0 16px;
-        }
-
-        .plk-cta__note {
-            font-size: 0.88em;
-            color: #666;
-            margin-top: 16px;
-            margin-bottom: 0;
-        }
-
         /* Obal pro horizontální scroll tabulky na mobilu */
         .plk-table-wrap {
             overflow-x: auto;
@@ -705,7 +667,6 @@
             .plk-hero { padding: 40px 15px 36px; }
             .plk-table { min-width: 480px; }
             .plk-table th, .plk-table td { padding: 8px 9px; font-size: 0.88em; }
-            .plk-cta { padding: 24px 16px; }
         }
     </style>
 </head>
@@ -1117,23 +1078,16 @@
                         <p class="plk-comparison__bonus">Bez rezervace – stačí koupit a&nbsp;vyrazit kdykoliv.</p>
                     </div>
 
-                    <!-- Konfigurátor týmů + objednávka (Benosaurus embed) -->
+                    <!-- Konfigurátor týmů + objednávka (Benosaurus JS widget v2 – sjednocený flow Stripe/faktura) -->
                     <div class="plk-config">
-                        <h3>Objednáváte více týmů nebo potřebujete fakturu?</h3>
-                        <p class="plk-config__lead">Spočítejte si cenu pro svou třídu a&nbsp;rovnou si kvíz objednejte.</p>
-                        <iframe id="benosaurus-form"
-                                title="Konfigurátor a objednávka Pražského literárního kvízu"
-                                src="https://naveromag.cz/benosaurus/objednavka/plk1-8d005281?embed=1&amp;compact=1"
-                                loading="lazy"
-                                style="width: 100%; border: none; overflow: hidden; margin: 8px 0 0;"></iframe>
+                        <div data-benosaurus-kviz="plk1-8d005281"
+                             data-font="inherit"
+                             data-accent="#319f39"
+                             data-bare="1"
+                             data-button-uppercase="1"
+                             data-button-shadow="0 1px 3px rgba(0, 0, 0, 0.35)"></div>
+                        <script src="https://benosaurus.pages.dev/embed/kviz.js" async></script>
                     </div>
-                    <script>
-                        window.addEventListener('message', function (e) {
-                            if (e.data && e.data.type === 'benosaurus-resize') {
-                                document.getElementById('benosaurus-form').style.height = e.data.height + 'px';
-                            }
-                        });
-                    </script>
                 </section>
 
                 <!-- Kdo za tím stojí -->
@@ -1141,18 +1095,6 @@
                     <h2>Kdo za tím stojí</h2>
                     <p>Pražský literární kvíz připravili Martin Kavka a&nbsp;Roman Věžník z&nbsp;<a href="https://cestina20.cz/o-cestine-2-0/">Češtiny 2.0</a> – slovníku, který tvoří samotní uživatelé už od roku 2008.</p>
                 </section>
-
-                <!-- CTA sekce -->
-                <div class="plk-cta">
-                    <h2>Připraveni vyrazit?</h2>
-                    <p class="plk-cta__price">od 33&nbsp;Kč / student</p>
-                    <a class="button"
-                       href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2"
-                       target="_blank" rel="noopener">
-                        Koupit kvíz
-                    </a>
-                    <p class="plk-cta__note">Rychlá platba kartou pro jeden tým. Objednáváte pro víc týmů nebo potřebujete fakturu? <a href="#benosaurus-form">Použijte konfigurátor výš</a>. Otázky? <a href="mailto:info@hados.cz">info@hados.cz</a></p>
-                </div>
 
             </div><!-- .content__list -->
         </div><!-- .content__inner -->

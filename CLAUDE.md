@@ -140,11 +140,9 @@ If a font still renders diacritics poorly despite this fix, remove it from `CZEC
 
 ## Product: Pražský literární kvíz (PLK)
 
-- CTA purchase link (1 team): `https://go.aharta.com/api.stripe.php?mode=game_activation&c=gE6I8RIGWM&g=2`
 - Contact email: `info@hados.cz`
 - Created by Martin Kavka and Roman Věžník (Čeština 2.0)
-- Multi-team purchases (and single-team purchases requiring an invoice) are handled via a **Benosaurus iframe embed** (`https://naveromag.cz/benosaurus/objednavka/plk1-8d005281?embed=1&compact=1`). The embed contains the team/student calculator, fun meter, and the order form with automatic invoicing (including ARES autofill for IČO). Auto-resize is wired via `postMessage` (event type `benosaurus-resize`). Benosaurus is built by **Roman Věžník**; styling (colors, gradient, font) is configured in the Benosaurus admin, not in this repo. The embed is cross-origin – host CSS cannot reach inside
-- The Stripe CTA in the `.plk-cta` box at the bottom is the fast path for single-team card payment without invoice; the embed is the path for multi-team or invoice orders. Both CTAs coexist and link to each other (CTA box has an anchor link back to `#benosaurus-form`)
+- All purchases go through the **Benosaurus JS widget** (`https://benosaurus.pages.dev/embed/kviz.js`). The widget unifies both paths: for 1 team it shows a primary „Zaplatit kartou" (Stripe via aharta wrapper, URL configured in Benosaurus admin) with a secondary „Chci fakturu místo toho" link; for 2+ teams it shows a single „Objednat" button that opens the invoice form (with ARES autofill for IČO). Benosaurus is built by **Roman Věžník**. There is **no longer a separate `.plk-cta` Stripe button on the page** — the widget is the only purchase entry point. Styling of the widget (accent, gradient, font, uppercase/shadow on CTA, bare mode) is set via `data-*` attributes on the embed div plus Benosaurus admin
 - Pricing: degressive per-team pricing (990 Kč for 1 team down to 310 Kč/team for 10 teams); key messaging uses "od 33 Kč / student" as the anchor price (example: 30 students → 5 teams → 1 950 Kč → 65 Kč/student)
 - Time limit: 12 hours (full day) — emphasize that there is no rush
 - Route: Staroměstské náměstí → Pražský hrad, 6 km, 20 stops, ~3 hours walking; route is recommended, not mandatory
@@ -154,7 +152,7 @@ If a font still renders diacritics poorly despite this fix, remove it from `CZEC
 ### PLK page components
 
 - **Price comparison cards** (`.plk-comparison`): 4 cards in a row comparing PLK price with other Prague activities (tour guide, museum/gallery, airport excursion). PLK card highlighted green with "Nejlepší volba" badge. Below: "Bez rezervace" note in green.
-- **Benosaurus order embed** (`.plk-config` wrapper with `<iframe id="benosaurus-form">`): Sits right below the price comparison inside the same `.plk-section`. The `.plk-config h3` shares its CSS rule with `.plk-comparison h3` so both sub-sections look like siblings. The fun meter that used to live in custom `.plk-funmeter` is now rendered inside the embed itself – if you see references to `.plk-calc` or `.plk-funmeter` in old commits, that was the pre-Benosaurus custom implementation that was removed.
+- **Benosaurus order widget** (`.plk-config` wrapper around `<div data-benosaurus-kviz>`): Sits right below the price comparison inside the same `.plk-section`. Uses `data-bare="1"` so the widget renders without its own card chrome – the surrounding `.content__list` provides the card. `data-button-uppercase="1"` and `data-button-shadow="0 1px 3px rgba(0, 0, 0, 0.35)"` align the widget's CTA with the theme `.button`. The fun meter, team stepper, and order form all live inside the widget. If you see references to `.plk-calc`, `.plk-funmeter`, or a cross-origin iframe at `naveromag.cz` in older commits, those were prior implementations replaced by this JS widget.
 - **Interactive route map**: Leaflet.js map (CARTO Voyager tiles) replacing the static `mapa-trasy.jpg`. 20 numbered stop markers with GPS coordinates from OpenStreetMap Nominatim. Walking figure (🚶) animates along the route on scroll-into-view; stops light up sequentially as the figure arrives. No route lines drawn (they'd cut through buildings) — students get the recommended route in-game.
 
 ### PLK route stops (exact GPS from Nominatim)
@@ -174,4 +172,4 @@ If a font still renders diacritics poorly despite this fix, remove it from `CZEC
 ### External JS dependencies (PLK)
 
 - **Leaflet 1.9.4** — loaded from unpkg CDN (CSS + JS) with SRI hashes. Used for the interactive route map only. `scrollWheelZoom: false` to prevent hijacking page scroll.
-- **Benosaurus order embed** — cross-origin iframe from `naveromag.cz` with a small inline `postMessage` listener that reads `{ type: 'benosaurus-resize', height }` and syncs iframe height. Do not replace with the JS widget variant (`benosaurus.pages.dev/embed/kviz.js`) – it lacks the automatic invoicing flow.
+- **Benosaurus order widget** — JS from `benosaurus.pages.dev/embed/kviz.js` (async). Renders into the host DOM (same-origin), so host CSS can reach inside if needed. Supports `data-accent`, `data-font="inherit"`, `data-bare="1"`, `data-button-uppercase="1"`, `data-button-shadow="..."`. The Stripe card-payment URL is set in Benosaurus admin, not hardcoded here.
