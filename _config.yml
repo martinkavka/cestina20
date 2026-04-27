@@ -1,0 +1,5 @@
+# GitHub Pages (Jekyll) – vyloučit interní složky z buildu.
+# Soubory v těchto cestách jsou stále v gitu, ale nepublikují se
+# na https://martinkavka.github.io/cestina20/.
+exclude:
+  - prezentace
