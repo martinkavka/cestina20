@@ -29,6 +29,14 @@ cestina20/
 │       └── mapa-trasy.jpg       # route map screenshot (1900x1188, 625 KB) – no longer used in HTML, replaced by Leaflet map
 ├── generator-karet/         # Word card image generator (internal tool)
 │   └── index.html
+├── prezentace/              # HTML slide decks for talks
+│   ├── sdilene/             # shared deck CSS/JS + logo
+│   │   ├── deck.css
+│   │   ├── deck.js
+│   │   └── assets/logo-cestina20.svg
+│   └── jihlava-2026-04/     # one deck per talk
+│       ├── index.html
+│       └── speaker-notes.md # export to PDF for second monitor
 └── dalsi-projekt/           # future projects follow the same pattern
     ├── index.html
     └── assets/
@@ -174,3 +182,31 @@ If a font still renders diacritics poorly despite this fix, remove it from `CZEC
 - **Leaflet 1.9.4** — loaded from unpkg CDN (CSS + JS) with SRI hashes. Used for the interactive route map only. `scrollWheelZoom: false` to prevent hijacking page scroll.
 - **Benosaurus order iframe** — `<iframe src="https://benosaurus.cz/objednavka/plk1-8d005281?embed=1&teamy=1&studenti=30" allow="payment">`. Iframe je cross-origin (Benosaurus běží na `benosaurus.cz`, my na `cestina20.cz`/`martinkavka.github.io`), takže host CSS dovnitř nesahá – vzhled formuláře plně řídí Benosaurus admin (font Source Sans 3, accent zelená `#15851d`, gradient CTA `#319f39 → #15851d`, brand color `#223276`). Resize protokol: iframe posílá `postMessage({type: 'benosaurus-resize', height: <px>})`, parent posluchač nastavuje `iframe.style.height`. Pokud iframe začne dělat něco divného, problém je 99 % případů na Benosaurus straně – ping Roman, nehrabej do HTML.
 - **Benosaurus infrastructure note** — Roman migrated Benosaurus z Cloudflare Pages na Workers v dubnu 2026 a **18. 4. 2026** přesunul celou službu na vlastní doménu `benosaurus.cz` (prefix `/benosaurus/` zmizel, admin je na `https://benosaurus.cz/admin`). Produkční objednávkový formulář (přímo iframovatelný) je `https://benosaurus.cz/objednavka/plk1-8d005281?embed=1`; existuje také slim JS embed `https://benosaurus.cz/embed/kviz.js`, který renderuje malou kartu se sliderem a jediným tlačítkem „Objednat", po kliknutí otevírá ten samý formulář v modalu – my ho **nepoužíváme**, protože embed nezobrazuje teploměr zábavnosti ani Stripe/faktura split přímo na stránce (vše je až v modalu po kliku). Starší adresy (`benosaurus.pages.dev`, `benosaurus.veznik.workers.dev/benosaurus/...`, `naveromag.cz/benosaurus/...`) jsou historické — nepoužívat. Demo widgetu (Romanův playground): `https://benosaurus.cz/embed/kviz-demo`.
+
+## Prezentace (`/prezentace`)
+
+HTML slide decky pro přednášky Martina jménem Čeština 2.0. Každá přednáška = vlastní adresář (`prezentace/{kde-kdy}/`). Sdílené komponenty žijí v `prezentace/sdilene/`.
+
+- **Tech stack:** vanilla HTML/CSS/JS, žádný framework (Reveal.js apod.). Inter font z Google Fonts s fallbackem na systémový sans (offline-safe). Brand barvy jako na webu: navy `#223276`, zelený gradient `#15851d → #319f39`, žlutý akcent `#ffd233`.
+- **Logo:** `prezentace/sdilene/assets/logo-cestina20.svg` je lokální kopie z `https://cestina20.cz/wp-content/themes/cestina20/images/logo-new.svg`. Stažená pro offline prezentaci.
+- **Klávesové zkratky (v `deck.js`):** →/space/Enter další · ←/PageUp zpět · Home/End skok · F fullscreen · Esc ven. Klik kamkoli = další (kromě `.flip-card`, linků, `.no-advance`).
+- **Fragment reveals** přes `<element class="fragment">` – objeví se při dalším kroku místo skoku na další slide. Reset se děje při přechodu na další slide.
+- **Flip karty** přes `<div class="flip-card">` s `.flip-card__inner` + dvě `.flip-card__face`. Klik na kartičku toggluje `.flipped` (CSS 3D transform, 0,55 s). Nepostupuje slide.
+- **Speaker notes** žijí vedle HTML jako `speaker-notes.md`. Martin je exportuje do PDF pro druhý monitor. Číslování nadpisů v notes odpovídá pořadí slidů v HTML.
+- **Slide varianty** v `deck.css`: `.slide--title`, `.slide--section`, `.slide--hero`, `.slide--dark`, `.slide--green`. Plus `.center` (horizontal alignment, jen když je slide active). Specialita: `.slide.center` má specifickou specificitu, protože plain `.center` by přebilo `.slide { display: none }` a všechno by bylo vidět najednou – už vyřešeno, ale nedělat to znovu.
+- **Konvence textu na slidech** (platí i pro jakýkoli jiný marketing copy Čeština 2.0):
+  - **České uvozovky `„…"`** (U+201E + U+201C), ne `"…"` ani `"…"`.
+  - **En-dash `–`**, nikdy em-dash `—`.
+  - **`&nbsp;`** po jednohláskových předložkách a&nbsp;spojkách (a, i, k, o, s, u, v, z) a u čísel s jednotkami (`13&nbsp;%`, `100+&nbsp;let`).
+  - **Bez teček za nadpisy.** Nadpis není věta.
+  - **Neuvádět číslo slidu** (X/Y) na slajdech – `.counter` je v&nbsp;`deck.css` schovaný přes `display: none`. Pro orientaci Martina slouží hash v URL (`#12`).
+  - **U krátkých přednášek (pod hodinu) nedávat „I./II. kapitola"** – zní to jako celodenní maraton.
+  - **Jazyk tonem:** publikum rozhodne co říct („zvedněte ruku"). Plátno drží otázku/slovo, řečník vede dialog.
+
+## Contacts &amp; branding
+
+- **`ja@cestina20.cz`** – veřejná adresa Čeština 2.0. Používej na slajdech, marketingových materiálech, v kontaktních blocích.
+- **`kavka.martin@gmail.com`** – osobní git identity pro Vercel, **ne na veřejné materiály**.
+- **`info@hados.cz`** – kontakt pro PLK (viz výše).
+- **Kniha:** *Hacknutá čeština* (zmiňuj jako výstup projektu).
+- **ČUNDR** je finální český překlad modelu FUDGE (Frequency, Unobtrusiveness, Diversity, Generation of forms, Endurance). Starší pracovní zkratka ČPOTR se ještě občas objeví ve starých materiálech – nepoužívat.
