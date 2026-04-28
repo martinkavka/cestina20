@@ -116,13 +116,15 @@ The `.plk-mockup` CSS component simulates an iPhone frame around a video. Key va
 
 ## Deployment
 
-The repository is deployed via GitHub Pages at `https://martinkavka.github.io/cestina20/`. To update after changes:
+The repository is deployed via GitHub Pages at `https://martinkavka.github.io/cestina20/` (legacy Jekyll build z `main`, root path). To update after changes:
 ```bash
 git add .
 git commit -m "Popis změny"
 git push
 ```
 Pages update automatically within 1–2 minutes.
+
+**Pozor: tahle repa je veřejný Pages source.** Všechno, co se pushne na `main`, se publikuje na github.io. Nové adresáře, které mají zůstat interní (drafty, speaker notes, klientská data), se musí explicitně vyloučit přes `_config.yml` (Jekyll `exclude:` list) — `.gitignore` to neřeší, ten ovlivňuje jen tracking, ne publish. Aktuálně je `prezentace/` excludovaná, vše ostatní jde live. Před commitem nového adresáře si polož otázku: „má tohle být veřejně dostupné?". Pokud ne, doplň do `_config.yml` první.
 
 ## Header padding
 
@@ -160,7 +162,7 @@ If a font still renders diacritics poorly despite this fix, remove it from `CZEC
 ### PLK page components
 
 - **Price comparison cards** (`.plk-comparison`): 4 cards in a row comparing PLK price with other Prague activities (tour guide, museum/gallery, airport excursion). PLK card highlighted green with "Nejlepší volba" badge. Below: "Bez rezervace" note in green.
-- **Benosaurus order iframe** (`.plk-config` wrapper around `<iframe class="plk-config__iframe">`): Sits right below the price comparison inside the same `.plk-section`. Iframe se sám resizuje přes `postMessage({type: 'benosaurus-resize', height})` — listener v inline `<script>` po iframu nastavuje `iframe.style.height = max(640, height + 20)`. `allow="payment"` je nutné pro Stripe / Apple Pay. Initial query params `teamy=1&studenti=30` jsou jen výchozí stav (uživatel je posunem sliderů přepíše). Pokud uvidíš v starších commitech `.plk-calc`, `.plk-funmeter`, JS embed `data-benosaurus-kviz` nebo iframe na `naveromag.cz`, jsou to dřívější implementace nahrazené tímto Benosaurus iframem.
+- **Benosaurus order iframe** (`.plk-config` wrapper around `<iframe class="plk-config__iframe">`): Sits right below the price comparison inside the same `.plk-section`. Iframe má pevně CSS `height: 1100px; max-height: 1500px;` jako základ (vejde se do toho i rozbalený firemní formulář). Listener na `postMessage({type: 'benosaurus-resize', height})` z origin `https://benosaurus.cz` výšku jemně doladí, ale **vstup se klampuje** přes `Math.max(400, Math.min(1500, height))` a updatuje se jen když se hodnota liší o víc než 4 px od aktuální. **Bez tohoto klampování + tolerance** by docházelo k feedback loopu: body uvnitř iframu má `min-h-full`, takže `scrollHeight` roste s iframem, posílá vyšší hodnotu, iframe roste dál — donekonečna. Takže pozor, kdyby někdo chtěl protokol „zjednodušit" zpátky na `height + 20` (jak má původní `kviz.js` ve svém modal handleru), znova to vyletí. `allow="payment"` je nutné pro Stripe / Apple Pay. Initial query params `teamy=1&studenti=30` jsou jen výchozí stav (uživatel je posunem sliderů přepíše). Pokud uvidíš v starších commitech `.plk-calc`, `.plk-funmeter`, JS embed `data-benosaurus-kviz` nebo iframe na `naveromag.cz`, jsou to dřívější implementace nahrazené tímto Benosaurus iframem.
 - **Interactive route map**: Leaflet.js map (CARTO Voyager tiles) replacing the static `mapa-trasy.jpg`. 20 numbered stop markers with GPS coordinates from OpenStreetMap Nominatim. Walking figure (🚶) animates along the route on scroll-into-view; stops light up sequentially as the figure arrives. No route lines drawn (they'd cut through buildings) — students get the recommended route in-game.
 
 ### PLK route stops (exact GPS from Nominatim)
