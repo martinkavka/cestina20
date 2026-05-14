@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Přihlášení k newsletteru – Čeština 2.0 (návrh)</title>
+<link rel="stylesheet" href="https://cestina20.cz/wp-content/themes/cestina20/css/style.100.min.css?ver=145">
+<style>
+  /* =========================================================
+     Newsletter widget – samostatný snippet pro WordPress.
+     Pozn.: theme cestina20 si maluje vlastní bullety přes
+     `ul li::before/::after` + padding-left:30px a všem `button`
+     elementům dává `text-transform:uppercase` a stínování.
+     Proto:
+       – list = <div>, ne <ul>/<li> (theme bullety se nematchnou)
+       – tlačítko explicitně přebíjíme text-transform/box-shadow.
+     ========================================================= */
+  .nl-card {
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 28px 24px;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #1f2937;
+  }
+  .nl-card *, .nl-card *::before, .nl-card *::after { box-sizing: border-box; }
+
+  .nl-card__logo {
+    display: block;
+    width: 120px;
+    height: auto;
+    margin: 0 auto 16px;
+  }
+  .nl-card__title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #223276;
+    margin: 0 0 10px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .nl-card__lead {
+    font-size: 15px;
+    color: #4b5563;
+    line-height: 1.55;
+    margin: 0 0 16px;
+  }
+  .nl-card__list-wrap {
+    display: inline-block;
+    text-align: left;
+    margin: 0 0 16px;
+  }
+  .nl-card__list-intro {
+    font-size: 14px;
+    font-weight: 600;
+    color: #223276;
+    margin: 0 0 8px;
+    line-height: 1.4;
+  }
+  .nl-card__list {
+    margin: 0;
+    text-align: left;
+  }
+  .nl-card__list-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+    font-size: 15px;
+    color: #1f2937;
+    line-height: 1.4;
+  }
+  .nl-card__list-item::before {
+    content: "";
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #15851d;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3 8l3.5 3.5L13 5'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 12px;
+  }
+  .nl-card__count {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0 0 18px;
+  }
+  .nl-card__count strong { color: #223276; font-weight: 600; }
+
+  .nl-card__form { margin: 0; }
+  .nl-card__row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .nl-card__input,
+  .nl-card__button {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    margin: 0;
+    font: inherit;
+    font-size: 15px;
+    line-height: 1.2;
+    border-radius: 6px;
+    box-shadow: none;
+    text-transform: none;
+    text-decoration: none;
+    text-align: center;
+  }
+  .nl-card__input {
+    color: #1f2937;
+    background: #fff;
+    border: 2px solid #d1d5db;
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .nl-card__input:focus {
+    border-color: #319f39;
+    box-shadow: 0 0 0 3px rgba(49,159,57,0.18);
+  }
+  .nl-card__input::placeholder { color: #9ca3af; }
+  .nl-card__button {
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    background: linear-gradient(180deg, #319f39 0%, #15851d 100%);
+    border: 2px solid transparent;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: filter .15s ease, transform .05s ease, box-shadow .15s ease;
+  }
+  .nl-card__button:hover { filter: brightness(1.06); }
+  .nl-card__button:focus { outline: none; box-shadow: 0 0 0 3px rgba(49,159,57,0.35); }
+  .nl-card__button:active { transform: translateY(1px); }
+  .nl-card__button[disabled] { opacity: .65; cursor: progress; }
+
+  .nl-card__msg {
+    margin: 12px 0 0;
+    font-size: 13px;
+    line-height: 1.45;
+    text-align: left;
+  }
+  .nl-card__msg--error { color: #b91c1c; }
+  .nl-card__msg--success { color: #15851d; font-weight: 600; }
+  .nl-card__legal {
+    margin: 12px 0 0;
+    font-size: 12px;
+    color: #9ca3af;
+    line-height: 1.4;
+  }
+  .nl-card[data-nl-state="success"] .nl-card__row,
+  .nl-card[data-nl-state="success"] .nl-card__legal { display: none; }
+
+  /* ---------- Inline varianta (široké obsahové bloky) ---------- */
+  .nl-card--inline { text-align: left; padding: 32px; }
+  .nl-card--inline .nl-card__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 18px;
+  }
+  .nl-card--inline .nl-card__logo {
+    margin: 4px 0 0;
+    flex: 0 0 96px;
+    width: 96px;
+  }
+  .nl-card--inline .nl-card__title { margin: 0 0 8px; font-size: 22px; }
+  .nl-card--inline .nl-card__lead { margin: 0; }
+  .nl-card--inline .nl-card__list-wrap { display: block; margin: 0 0 18px; }
+  .nl-card--inline .nl-card__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+  .nl-card--inline .nl-card__list-item { padding: 0; font-size: 14px; }
+  .nl-card--inline .nl-card__count { display: none; }
+  .nl-card--inline .nl-card__row { flex-direction: row; gap: 10px; align-items: center; }
+  .nl-card--inline .nl-card__input { flex: 1 1 auto; width: auto; }
+  .nl-card--inline .nl-card__button { flex: 0 0 auto; width: auto; padding: 0 32px; }
+
+  @media (max-width: 560px) {
+    .nl-card--inline { padding: 26px; text-align: center; }
+    .nl-card--inline .nl-card__head { flex-direction: column; align-items: center; gap: 14px; }
+    .nl-card--inline .nl-card__logo { margin: 0; }
+    .nl-card--inline .nl-card__list { justify-content: center; }
+    .nl-card--inline .nl-card__row { flex-direction: column; }
+    .nl-card--inline .nl-card__input,
+    .nl-card--inline .nl-card__button { width: 100%; }
+  }
+
+  /* =========================================================
+     Demo stránka (mimo embed snippet)
+     ========================================================= */
+  body { background: #f4f4f4; }
+  .demo-page { max-width: 1100px; margin: 40px auto 80px; padding: 0 20px; }
+  .demo-page h1 { color: #223276; margin: 0 0 8px; font-size: 28px; }
+  .demo-page .lead { color: #4b5563; max-width: 720px; margin: 0 0 32px; line-height: 1.55; }
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 760px) { .demo-grid { grid-template-columns: 1fr; } }
+  .demo-col h2 { font-size: 18px; color: #223276; margin: 0 0 12px; font-weight: 600; }
+  .demo-col .note { font-size: 13px; color: #6b7280; margin: 12px 0 0; line-height: 1.5; }
+
+  .demo-section { margin-top: 56px; }
+  .demo-section h2 { font-size: 22px; color: #223276; margin: 0 0 12px; }
+  .demo-section p { color: #4b5563; line-height: 1.55; max-width: 720px; }
+  .demo-snippet textarea {
+    width: 100%;
+    min-height: 360px;
+    padding: 16px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #e5e7eb;
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    resize: vertical;
+    white-space: pre;
+  }
+  .demo-snippet .copy-bar { display: flex; gap: 8px; align-items: center; margin: 8px 0; }
+  .demo-snippet .copy-btn {
+    padding: 9px 18px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: #223276;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: none;
+    box-shadow: none;
+    margin: 0;
+    width: auto;
+  }
+  .demo-snippet .copy-btn:hover { background: #1a2660; }
+  .demo-snippet .copy-status { font-size: 13px; color: #15851d; font-weight: 600; }
+
+  .demo-cta-bg {
+    background: linear-gradient(180deg, #2d4ea8 0%, #223276 100%);
+    padding: 36px;
+    border-radius: 10px;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+<main class="demo-page">
+  <h1>Přihlášení k&nbsp;newsletteru – návrh v3</h1>
+  <p class="lead">Opraveno: bullets už nekolíduje s&nbsp;theme tečkami (přepnuto z&nbsp;<code>ul/li</code> na <code>div</code>), tlačítko není UPPERCASE ani s&nbsp;přebytečným stínem (přebito theme defaultů).</p>
+
+  <div class="demo-grid">
+    <section class="demo-col">
+      <h2>1. Sidebar (úzká, ~320&nbsp;px)</h2>
+
+      <div class="nl-card" data-nl-substack="cestina20">
+        <img class="nl-card__logo" src="assets/logo-cestina20.png" alt="Čeština 2.0" width="120" height="104">
+        <h3 class="nl-card__title">Buďte o&nbsp;slovo napřed</h3>
+        <p class="nl-card__lead">Každý všední den jedno vybrané slovo z&nbsp;Češtiny 2.0, se&nbsp;kterým zaperlíte před rodinou, přáteli i&nbsp;kolegy.</p>
+        <div class="nl-card__list-wrap">
+          <p class="nl-card__list-intro">Co dostanete:</p>
+          <div class="nl-card__list">
+            <div class="nl-card__list-item">Slovo dne</div>
+            <div class="nl-card__list-item">Definice</div>
+            <div class="nl-card__list-item">Příklad použití</div>
+          </div>
+        </div>
+        <p class="nl-card__count">Odebírá už přes <strong>1&nbsp;500 lidí</strong></p>
+        <form class="nl-card__form" novalidate>
+          <div class="nl-card__row">
+            <input class="nl-card__input" type="email" name="email" required placeholder="Zadejte svůj e-mail" autocomplete="email" aria-label="Váš e-mail">
+            <button class="nl-card__button" type="submit">Odebírat</button>
+          </div>
+          <p class="nl-card__msg nl-card__msg--error" hidden role="alert"></p>
+          <p class="nl-card__msg nl-card__msg--success" hidden>Hotovo! Mrkněte do&nbsp;schránky a&nbsp;potvrďte přihlášení – pak se vám brzo ozve první slovo.</p>
+          <p class="nl-card__legal">Posílá Martin Kavka, zakladatel slovníku Čeština&nbsp;2.0</p>
+        </form>
+      </div>
+      <p class="note">Plnošířkové vstupní pole i&nbsp;tlačítko, vše vystředěné. Logo 96&nbsp;px, fajfky v&nbsp;brand zelené.</p>
+    </section>
+
+    <section class="demo-col">
+      <h2>2. Obsahový blok (široký, <code>nl-card--inline</code>)</h2>
+
+      <div class="nl-card nl-card--inline" data-nl-substack="cestina20">
+        <div class="nl-card__head">
+          <img class="nl-card__logo" src="assets/logo-cestina20.png" alt="Čeština 2.0" width="96" height="83">
+          <div>
+            <h3 class="nl-card__title">Buďte o&nbsp;slovo napřed</h3>
+            <p class="nl-card__lead">Každý všední den jedno vybrané slovo, se&nbsp;kterým zaperlíte před rodinou, přáteli i&nbsp;kolegy. Už <strong>přes 1&nbsp;500 odběratelů</strong>.</p>
+          </div>
+        </div>
+        <div class="nl-card__list-wrap">
+          <p class="nl-card__list-intro">Co dostanete:</p>
+          <div class="nl-card__list">
+            <div class="nl-card__list-item">Slovo dne</div>
+            <div class="nl-card__list-item">Definice</div>
+            <div class="nl-card__list-item">Příklad použití</div>
+          </div>
+        </div>
+        <form class="nl-card__form" novalidate>
+          <div class="nl-card__row">
+            <input class="nl-card__input" type="email" name="email" required placeholder="Zadejte svůj e-mail" autocomplete="email" aria-label="Váš e-mail">
+            <button class="nl-card__button" type="submit">Odebírat</button>
+          </div>
+          <p class="nl-card__msg nl-card__msg--error" hidden role="alert"></p>
+          <p class="nl-card__msg nl-card__msg--success" hidden>Hotovo! Mrkněte do&nbsp;schránky a&nbsp;potvrďte přihlášení – pak se vám brzo ozve první slovo.</p>
+          <p class="nl-card__legal">Posílá Martin Kavka, zakladatel slovníku Čeština&nbsp;2.0</p>
+        </form>
+      </div>
+      <p class="note">Logo 84&nbsp;px vlevo, headline + popis vedle. Bullets v&nbsp;jedné řadě, vstup a&nbsp;tlačítko 48&nbsp;px stejně vysoké.</p>
+
+      <h2 style="margin-top: 32px;">3. Na barevném podkladu (CTA banner)</h2>
+      <p class="note" style="margin-bottom: 12px;">Karta zůstává bílá, pozadí může být brand navy / gradient / fotka.</p>
+      <div class="demo-cta-bg">
+        <div class="nl-card nl-card--inline" data-nl-substack="cestina20">
+          <div class="nl-card__head">
+            <img class="nl-card__logo" src="assets/logo-cestina20.png" alt="Čeština 2.0" width="96" height="83">
+            <div>
+              <h3 class="nl-card__title">Buďte o&nbsp;slovo napřed</h3>
+              <p class="nl-card__lead">Čeština má šmrnc, vtip i&nbsp;budoucnost. Posílejte si její nejlepší kousky každý všední den. Už <strong>přes 1&nbsp;500 odběratelů</strong>.</p>
+            </div>
+          </div>
+          <div class="nl-card__list-wrap">
+            <p class="nl-card__list-intro">Co dostanete:</p>
+            <div class="nl-card__list">
+              <div class="nl-card__list-item">Slovo dne</div>
+              <div class="nl-card__list-item">Definice</div>
+              <div class="nl-card__list-item">Příklad použití</div>
+            </div>
+          </div>
+          <form class="nl-card__form" novalidate>
+            <div class="nl-card__row">
+              <input class="nl-card__input" type="email" name="email" required placeholder="Zadejte svůj e-mail" autocomplete="email" aria-label="Váš e-mail">
+              <button class="nl-card__button" type="submit">Odebírat</button>
+            </div>
+            <p class="nl-card__msg nl-card__msg--error" hidden role="alert"></p>
+            <p class="nl-card__msg nl-card__msg--success" hidden>Hotovo! Mrkněte do&nbsp;schránky a&nbsp;potvrďte přihlášení – pak se vám brzo ozve první slovo.</p>
+            <p class="nl-card__legal">Posílá Martin Kavka, zakladatel slovníku Čeština&nbsp;2.0</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="demo-section demo-snippet">
+    <h2>Snippet pro&nbsp;WordPress</h2>
+    <p>Vlož jako blok „Vlastní HTML". Snippet je defenzivně psaný – přebíjí themové <code>button</code> i&nbsp;<code>ul li</code> defaulty, takže funguje stejně i&nbsp;uvnitř theme cestina20.</p>
+    <div class="copy-bar">
+      <button type="button" class="copy-btn" id="copyBtn">Zkopírovat snippet</button>
+      <span class="copy-status" id="copyStatus" hidden>Zkopírováno!</span>
+    </div>
+    <textarea id="snippetOut" readonly spellcheck="false"></textarea>
+  </section>
+</main>
+
+<!-- Embed šablona – obsah <template> se neexekuje, jen ho přečteme do textarea. -->
+<template id="nlSnippet"><!-- Newsletter Čeština 2.0 – přihlášení k odběru -->
+<div class="nl-card" data-nl-substack="cestina20">
+  <img class="nl-card__logo" src="data:image/png;base64,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" alt="Čeština 2.0" width="120" height="104">
+  <h3 class="nl-card__title">Buďte o&nbsp;slovo napřed</h3>
+  <p class="nl-card__lead">Každý všední den jedno vybrané slovo z&nbsp;Češtiny 2.0, se&nbsp;kterým zaperlíte před rodinou, přáteli i&nbsp;kolegy.</p>
+  <div class="nl-card__list-wrap">
+    <p class="nl-card__list-intro">Co dostanete:</p>
+    <div class="nl-card__list">
+      <div class="nl-card__list-item">Slovo dne</div>
+      <div class="nl-card__list-item">Definice</div>
+      <div class="nl-card__list-item">Příklad použití</div>
+    </div>
+  </div>
+  <p class="nl-card__count">Odebírá už přes <strong>1&nbsp;500 lidí</strong></p>
+  <form class="nl-card__form" novalidate>
+    <div class="nl-card__row">
+      <input class="nl-card__input" type="email" name="email" required placeholder="Zadejte svůj e-mail" autocomplete="email" aria-label="Váš e-mail">
+      <button class="nl-card__button" type="submit">Odebírat</button>
+    </div>
+    <p class="nl-card__msg nl-card__msg--error" hidden role="alert"></p>
+    <p class="nl-card__msg nl-card__msg--success" hidden>Hotovo! Mrkněte do&nbsp;schránky a&nbsp;potvrďte přihlášení – pak se vám brzo ozve první slovo.</p>
+    <p class="nl-card__legal">Posílá Martin Kavka, zakladatel slovníku Čeština&nbsp;2.0</p>
+  </form>
+</div>
+
+<style>
+.nl-card{box-sizing:border-box;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:28px 24px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:#1f2937}
+.nl-card *,.nl-card *::before,.nl-card *::after{box-sizing:border-box}
+.nl-card__logo{display:block;width:120px;height:auto;margin:0 auto 16px}
+.nl-card__title{font-size:24px;font-weight:700;color:#223276;margin:0 0 10px;line-height:1.2;letter-spacing:-0.01em}
+.nl-card__lead{font-size:15px;color:#4b5563;line-height:1.55;margin:0 0 16px}
+.nl-card__list-wrap{display:inline-block;text-align:left;margin:0 0 16px}
+.nl-card__list-intro{font-size:14px;font-weight:600;color:#223276;margin:0 0 8px;line-height:1.4}
+.nl-card__list{margin:0;text-align:left}
+.nl-card__list-item{display:flex;align-items:center;gap:10px;padding:4px 0;font-size:15px;color:#1f2937;line-height:1.4}
+.nl-card__list-item::before{content:"";flex:0 0 20px;width:20px;height:20px;border-radius:50%;background-color:#15851d;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3 8l3.5 3.5L13 5'/%3E%3C/svg%3E");background-position:center;background-repeat:no-repeat;background-size:12px}
+.nl-card__count{font-size:13px;color:#6b7280;margin:0 0 18px}
+.nl-card__count strong{color:#223276;font-weight:600}
+.nl-card__form{margin:0}
+.nl-card__row{display:flex;flex-direction:column;gap:10px}
+.nl-card__input,.nl-card__button{width:100%;height:48px;padding:0 16px;margin:0;font:inherit;font-size:15px;line-height:1.2;border-radius:6px;box-shadow:none;text-transform:none;text-decoration:none;text-align:center}
+.nl-card__input{color:#1f2937;background:#fff;border:2px solid #d1d5db;outline:none;transition:border-color .15s,box-shadow .15s}
+.nl-card__input:focus{border-color:#319f39;box-shadow:0 0 0 3px rgba(49,159,57,0.18)}
+.nl-card__input::placeholder{color:#9ca3af}
+.nl-card__button{color:#fff;font-weight:700;letter-spacing:.01em;background:linear-gradient(180deg,#319f39 0%,#15851d 100%);border:2px solid transparent;cursor:pointer;-webkit-appearance:none;appearance:none;transition:filter .15s,transform .05s,box-shadow .15s}
+.nl-card__button:hover{filter:brightness(1.06)}
+.nl-card__button:focus{outline:none;box-shadow:0 0 0 3px rgba(49,159,57,0.35)}
+.nl-card__button:active{transform:translateY(1px)}
+.nl-card__button[disabled]{opacity:.65;cursor:progress}
+.nl-card__msg{margin:12px 0 0;font-size:13px;line-height:1.45;text-align:left}
+.nl-card__msg--error{color:#b91c1c}
+.nl-card__msg--success{color:#15851d;font-weight:600}
+.nl-card__legal{margin:12px 0 0;font-size:12px;color:#9ca3af;line-height:1.4}
+.nl-card[data-nl-state="success"] .nl-card__row,.nl-card[data-nl-state="success"] .nl-card__legal{display:none}
+.nl-card--inline{text-align:left;padding:32px}
+.nl-card--inline .nl-card__head{display:flex;align-items:flex-start;gap:24px;margin-bottom:18px}
+.nl-card--inline .nl-card__logo{margin:4px 0 0;flex:0 0 96px;width:96px}
+.nl-card--inline .nl-card__title{margin:0 0 8px;font-size:22px}
+.nl-card--inline .nl-card__lead{margin:0}
+.nl-card--inline .nl-card__list-wrap{display:block;margin:0 0 18px}
+.nl-card--inline .nl-card__list{display:flex;flex-wrap:wrap;gap:8px 24px}
+.nl-card--inline .nl-card__list-item{padding:0;font-size:14px}
+.nl-card--inline .nl-card__count{display:none}
+.nl-card--inline .nl-card__row{flex-direction:row;gap:10px;align-items:center}
+.nl-card--inline .nl-card__input{flex:1 1 auto;width:auto}
+.nl-card--inline .nl-card__button{flex:0 0 auto;width:auto;padding:0 32px}
+@media (max-width:560px){.nl-card--inline{padding:26px;text-align:center}.nl-card--inline .nl-card__head{flex-direction:column;align-items:center;gap:14px}.nl-card--inline .nl-card__logo{margin:0}.nl-card--inline .nl-card__list{justify-content:center}.nl-card--inline .nl-card__row{flex-direction:column}.nl-card--inline .nl-card__input,.nl-card--inline .nl-card__button{width:100%}}
+</style>
+
+<script>
+(function(){
+  function init(card){
+    if(card.dataset.nlBound==='1')return;card.dataset.nlBound='1';
+    var pub=card.dataset.nlSubstack;if(!pub)return;
+    var form=card.querySelector('.nl-card__form');
+    var input=card.querySelector('.nl-card__input');
+    var button=card.querySelector('.nl-card__button');
+    var errEl=card.querySelector('.nl-card__msg--error');
+    var okEl=card.querySelector('.nl-card__msg--success');
+    function err(m){errEl.textContent=m;errEl.hidden=false;okEl.hidden=true;card.dataset.nlState='error';button.disabled=false;}
+    function ok(){errEl.hidden=true;okEl.hidden=false;card.dataset.nlState='success';}
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      var email=(input.value||'').trim();
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){err('Zadejte platný e-mail.');input.focus();return;}
+      errEl.hidden=true;okEl.hidden=true;card.dataset.nlState='loading';button.disabled=true;
+      fetch('https://'+pub+'.substack.com/api/v1/free',{
+        method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email:email,first_url:location.href,first_referrer:document.referrer||'',current_url:location.href,current_referrer:document.referrer||'',referral_code:'',source:'subscribe_widget'})
+      }).then(function(r){
+        if(!r.ok)throw new Error('http_'+r.status);
+        ok();
+      }).catch(function(){
+        window.location.href='https://'+pub+'.substack.com/subscribe?email='+encodeURIComponent(email);
+      });
+    });
+  }
+  function all(){document.querySelectorAll('.nl-card[data-nl-substack]').forEach(init);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',all);else all();
+})();
+</script>
+</template>
+
+<script>
+  (function(){
+    function init(card){
+      if(card.dataset.nlBound==='1')return;card.dataset.nlBound='1';
+      var pub=card.dataset.nlSubstack;if(!pub)return;
+      var form=card.querySelector('.nl-card__form');
+      var input=card.querySelector('.nl-card__input');
+      var button=card.querySelector('.nl-card__button');
+      var errEl=card.querySelector('.nl-card__msg--error');
+      var okEl=card.querySelector('.nl-card__msg--success');
+      function err(m){errEl.textContent=m;errEl.hidden=false;okEl.hidden=true;card.dataset.nlState='error';button.disabled=false;}
+      function ok(){errEl.hidden=true;okEl.hidden=false;card.dataset.nlState='success';}
+      form.addEventListener('submit',function(e){
+        e.preventDefault();
+        var email=(input.value||'').trim();
+        if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){err('Zadejte platný e-mail.');input.focus();return;}
+        errEl.hidden=true;okEl.hidden=true;card.dataset.nlState='loading';button.disabled=true;
+        fetch('https://'+pub+'.substack.com/api/v1/free',{
+          method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({email:email,first_url:location.href,first_referrer:document.referrer||'',current_url:location.href,current_referrer:document.referrer||'',referral_code:'',source:'subscribe_widget'})
+        }).then(function(r){
+          if(!r.ok)throw new Error('http_'+r.status);
+          ok();
+        }).catch(function(){
+          window.location.href='https://'+pub+'.substack.com/subscribe?email='+encodeURIComponent(email);
+        });
+      });
+    }
+    document.querySelectorAll('.nl-card[data-nl-substack]').forEach(init);
+
+    var tpl = document.getElementById('nlSnippet');
+    var out = document.getElementById('snippetOut');
+    if (tpl && out) {
+      out.value = tpl.innerHTML.replace(/^\s+|\s+$/g, '');
+    }
+    var btn = document.getElementById('copyBtn');
+    var status = document.getElementById('copyStatus');
+    if (btn && out && status) {
+      btn.addEventListener('click', function(){
+        out.select();
+        try { document.execCommand('copy'); } catch(e) {}
+        if (navigator.clipboard) navigator.clipboard.writeText(out.value).catch(function(){});
+        status.hidden = false;
+        setTimeout(function(){ status.hidden = true; }, 2000);
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

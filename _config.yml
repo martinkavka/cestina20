@@ -1,0 +1,6 @@
+# GitHub Pages (Jekyll) – vyloučit z buildu složky, které jsou v repu
+# kvůli hand-offu, ale nemají se publikovat na github.io.
+# Soubory zůstávají v gitu, jen se nepublikují na
+# https://martinkavka.github.io/cestina20/.
+exclude:
+  - prihlaseni-newsletter

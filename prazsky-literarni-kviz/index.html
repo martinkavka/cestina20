@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pražský literární kvíz – Čeština 2.0</title>
+    <script>
+        (function (d) {
+            var config = {
+                    kitId: 'wla4qad',
+                    scriptTimeout: 604800,
+                    async: true
+                },
+                h = d.documentElement, t = setTimeout(function () {
+                    h.className = h.className.replace(/\bwf-loading\b/g, "") + " wf-inactive";
+                }, config.scriptTimeout), tk = d.createElement("script"), f = false,
+                s = d.getElementsByTagName("script")[0], a;
+            h.className += " wf-loading";
+            tk.src = 'https://use.typekit.net/' + config.kitId + '.js';
+            tk.async = true;
+            tk.onload = tk.onreadystatechange = function () {
+                a = this.readyState;
+                if (f || a && a != "complete" && a != "loaded") return;
+                f = true;
+                clearTimeout(t);
+                try { Typekit.load(config) } catch (e) {}
+            };
+            s.parentNode.insertBefore(tk, s)
+        })(document);
+    </script>
+    <meta name="description" content="Pražský literární kvíz – 6 km, 20 zastávek, jedna třída. Interaktivní procházka Prahou po stopách české literatury. Ideální aktivita pro školní výlet.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Pražský literární kvíz – Čeština 2.0">
+    <meta property="og:description" content="Vaše třída prochází Prahou a odpovídá na otázky k české literatuře. Nemusíte nic připravovat. Stačí jen přijít. Interaktivní kvíz Prahou od 33 Kč/student.">
+    <!-- TODO: až bude známá finální URL, změnit og:image na absolutní cestu (https://cestina20.cz/...) -->
+    <meta property="og:image" content="assets/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="robots" content="index, follow">
+    <meta property="og:locale" content="cs_CZ">
+    <link rel="stylesheet"
+          href="https://cestina20.cz/wp-content/themes/cestina20/css/style.100.min.css?ver=145"
+          type="text/css">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="https://cestina20.cz/wp-content/themes/cestina20/images/favicon/favicon-32x32.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <script>
+        document.documentElement.className = document.documentElement.className.replace("no-js", "js");
+    </script>
+    <style>
+        /* Landing page – přidané styly, CSS tématu se nemění */
+
+        .plk-hero {
+            background-color: #2d4ea8;
+            background-image: linear-gradient(rgba(26, 38, 96, 0.72), rgba(26, 38, 96, 0.78)), url('assets/praha.jpg');
+            background-size: cover;
+            background-position: center 40%;
+            color: #fff;
+            padding: 60px 0 50px;
+            text-align: center;
+        }
+
+        .plk-hero__title {
+            font-size: 2.6em;
+            font-weight: 700;
+            margin: 0 0 16px;
+            color: #fff;
+            line-height: 1.15;
+        }
+
+        .plk-hero__subtitle {
+            font-size: 1.15em;
+            margin: 0 0 32px;
+            color: rgba(255, 255, 255, 0.88);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.55;
+        }
+
+        .plk-hero .button {
+            font-size: 1.05em;
+            padding: 14px 28px;
+        }
+
+        .plk-hero__price {
+            margin: 12px 0 0;
+            font-size: 0.95em;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        /* Přehled */
+        .plk-overview {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 4px;
+            font-size: 0.97em;
+        }
+
+        .plk-overview td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #edf0f5;
+            vertical-align: middle;
+        }
+
+        .plk-overview tr:last-child td {
+            border-bottom: none;
+        }
+
+        .plk-overview tr:nth-child(even) td {
+            background: #f7f8fb;
+        }
+
+        .plk-overview__icon {
+            font-size: 1.15em;
+            padding-right: 6px;
+        }
+
+        .plk-overview__label {
+            color: #555;
+            width: 45%;
+        }
+
+        .plk-overview__value {
+            font-weight: 700;
+            color: #223276;
+        }
+
+        /* Kroky */
+        .plk-steps {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0;
+        }
+
+        .plk-steps li {
+            list-style: none !important;
+            padding: 0 !important;
+        }
+
+        .plk-steps li::before,
+        .plk-steps li::after {
+            display: none !important;
+        }
+
+        .plk-steps__item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .plk-steps__num {
+            background: #223276;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9em;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Mockup mobilu */
+        .plk-mockup-wrap {
+            text-align: center;
+            margin: 20px 0 0;
+        }
+
+        .plk-mockup {
+            display: inline-block;
+            width: 280px;
+            height: 606px;
+            border: 8px solid #1a1a1a;
+            border-radius: 56px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+            transform: translateZ(0);
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+        }
+
+        .plk-mockup::before {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 6px;
+            background: #1a1a1a;
+            border-radius: 3px;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .plk-mockup__screen {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .plk-mockup__screen video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            clip-path: inset(2px 2px round 48px);
+        }
+
+        .plk-mockup-caption {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        /* Sekce s videem – přes celou šířku karty */
+        .plk-video-feature {
+            margin: 20px -25px 0;
+            padding: 36px 25px 40px;
+            background: #f0f3ff;
+            text-align: center;
+        }
+
+        .plk-video-feature h2 {
+            margin-top: 0;
+            color: #223276;
+        }
+
+        .plk-video-feature__intro {
+            color: #555;
+            margin: 0 auto 28px;
+            max-width: 520px;
+            font-size: 0.97em;
+            line-height: 1.55;
+        }
+
+        .plk-mockup--large {
+            width: 320px;
+            height: 693px;
+        }
+
+        @media (max-width: 600px) {
+            .plk-video-feature {
+                margin-left: -15px;
+                margin-right: -15px;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+
+        /* Mapa trasy */
+        .plk-map {
+            margin: 20px 0 0;
+            border-radius: 6px;
+            border: 1px solid #e0e4f0;
+            overflow: hidden;
+        }
+
+        #plk-route-map {
+            width: 100%;
+            height: 520px;
+        }
+
+        @media (max-width: 600px) {
+            #plk-route-map {
+                height: 400px;
+            }
+        }
+
+        .plk-pawn {
+            font-size: 28px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+            transition: transform 0.1s;
+            animation: plk-pawn-bounce 0.6s ease-in-out infinite;
+        }
+
+        @keyframes plk-pawn-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .plk-stop-icon {
+            background: #223276;
+            color: #fff;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+            opacity: 0.4;
+            transition: opacity 0.3s, background 0.3s;
+        }
+
+        .plk-stop-icon--active {
+            opacity: 1;
+            background: #15851d;
+        }
+
+        .plk-stop-icon--start {
+            background: #15851d;
+            opacity: 1;
+            width: 26px;
+            height: 26px;
+            font-size: 12px;
+        }
+
+        .plk-stop-icon--end {
+            width: 26px;
+            height: 26px;
+            font-size: 12px;
+        }
+
+        /* Inline CTA */
+        .plk-inline-cta .button {
+            font-size: 1.05em;
+            padding: 14px 28px;
+        }
+
+        .plk-inline-cta {
+            text-align: center;
+            margin: 24px 0;
+            padding: 20px 0;
+            border-top: 1px solid #edf0f5;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+
+        .plk-inline-cta__note {
+            font-size: 0.82em;
+            color: #888;
+            margin: 8px 0 0;
+        }
+
+        /* Sticky CTA na mobilu */
+        .plk-sticky-cta {
+            display: none;
+        }
+
+        @media (max-width: 720px) {
+            .plk-sticky-cta {
+                display: block;
+                position: fixed;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                background: #fff;
+                border-top: 1px solid #ddd;
+                box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+                padding: 10px 15px;
+                text-align: center;
+            }
+
+            .plk-sticky-cta .button {
+                display: block;
+                width: 100%;
+                font-size: 0.95em;
+                padding: 12px 0;
+            }
+
+            .plk-sticky-cta.is-visible {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            /* Aby footer nebyl schovaný za sticky barem */
+            .footer {
+                padding-bottom: 70px;
+            }
+        }
+
+        /* Ukázka otázky */
+        .plk-sample {
+            background: #f8f6f2;
+            border-left: 4px solid #223276;
+            padding: 20px 24px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .plk-sample__intro {
+            font-weight: 700;
+            color: #223276;
+            font-size: 0.88em;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-top: 0;
+        }
+
+        .plk-sample__question {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #1a2660;
+            border: none;
+            margin: 16px 0;
+            padding: 0;
+            font-style: normal;
+        }
+
+        .plk-sample__question small {
+            font-weight: 400;
+            font-size: 0.78em;
+            color: #666;
+            display: block;
+            margin-top: 6px;
+        }
+
+        .plk-sample__hint {
+            font-size: 0.88em;
+            color: #888;
+            margin-bottom: 0;
+            font-style: italic;
+        }
+
+        /* FAQ */
+        .plk-faq {
+            margin: 0;
+            padding: 0;
+        }
+
+        .plk-faq dt {
+            font-weight: 700;
+            color: #223276;
+            margin-top: 16px;
+        }
+
+        .plk-faq dt:first-child {
+            margin-top: 0;
+        }
+
+        .plk-faq dd {
+            margin: 4px 0 0 0;
+            padding: 0;
+            color: #444;
+        }
+
+        /* Ceník */
+        .plk-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 10px;
+            font-size: 0.95em;
+        }
+
+        .plk-table th {
+            background: #223276;
+            color: #fff;
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 700;
+        }
+
+        .plk-table td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #e8eaf0;
+        }
+
+        .plk-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .plk-table tr:nth-child(even) td {
+            background: #f7f8fb;
+        }
+
+        .plk-table tr.plk-table__featured td {
+            background: #fffbe6;
+            font-weight: 700;
+            border-top: 2px solid #f5c518;
+            border-bottom: 2px solid #f5c518;
+        }
+
+        .plk-badge {
+            display: inline-block;
+            background: #f5c518;
+            color: #333;
+            font-size: 0.72em;
+            font-weight: 700;
+            border-radius: 3px;
+            padding: 2px 6px;
+            margin-left: 6px;
+            vertical-align: middle;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .plk-note {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        /* Srovnání cen – karty */
+        .plk-comparison {
+            margin-top: 28px;
+        }
+
+        .plk-comparison h3 {
+            margin: 0 0 16px;
+            color: #223276;
+            font-size: 1.05em;
+        }
+        .plk-config {
+            margin-top: 28px;
+        }
+
+        .plk-config__iframe {
+            width: 100%;
+            height: 1100px;
+            max-height: 1500px;
+            border: 0;
+            display: block;
+            background: #fff;
+        }
+
+        .plk-comparison__cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .plk-comparison__card {
+            background: #f8f6f2;
+            border-radius: 8px;
+            padding: 18px 14px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .plk-comparison__card--plk {
+            background: #eef6ee;
+            border-color: #15851d;
+            position: relative;
+        }
+
+        .plk-comparison__card-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #15851d;
+            color: #fff;
+            font-size: 0.68em;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 3px;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .plk-comparison__icon {
+            font-size: 1.6em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .plk-comparison__name {
+            font-size: 0.82em;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .plk-comparison__price {
+            font-weight: 700;
+            font-size: 1.05em;
+            color: #223276;
+        }
+
+        .plk-comparison__card--plk .plk-comparison__price {
+            color: #15851d;
+        }
+
+        .plk-comparison__unit {
+            font-size: 0.78em;
+            color: #888;
+            display: block;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        .plk-comparison__note {
+            margin: 14px 0 0;
+            font-size: 0.88em;
+            color: #888;
+        }
+
+        .plk-comparison__bonus {
+            margin: 8px 0 0;
+            font-size: 0.9em;
+            font-weight: 700;
+            color: #15851d;
+        }
+
+        @media (max-width: 600px) {
+            .plk-comparison__cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Teploměr zábavnosti */
+        .plk-map + p {
+            margin-top: 16px;
+        }
+
+        /* Callout box */
+        .plk-callout {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: #eef6ee;
+            border: 1px solid #c4dfc4;
+            border-radius: 6px;
+            padding: 20px 24px;
+            margin-top: 20px;
+        }
+
+        .plk-callout__icon {
+            font-size: 1.8em;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .plk-callout__title {
+            font-weight: 700;
+            color: #1a5c1a;
+            margin: 0 0 4px;
+            font-size: 1.05em;
+        }
+
+        .plk-callout__text {
+            margin: 0;
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .plk-callout {
+                padding: 16px;
+            }
+        }
+
+        /* Sekce */
+        .plk-section {
+            margin-top: 20px;
+        }
+
+        .plk-section h2 {
+            margin-top: 0;
+        }
+
+        /* Obal pro horizontální scroll tabulky na mobilu */
+        .plk-table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Responzivita */
+        @media (max-width: 600px) {
+            .plk-hero__title { font-size: 1.8em; }
+            .plk-hero { padding: 40px 15px 36px; }
+            .plk-table { min-width: 480px; }
+            .plk-table th, .plk-table td { padding: 8px 9px; font-size: 0.88em; }
+        }
+    </style>
+</head>
+<body class="page wp-theme-cestina20">
+
+<header class="header">
+    <div class="container">
+        <a class="header__go_to_content" href="#content" title="Přejít na obsah">Přejít na obsah</a>
+        <a href="https://cestina20.cz/pridat-slovo/" class="header__add__mobile"><span>Přidat slovo</span></a>
+        <a class="header__logo" href="https://cestina20.cz">
+            <img src="https://cestina20.cz/wp-content/themes/cestina20/images/logo-new.svg" alt="Logo">
+        </a>
+        <div class="header__claim">Slovník, který tvoříte vy</div>
+        <form role="search" method="get" class="header__search header__search--desktop" action="https://cestina20.cz/">
+            <label for="header__search--desktop--s">Vyhledávání:</label>
+            <input type="text" value="" name="s" id="header__search--desktop--s" placeholder="Najít slovo..." autocomplete="off">
+            <button class="header__search__button">&nbsp;<span class="header__search__button__label">Hledat</span><span class="header__search__button__icon"></span></button>
+            <div class="header__search__result">
+                <div class="spinner">
+                    <div class="spinner__rect spinner__rect--1"></div>
+                    <div class="spinner__rect spinner__rect--2"></div>
+                    <div class="spinner__rect spinner__rect--3"></div>
+                    <div class="spinner__rect spinner__rect--4"></div>
+                    <div class="spinner__rect spinner__rect--5"></div>
+                </div>
+                <ul class="header__search__result__data"></ul>
+            </div>
+        </form>
+        <span id="header__menu__button" class="header__menu__button"><span>Menu</span></span>
+        <a href="https://cestina20.cz/pridat-slovo/" class="header__add button button--add">Přidat slovo<span>&nbsp;</span></a>
+    </div>
+</header>
+<div id="menu__wrap" class="menu__wrap">
+    <div class="container">
+        <div class="menu__inner">
+            <nav id="header__menu__inner" class="header__menu__inner">
+                <ul class="menu">
+                    <li class="menu-item"><a href="https://cestina20.cz/">Slovo dne</a></li>
+                    <li class="menu-item-has-children menu__letters menu-item">
+                        <a>Dle abecedy</a>
+                        <ul class="sub-menu">
+                            <li><a href="https://cestina20.cz/pismeno/ostatni/">#</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/a/">A</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/b/">B</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/c/">C</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/d/">D</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/e/">E</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/f/">F</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/g/">G</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/h/">H</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/ch/">CH</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/i/">I</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/j/">J</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/k/">K</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/l/">L</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/m/">M</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/n/">N</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/o/">O</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/p/">P</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/q/">Q</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/r/">R</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/s/">S</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/t/">T</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/u/">U</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/v/">V</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/w/">W</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/x/">X</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/y/">Y</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/z/">Z</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item"><a href="https://cestina20.cz/zebricek/nejoblibenejsi/">Nejoblíbenější</a></li>
+                    <li class="menu-item"><a href="https://cestina20.cz/zebricek/nove-pridana/">Nově přidaná</a></li>
+                </ul>
+            </nav>
+            <nav id="header__menu__inner__right" class="header__menu__inner__right">
+                <ul class="menu">
+                    <li class="menu-item menu-item-has-children">
+                        <a href="#">Kniha a TV pořad</a>
+                        <ul class="sub-menu">
+                            <li class="menu-item"><a href="https://cestina20.cz/kniha/">Kniha Hacknutá čeština</a></li>
+                            <li class="menu-item"><a href="https://cestina20.cz/televize-seznam/">TV pořad Hacknutá čeština</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item"><a href="https://cestina20.cz/o-cestine-2-0/">O Češtině 2.0</a></li>
+                    <li class="menu-item"><a href="https://cestina20.cz/kontakt/">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<div id="submenu__wrap" class="submenu__wrap" style="display: none;">
+    <div class="container">
+        <ul class="submenu">
+            <li><a href="https://cestina20.cz/pismeno/ostatni/">#</a></li>
+            <li><a href="https://cestina20.cz/pismeno/a/">A</a></li>
+            <li><a href="https://cestina20.cz/pismeno/b/">B</a></li>
+            <li><a href="https://cestina20.cz/pismeno/c/">C</a></li>
+            <li><a href="https://cestina20.cz/pismeno/d/">D</a></li>
+            <li><a href="https://cestina20.cz/pismeno/e/">E</a></li>
+            <li><a href="https://cestina20.cz/pismeno/f/">F</a></li>
+            <li><a href="https://cestina20.cz/pismeno/g/">G</a></li>
+            <li><a href="https://cestina20.cz/pismeno/h/">H</a></li>
+            <li><a href="https://cestina20.cz/pismeno/ch/">CH</a></li>
+            <li><a href="https://cestina20.cz/pismeno/i/">I</a></li>
+            <li><a href="https://cestina20.cz/pismeno/j/">J</a></li>
+            <li><a href="https://cestina20.cz/pismeno/k/">K</a></li>
+            <li><a href="https://cestina20.cz/pismeno/l/">L</a></li>
+            <li><a href="https://cestina20.cz/pismeno/m/">M</a></li>
+            <li><a href="https://cestina20.cz/pismeno/n/">N</a></li>
+            <li><a href="https://cestina20.cz/pismeno/o/">O</a></li>
+            <li><a href="https://cestina20.cz/pismeno/p/">P</a></li>
+            <li><a href="https://cestina20.cz/pismeno/q/">Q</a></li>
+            <li><a href="https://cestina20.cz/pismeno/r/">R</a></li>
+            <li><a href="https://cestina20.cz/pismeno/s/">S</a></li>
+            <li><a href="https://cestina20.cz/pismeno/t/">T</a></li>
+            <li><a href="https://cestina20.cz/pismeno/u/">U</a></li>
+            <li><a href="https://cestina20.cz/pismeno/v/">V</a></li>
+            <li><a href="https://cestina20.cz/pismeno/w/">W</a></li>
+            <li><a href="https://cestina20.cz/pismeno/x/">X</a></li>
+            <li><a href="https://cestina20.cz/pismeno/y/">Y</a></li>
+            <li><a href="https://cestina20.cz/pismeno/z/">Z</a></li>
+        </ul>
+    </div>
+</div>
+<div class="header__search__wrap--mobile">
+    <div class="container">
+        <form role="search" method="get" class="header__search header__search--mobile" action="https://cestina20.cz/">
+            <label for="header__search--mobile--s">Vyhledávání:</label>
+            <input type="text" value="" name="s" id="header__search--mobile--s" placeholder="Najít slovo..." autocomplete="off">
+            <button class="header__search__button">&nbsp;<span class="header__search__button__label">Hledat</span><span class="header__search__button__icon"></span></button>
+            <div class="header__search__result">
+                <div class="spinner">
+                    <div class="spinner__rect spinner__rect--1"></div>
+                    <div class="spinner__rect spinner__rect--2"></div>
+                    <div class="spinner__rect spinner__rect--3"></div>
+                    <div class="spinner__rect spinner__rect--4"></div>
+                    <div class="spinner__rect spinner__rect--5"></div>
+                </div>
+                <ul class="header__search__result__data"></ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Hero sekce -->
+<div class="plk-hero">
+    <div class="container">
+        <h1 class="plk-hero__title">Pražský literární kvíz</h1>
+        <p class="plk-hero__subtitle">Vaše třída prochází Prahou a odpovídá na otázky k české literatuře.<br>Nemusíte nic připravovat. Stačí jen přijít.</p>
+        <a class="button"
+           href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2"
+           target="_blank" rel="noopener">
+            Koupit kvíz
+        </a>
+        <p class="plk-hero__price">od 33&nbsp;Kč / student</p>
+    </div>
+</div>
+
+<div class="container">
+    <div id="content" class="content">
+        <div id="content__inner" class="content__inner" style="padding-right: 0;">
+            <div class="content__list">
+
+                <!-- Rychlý přehled -->
+                <section class="plk-section">
+                    <h2>Rychlý přehled</h2>
+                    <table class="plk-overview">
+                        <tbody>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#127979;</span> Obtížnost</td>
+                                <td class="plk-overview__value">Studenti SŠ</td>
+                            </tr>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#128205;</span> Začátek</td>
+                                <td class="plk-overview__value">Staroměstské náměstí</td>
+                            </tr>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#127963;</span> Konec</td>
+                                <td class="plk-overview__value">Pražský hrad</td>
+                            </tr>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#128336;</span> Délka trasy</td>
+                                <td class="plk-overview__value">6&nbsp;km / 3&nbsp;hodiny</td>
+                            </tr>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#9997;&#65039;</span> Zastávky</td>
+                                <td class="plk-overview__value">20&nbsp;úloh</td>
+                            </tr>
+                            <tr>
+                                <td class="plk-overview__label"><span class="plk-overview__icon">&#128176;</span> Cena</td>
+                                <td class="plk-overview__value">od 33&nbsp;Kč / student</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Ukázka hry – video mockup -->
+                <section class="plk-video-feature">
+                    <h2>Jak vypadá hra</h2>
+                    <p class="plk-video-feature__intro">Otázka, kontext, mapa – přesně takhle to vypadá na každé ze 20 zastávek.</p>
+                    <div class="plk-mockup-wrap">
+                        <div class="plk-mockup plk-mockup--large">
+                            <div class="plk-mockup__screen">
+                                <video autoplay loop muted playsinline aria-label="Ukázka hry Pražský literární kvíz" id="plk-mockup-video">
+                                    <source src="assets/ukazka-hry-web.mp4" type="video/mp4">
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Popis produktu -->
+                <section class="plk-section">
+                    <h2>Praha jako vaše hřiště</h2>
+                    <p>Centrum Prahy je plné literárních příběhů, které většina lidí přejde bez povšimnutí. Kvíz vám je pomůže najít – budete se bavit, ať už přijíždíte z druhého konce republiky, nebo máte školu pár minut od Staromáku.</p>
+                </section>
+
+                <!-- Co získáte -->
+                <section class="plk-section">
+                    <h2>Co získáte</h2>
+                    <ul class="plk-steps">
+                        <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> 3&nbsp;hodiny, kdy se studenti baví a&nbsp;učí zároveň – bez jediného pohledu na hodinky.</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> 20&nbsp;interaktivních zastávek navázaných na učivo české literatury.</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> Soutěž týmů přirozeně vtáhne i ty, které literatura „nebaví".</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">&#10003;</span> Žádná příprava pro učitele – stačí koupit, otevřít v&nbsp;mobilu a&nbsp;vyrazit.</li>
+                    </ul>
+                </section>
+
+                <!-- Časový callout -->
+                <div class="plk-callout">
+                    <span class="plk-callout__icon">&#128336;</span>
+                    <div>
+                        <p class="plk-callout__title">Na hru máte celý den – 12 hodin</p>
+                        <p class="plk-callout__text">Není potřeba spěchat. Zastavte se na oběd, prohlédněte si město, dejte si pauzu. Trasa má 6&nbsp;km a&nbsp;zabere přibližně 3&nbsp;hodiny – zbytek dne je váš.</p>
+                    </div>
+                </div>
+
+                <!-- Jak to funguje -->
+                <section class="plk-section">
+                    <h2>Jak to funguje</h2>
+                    <ul class="plk-steps">
+                        <li class="plk-steps__item"><span class="plk-steps__num">1</span> Dorazíte na Staromák a&nbsp;spustíte hru v&nbsp;mobilu.</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">2</span> Na každé zastávce si přečtete zadání, občas poslechnete audio a&nbsp;splníte úkol.</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">3</span> Správná odpověď vás posune na další zastávku – celkem jich je 20, postupně dojdete až na Pražský hrad.</li>
+                        <li class="plk-steps__item"><span class="plk-steps__num">4</span> Chcete soutěžit? Rozdělte třídu do týmů – každý tým hraje na svém mobilu.</li>
+                    </ul>
+                </section>
+
+                <!-- Náhled trasy -->
+                <section class="plk-section">
+                    <h2>Kudy vede trasa</h2>
+                    <p>Kvíz startuje na Staroměstském náměstí a vede nejhezčími pasážemi Prahy – Malou Stranou, přes Karlův most – až na Pražský hrad. Celkem 6&nbsp;km, 20&nbsp;zastávek, přibližně 3&nbsp;hodiny chůze.</p>
+
+                    <div class="plk-map">
+                        <div id="plk-route-map"></div>
+                    </div>
+
+                    <p>Vaši studenti dostanou přímo ve hře doporučenou trasu, ale můžou jít, jak chtějí. Zastávky lze přeskakovat nebo doplnit o&nbsp;vlastní zastavení. Na celou hru máte 12&nbsp;hodin, takže vše v&nbsp;pohodě stihnete.</p>
+                </section>
+
+                <!-- Inline CTA -->
+                <div class="plk-inline-cta">
+                    <a class="button" href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2" target="_blank" rel="noopener">Koupit kvíz</a>
+                    <p class="plk-inline-cta__note">od 33&nbsp;Kč / student · Více týmů? Napište na <a href="mailto:info@hados.cz">info@hados.cz</a></p>
+                </div>
+
+                <!-- Ukázka otázky -->
+                <section class="plk-section">
+                    <h2>Ochutnávka z kvízu</h2>
+                    <div class="plk-sample">
+                        <p class="plk-sample__intro">Zastavení č. 1 – Staroměstské náměstí</p>
+                        <p>Na tomto místě proběhla 21. června 1621 hromadná poprava 27 vůdců stavovského povstání. Během zastavení si přečtete úryvek z dobového textu a poslechnete, jak popravy probíhaly. Pak přijde otázka:</p>
+                        <blockquote class="plk-sample__question">
+                            Jak se jmenoval kat, který roku 1621 na tomto místě popravil 27 českých pánů?<br>
+                            <small>Nápověda: Stačí napsat jeho příjmení. A bacha na pravopis!</small>
+                        </blockquote>
+                        <p class="plk-sample__hint">Takhle vypadá každá ze 20 zastávek – kontext, příběh a úkol, který vyřešíte přímo na místě.</p>
+                    </div>
+                </section>
+
+                <!-- FAQ -->
+                <section class="plk-section">
+                    <h2>Časté otázky</h2>
+                    <dl class="plk-faq">
+                        <dt>Dá se kvíz přerušit?</dt>
+                        <dd>Ne, po spuštění běží čas. Máte ale <strong>celý den – 12&nbsp;hodin</strong>. Klidně se zastavte na oběd, projděte si město vlastním tempem a&nbsp;užijte výlet bez spěchu. Stihnete to v&nbsp;pohodě.</dd>
+
+                        <dt>Potřebují studenti internet?</dt>
+                        <dd>Jen při načítání úkolů. Hra běží v&nbsp;prohlížeči a&nbsp;dat spotřebuje minimum.</dd>
+
+                        <dt>Kolik lidí může být v&nbsp;jednom týmu?</dt>
+                        <dd>Klidně celá třída, ale všichni plní stejný úkol najednou. Chcete víc zábavy? Rozdělte třídu do menších týmů, ať si zasoutěží.</dd>
+
+                        <dt>Co když prší?</dt>
+                        <dd>Pražský literární kvíz je venkovní aktivita. Zvládnete ji i za deště, ale záleží na vás.</dd>
+
+                        <dt>Kdy můžeme vyrazit?</dt>
+                        <dd>Kdykoliv. Kvíz funguje celý rok, v&nbsp;jakýkoliv měsíc a&nbsp;kdykoliv během dne – ráno, dopoledne, odpoledne i&nbsp;večer. Nejsou tam vstupenky, otevírací doby ani jiné omezení, která by výlet zkomplikovala. Zaplatíte, otevřete v&nbsp;mobilu a&nbsp;jdete.</dd>
+
+                        <dt>Dostanu výsledky všech týmů?</dt>
+                        <dd>Ne. Berte to hlavně jako hru, ne jako zkoušku.</dd>
+                    </dl>
+                </section>
+
+                <!-- Ceník pro více týmů -->
+                <section class="plk-section">
+                    <h2>Ceník pro více týmů</h2>
+                    <div class="plk-table-wrap">
+                    <table class="plk-table">
+                        <thead>
+                            <tr>
+                                <th>Počet týmů</th>
+                                <th>Cena za tým</th>
+                                <th>Celkem</th>
+                                <th>Ušetříte</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1&nbsp;tým</td>
+                                <td>990&nbsp;Kč</td>
+                                <td>990&nbsp;Kč</td>
+                                <td>–</td>
+                            </tr>
+                            <tr>
+                                <td>2&nbsp;týmy</td>
+                                <td>650&nbsp;Kč</td>
+                                <td>1&nbsp;300&nbsp;Kč</td>
+                                <td>680&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>3&nbsp;týmy</td>
+                                <td>510&nbsp;Kč</td>
+                                <td>1&nbsp;530&nbsp;Kč</td>
+                                <td>1&nbsp;440&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>4&nbsp;týmy</td>
+                                <td>440&nbsp;Kč</td>
+                                <td>1&nbsp;760&nbsp;Kč</td>
+                                <td>2&nbsp;200&nbsp;Kč</td>
+                            </tr>
+                            <tr class="plk-table__featured">
+                                <td>5&nbsp;týmů <span class="plk-badge">Oblíbené pro třídu</span></td>
+                                <td>390&nbsp;Kč</td>
+                                <td>1&nbsp;950&nbsp;Kč</td>
+                                <td>3&nbsp;000&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>6&nbsp;týmů</td>
+                                <td>370&nbsp;Kč</td>
+                                <td>2&nbsp;220&nbsp;Kč</td>
+                                <td>3&nbsp;720&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>7&nbsp;týmů</td>
+                                <td>350&nbsp;Kč</td>
+                                <td>2&nbsp;450&nbsp;Kč</td>
+                                <td>4&nbsp;480&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>8&nbsp;týmů</td>
+                                <td>330&nbsp;Kč</td>
+                                <td>2&nbsp;640&nbsp;Kč</td>
+                                <td>5&nbsp;280&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>9&nbsp;týmů</td>
+                                <td>320&nbsp;Kč</td>
+                                <td>2&nbsp;880&nbsp;Kč</td>
+                                <td>6&nbsp;030&nbsp;Kč</td>
+                            </tr>
+                            <tr>
+                                <td>10&nbsp;týmů</td>
+                                <td>310&nbsp;Kč</td>
+                                <td>3&nbsp;100&nbsp;Kč</td>
+                                <td>6&nbsp;800&nbsp;Kč</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div class="plk-comparison">
+                        <h3>Kolik stojí jiné aktivity v&nbsp;Praze?</h3>
+                        <div class="plk-comparison__cards">
+                            <div class="plk-comparison__card">
+                                <span class="plk-comparison__icon">🏛️</span>
+                                <div class="plk-comparison__name">Průvodce Prahou</div>
+                                <div class="plk-comparison__price">3–5&nbsp;000&nbsp;Kč <span class="plk-comparison__unit">za skupinu</span></div>
+                            </div>
+                            <div class="plk-comparison__card">
+                                <span class="plk-comparison__icon">🎨</span>
+                                <div class="plk-comparison__name">Muzeum / galerie</div>
+                                <div class="plk-comparison__price">60–330&nbsp;Kč <span class="plk-comparison__unit">/ student</span></div>
+                            </div>
+                            <div class="plk-comparison__card">
+                                <span class="plk-comparison__icon">✈️</span>
+                                <div class="plk-comparison__name">Exkurze na letišti</div>
+                                <div class="plk-comparison__price">od 130&nbsp;Kč <span class="plk-comparison__unit">/ student</span></div>
+                            </div>
+                            <div class="plk-comparison__card plk-comparison__card--plk">
+                                <span class="plk-comparison__card-badge">Nejlepší volba</span>
+                                <span class="plk-comparison__icon">📚</span>
+                                <div class="plk-comparison__name">Pražský literární kvíz</div>
+                                <div class="plk-comparison__price">od 33&nbsp;Kč <span class="plk-comparison__unit">/ student</span></div>
+                            </div>
+                        </div>
+                        <p class="plk-comparison__note">Příklad: třída 30&nbsp;studentů → 5&nbsp;týmů → 1&nbsp;950&nbsp;Kč → 65&nbsp;Kč na studenta.</p>
+                        <p class="plk-comparison__bonus">Bez rezervace – stačí koupit a&nbsp;vyrazit kdykoliv.</p>
+                    </div>
+
+                    <!-- Konfigurátor + objednávka (Benosaurus iframe – sjednocený flow Stripe pro 1 tým, faktura pro 2+) -->
+                    <div class="plk-config">
+                        <iframe
+                            class="plk-config__iframe"
+                            src="https://benosaurus.cz/objednavka/plk1-8d005281?embed=1&teamy=1&studenti=30"
+                            title="Objednávka Pražského literárního kvízu"
+                            allow="payment"
+                            loading="lazy"></iframe>
+                        <script>
+                            (function () {
+                                var iframe = document.querySelector('.plk-config__iframe');
+                                if (!iframe) return;
+                                window.addEventListener('message', function (e) {
+                                    if (e.origin !== 'https://benosaurus.cz') return;
+                                    if (!e.data || typeof e.data !== 'object') return;
+                                    if (e.data.type !== 'benosaurus-resize' || typeof e.data.height !== 'number') return;
+                                    var target = Math.max(400, Math.min(1500, e.data.height));
+                                    if (Math.abs(target - iframe.offsetHeight) > 4) {
+                                        iframe.style.height = target + 'px';
+                                    }
+                                });
+                            })();
+                        </script>
+                    </div>
+                </section>
+
+                <!-- Kdo za tím stojí -->
+                <section class="plk-section">
+                    <h2>Kdo za tím stojí</h2>
+                    <p>Pražský literární kvíz připravili Martin Kavka a&nbsp;Roman Věžník z&nbsp;<a href="https://cestina20.cz/o-cestine-2-0/">Češtiny 2.0</a> – slovníku, který tvoří samotní uživatelé už od roku 2008.</p>
+                </section>
+
+            </div><!-- .content__list -->
+        </div><!-- .content__inner -->
+    </div><!-- .content -->
+</div><!-- .container -->
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer__inner">
+            <p>Čeština 2.0 – slovník, který tvoříte vy od roku 2008. Obsah slovníku můžete volně citovat či dále publikovat s uvedením zdroje.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Sticky CTA – jen mobil -->
+<div class="plk-sticky-cta">
+    <a class="button" href="https://go.aharta.com/api.stripe.php?mode=game_activation&amp;c=gE6I8RIGWM&amp;g=2" target="_blank" rel="noopener">Koupit kvíz · od 33&nbsp;Kč / student</a>
+</div>
+
+<script type="text/javascript">
+var ef_string = {"ajax_url":"https:\/\/cestina20.cz\/wp-admin\/admin-ajax.php","template_directory":"https:\/\/cestina20.cz\/wp-content\/themes\/cestina20"};
+</script>
+<script src="https://cestina20.cz/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script src="https://cestina20.cz/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<script src="https://cestina20.cz/wp-includes/js/hoverintent-js.min.js?ver=2.2.1"></script>
+<script src="https://cestina20.cz/wp-content/themes/cestina20/js/min/script.100.min.js?ver=145"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+    var vid = document.getElementById('plk-mockup-video');
+    if (vid) vid.playbackRate = 0.85;
+
+    (function () {
+        var hero = document.querySelector('.plk-hero');
+        var sticky = document.querySelector('.plk-sticky-cta');
+        if (!hero || !sticky) return;
+        var observer = new IntersectionObserver(function (entries) {
+            sticky.classList.toggle('is-visible', !entries[0].isIntersecting);
+        }, { threshold: 0 });
+        observer.observe(hero);
+    })();
+
+    /* Interaktivní mapa trasy */
+    (function () {
+        var mapEl = document.getElementById('plk-route-map');
+        if (!mapEl || typeof L === 'undefined') return;
+
+        /* 20 zastávek – přesné souřadnice z OpenStreetMap Nominatim */
+        /* Střed Staroměstského nám.: 50.08745, 14.42097 */
+        var SQ = [50.08745, 14.42097]; /* střed náměstí */
+        var stops = [
+            /* 1–9: Staroměstské nám. – rovnoměrně po obvodu (r ≈ 40 m) */
+            [SQ[0] - 0.00035, SQ[1] - 0.00030, 'Zastávka 1 – Staroměstské nám.'],
+            [SQ[0] - 0.00030, SQ[1] + 0.00020, 'Zastávka 2 – Staroměstské nám.'],
+            [SQ[0] - 0.00010, SQ[1] + 0.00055, 'Zastávka 3 – Staroměstské nám.'],
+            [SQ[0] + 0.00015, SQ[1] + 0.00060, 'Zastávka 4 – Staroměstské nám.'],
+            [SQ[0] + 0.00035, SQ[1] + 0.00040, 'Zastávka 5 – Staroměstské nám.'],
+            [SQ[0] + 0.00040, SQ[1] + 0.00000, 'Zastávka 6 – Staroměstské nám.'],
+            [SQ[0] + 0.00025, SQ[1] - 0.00040, 'Zastávka 7 – Staroměstské nám.'],
+            [SQ[0] - 0.00005, SQ[1] - 0.00050, 'Zastávka 8 – Staroměstské nám.'],
+            [SQ[0],           SQ[1],             'Zastávka 9 – Staroměstské nám.'],
+            /* 10–11: Stavovské divadlo */
+            [50.08610, 14.42340, 'Stavovské divadlo'],
+            [50.08582, 14.42388, 'Stavovské divadlo'],
+            /* 12–20: ověřené z Nominatim */
+            [50.07874, 14.41702, 'U Fleků'],
+            [50.08086, 14.41357, 'Národní divadlo'],
+            [50.08154, 14.41324, 'Kavárna Slavie'],
+            [50.08435, 14.41750, 'Betlémská kaple'],
+            [50.08663, 14.41015, 'Karlův most'],
+            [50.08540, 14.40802, 'Werichova vila'],
+            [50.08797, 14.40322, 'Chrám sv. Mikuláše'],
+            [50.08848, 14.39722, 'Dům U Dvou slunců'],
+            [50.08959, 14.39767, 'Socha TGM – Hradčanské nám.']
+        ];
+
+        /* Trasa – zastávky + mezilehlé body po ulicích */
+        var stopCoords = stops.map(function (s) { return [s[0], s[1]]; });
+        var routeCoords = [
+            /* 1–9: okruh po náměstí (přímo ze stops) */
+            stopCoords[0], stopCoords[1], stopCoords[2], stopCoords[3],
+            stopCoords[4], stopCoords[5], stopCoords[6], stopCoords[7],
+            stopCoords[8],
+            /* → Stavovské divadlo (Železná ul.) */
+            [50.08680, 14.42200],
+            stopCoords[9],
+            stopCoords[10],
+            /* → U Fleků (Rytířská → Vodičkova → Křemencova) */
+            [50.08500, 14.42250],
+            [50.08350, 14.42100],
+            [50.08150, 14.41950],
+            stopCoords[11],
+            /* → Národní divadlo (Ostrovní → Národní) */
+            [50.07920, 14.41550],
+            [50.08000, 14.41450],
+            stopCoords[12],
+            /* → Kavárna Slavie */
+            stopCoords[13],
+            /* → Betlémská kaple (Karoliny Světlé) */
+            [50.08200, 14.41450],
+            [50.08300, 14.41600],
+            stopCoords[14],
+            /* → Karlův most (Husova → Karlova → most) */
+            [50.08500, 14.41600],
+            [50.08580, 14.41350],
+            [50.08640, 14.41150],
+            stopCoords[15],
+            /* → Werichova vila (přes most, dolů na Kampu) */
+            [50.08600, 14.40900],
+            stopCoords[16],
+            /* → Chrám sv. Mikuláše (Mostecká → Malostranské nám.) */
+            [50.08600, 14.40600],
+            [50.08700, 14.40450],
+            stopCoords[17],
+            /* → Dům U Dvou slunců (Nerudova) */
+            [50.08820, 14.40100],
+            stopCoords[18],
+            /* → Socha TGM (Ke Hradu → Hradčanské nám.) */
+            [50.08900, 14.39740],
+            stopCoords[19]
+        ];
+
+        /* Inicializace mapy */
+        var map = L.map('plk-route-map', {
+            scrollWheelZoom: false,
+            attributionControl: true
+        });
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        map.fitBounds(stopCoords, { padding: [50, 50] });
+
+        /* Bez čar trasy – ve hře mají doporučenou trasu */
+
+        /* Zastávkové značky */
+        var stopMarkers = stops.map(function (s, i) {
+            var isStart = i === 0;
+            var isEnd = i === stops.length - 1;
+            var cls = 'plk-stop-icon';
+            if (isStart) cls += ' plk-stop-icon--start';
+            if (isEnd) cls += ' plk-stop-icon--end';
+
+            var icon = L.divIcon({
+                className: '',
+                html: '<div class="' + cls + '">' + (i + 1) + '</div>',
+                iconSize: [22, 22],
+                iconAnchor: [11, 11]
+            });
+
+            var marker = L.marker([s[0], s[1]], { icon: icon }).addTo(map);
+            marker.bindTooltip(s[2], { direction: 'top', offset: [0, -14] });
+            return marker;
+        });
+
+        /* Figurka – panáček z Člověče nezlob se */
+        var pawnIcon = L.divIcon({
+            className: '',
+            html: '<div class="plk-pawn">🚶</div>',
+            iconSize: [28, 28],
+            iconAnchor: [14, 28]
+        });
+        var pawn = L.marker(routeCoords[0], { icon: pawnIcon, zIndexOffset: 1000 }).addTo(map);
+
+        /* Animace */
+        var animDuration = 10000; /* ms celkem */
+        var animStarted = false;
+        var currentStop = 0;
+
+        function lerp(a, b, t) {
+            return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+        }
+
+        /* Spočítej délky segmentů pro rovnoměrnou rychlost */
+        var segLengths = [];
+        var totalLength = 0;
+        for (var i = 1; i < routeCoords.length; i++) {
+            var dx = routeCoords[i][0] - routeCoords[i - 1][0];
+            var dy = routeCoords[i][1] - routeCoords[i - 1][1];
+            var len = Math.sqrt(dx * dx + dy * dy);
+            segLengths.push(len);
+            totalLength += len;
+        }
+
+        /* Vzdálenost dvou bodů */
+        function dist(a, b) {
+            var dx = a[0] - b[0], dy = a[1] - b[1];
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        /* Práh blízkosti – figurka „dorazila" na zastávku */
+        var ARRIVE_THRESHOLD = 0.0008;
+
+        function animate() {
+            if (animStarted) return;
+            animStarted = true;
+
+            /* Na startu viditelná jen zastávka 1, odhalená 2 */
+            var nextStop = 0; /* další zastávka, na kterou figurka míří */
+            stopMarkers[0].getElement().querySelector('.plk-stop-icon').classList.add('plk-stop-icon--active');
+            if (stopMarkers.length > 1) {
+                stopMarkers[1].getElement().querySelector('.plk-stop-icon').classList.add('plk-stop-icon--active');
+            }
+
+            var startTime = null;
+
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                var elapsed = timestamp - startTime;
+                var progress = Math.min(elapsed / animDuration, 1);
+
+                /* Najdi aktuální segment na základě vzdálenosti */
+                var targetDist = progress * totalLength;
+                var accumulated = 0;
+                var segIndex = 0;
+                for (var j = 0; j < segLengths.length; j++) {
+                    if (accumulated + segLengths[j] >= targetDist) {
+                        segIndex = j;
+                        break;
+                    }
+                    accumulated += segLengths[j];
+                    segIndex = j;
+                }
+
+                var segProgress = segLengths[segIndex] > 0
+                    ? (targetDist - accumulated) / segLengths[segIndex]
+                    : 0;
+                segProgress = Math.max(0, Math.min(1, segProgress));
+
+                var pos = lerp(routeCoords[segIndex], routeCoords[segIndex + 1] || routeCoords[segIndex], segProgress);
+                pawn.setLatLng(pos);
+
+                /* Sekvenční odhalování: sleduj jen další zastávku v pořadí */
+                if (nextStop < stopCoords.length && dist(pos, stopCoords[nextStop]) < ARRIVE_THRESHOLD) {
+                    nextStop++;
+                    /* Odhal následující zastávku (tu, kam teď míříme) */
+                    var reveal = Math.min(nextStop + 1, stopMarkers.length - 1);
+                    stopMarkers[reveal].getElement().querySelector('.plk-stop-icon').classList.add('plk-stop-icon--active');
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    for (var m = 0; m < stopMarkers.length; m++) {
+                        stopMarkers[m].getElement().querySelector('.plk-stop-icon').classList.add('plk-stop-icon--active');
+                    }
+                    pawn.setLatLng(routeCoords[routeCoords.length - 1]);
+                }
+            }
+
+            requestAnimationFrame(step);
+        }
+
+        /* Spusť animaci při scrollu do viewportu */
+        var mapObserver = new IntersectionObserver(function (entries) {
+            if (entries[0].isIntersecting) {
+                animate();
+                mapObserver.disconnect();
+            }
+        }, { threshold: 0.3 });
+        mapObserver.observe(mapEl);
+    })();
+</script>
+</body>
+</html>
