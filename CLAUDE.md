@@ -30,7 +30,9 @@ cestina20/
 │       ├── og-image.jpg         # OG image optimized (200 KB)
 │       └── mapa-trasy.jpg       # route map screenshot (1900x1188, 625 KB) – no longer used in HTML, replaced by Leaflet map
 ├── prednasky/               # Přednášky o češtině – landing page (rozpracováno, Jekyll-excluded)
-│   └── index.html           #   foto Martina v assets/martin-kavka.jpg zatím chybí
+│   ├── index.html
+│   └── assets/
+│       └── martin-kavka.jpg # bio foto (800×533, optimalizováno z 15MB originálu)
 ├── prihlaseni-newsletter/   # Newsletter signup widget (Jekyll-excluded, čeká na programátora)
 │   ├── index.html           # demo + zdroj embed snippetu pro WordPress (snippet má logo inline jako base64 data URI = samonosný)
 │   └── assets/
@@ -71,11 +73,13 @@ Asset paths in HTML/CSS are relative to the project's `index.html` (e.g. `assets
 To match the look of a standard cestina20.cz subpage, include these elements in order:
 
 1. **`<header class="header">`** — logo, claim, desktop search form (with spinner markup), `#header__menu__button`, „Přidat slovo" button.
-2. **`#menu__wrap.menu__wrap`** — left nav (Slovo dne, Dle abecedy dropdown, Nejoblíbenější, Nově přidaná) + right nav (Kniha a TV pořad, O Češtině 2.0, Kontakt).
+2. **`#menu__wrap.menu__wrap`** — left nav (Slovo dne, Dle abecedy dropdown, Nejoblíbenější, Nově přidaná) + right nav (rozbalovací „Více", O Češtině 2.0, Kontakt — viz poznámka o menu níž).
 3. **`#submenu__wrap.submenu__wrap`** — the "Dle abecedy" letter picker (A–Z horizontal strip). This is a **separate div** after `menu__wrap`, not nested inside it. The theme JS toggles its visibility when "Dle abecedy" is clicked. Uses `.submenu` class (not `.sub-menu`). The `sub-menu` ul inside `menu__letters` li is kept for mobile; the `submenu__wrap` is the desktop letter bar.
 4. **`.header__search__wrap--mobile`** — mobile search form (hidden on desktop by the theme CSS).
 4. **Hero or page content** — for landing pages, a full-width hero sits directly after the nav bar. Use a lighter blue (e.g. `#2d4ea8`) for the hero so it contrasts with the darker header (`#223276`). Background images use a semi-transparent dark overlay via CSS gradient (`rgba(26,38,96,0.72)`) to keep white text readable.
 5. **`<footer class="footer">`**
+
+**Menu „Více" (demo):** Pravá část navigace má na stránkách `prednasky/` i `prazsky-literarni-kviz/` rozbalovací položku `Více` (Pražský literární kvíz / Přednášky pro školy / Kniha Hacknutá čeština / TV seriál Hacknutá čeština) — je to **demo** cílové podoby menu pro programátora. Ostrý web cestina20.cz stále běží na starém „Kniha a TV pořad"; reálná změna menu se dělá ve WordPressu (Vzhled → Menu). Dvě nové položky vedou zatím na `#`, u bloku je v HTML komentář.
 
 Load these scripts before `</body>` for navigation (hamburger menu, dropdowns, live search) to work:
 ```html
