@@ -29,6 +29,8 @@ cestina20/
 │       ├── og-image.png         # OG image original (1200x630)
 │       ├── og-image.jpg         # OG image optimized (200 KB)
 │       └── mapa-trasy.jpg       # route map screenshot (1900x1188, 625 KB) – no longer used in HTML, replaced by Leaflet map
+├── prednasky/               # Přednášky o češtině – landing page (rozpracováno, Jekyll-excluded)
+│   └── index.html           #   foto Martina v assets/martin-kavka.jpg zatím chybí
 ├── prihlaseni-newsletter/   # Newsletter signup widget (Jekyll-excluded, čeká na programátora)
 │   ├── index.html           # demo + zdroj embed snippetu pro WordPress (snippet má logo inline jako base64 data URI = samonosný)
 │   └── assets/
@@ -161,6 +163,61 @@ Do NOT override `.header` padding globally — the theme manages header padding 
 
 - **Leaflet 1.9.4** — loaded from unpkg CDN (CSS + JS) with SRI hashes. Used for the interactive route map only. `scrollWheelZoom: false` to prevent hijacking page scroll.
 - **Benosaurus order iframe** — `<iframe src="https://benosaurus.cz/objednavka/plk1-8d005281?embed=1&teamy=1&studenti=30" allow="payment">`. Iframe je cross-origin (Benosaurus běží na `benosaurus.cz`), takže host CSS dovnitř nesahá – vzhled formuláře plně řídí Benosaurus. Resize protokol: iframe posílá `postMessage({type: 'benosaurus-resize', height: <px>})`, parent posluchač nastavuje `iframe.style.height` (s klampováním, viz výše). Benosaurus je projekt Romana Věžníka — pokud iframe začne dělat něco divného, problém je skoro vždy na Benosaurus straně, řeš s Romanem, nehrabej do HTML.
+
+## Product: Přednášky o češtině (`/prednasky`)
+
+Landing page pro objednávání **interaktivních přednášek o češtině** pro ZŠ, SŠ, knihovny a kulturní centra. Cílovka = **učitelé** (oni rozhodují a objednávají), ne studenti. Stránka je **rozpracovaná** – drží `<meta name="robots" content="noindex, nofollow">` a je v `_config.yml` exclude listu, dokud nebude finální. Cílový URL po launchi: nejspíš `prednasky.cestina20.cz` (custom doména) nebo `cestina20.cz/prednasky/` (přes WP) – nerozhodnuto. Page-specific CSS prefix: `pred-`.
+
+**Kontaktní e-mail je `jsem@martinkavka.cz`** (ne `ja@cestina20.cz` jako zbytek webu) – přednášky jsou Martinova osobní služba. Adresa je v hero odkazu a v JS proměnné `EMAIL`.
+
+### Pozicování a tonalita
+
+- **„Bavit, ne přednášet."** Martin nechce být v copy stylizovaný jako akademik / expert. Autoritu dělají credentials (slovník, kniha, TV seriál) – copy zůstává hravé, lidské, srozumitelné pro učitele.
+- **„Interaktivní přednáška, ne beseda."** Slovo *beseda* signalizuje učiteli volnou diskuzi, která ve třídě nefunguje. Stránka konzistentně používá *přednášku* / *interaktivní přednášku*, ale tuhle distinkci na stránce explicitně nevysvětluje.
+- **Obsah je proměnlivý, ne fixní program.** Stránka záměrně neslibuje pevné penzum témat – každá přednáška se ladí na míru, konkrétní zaměření se domlouvá předem (e-mailem nebo krátkým hovorem). Copy je důsledně v 1. osobě („účtuju", „počítám", „pošlu vám").
+
+### Cenový model
+
+Ceny jsou **bez DPH**; u každé hodnoty v tabulce i v kalkulačce je menším šedým písmem i cena s DPH (21 %). Přednášky fakturuje Martin Kavka osobně jako plátce DPH (faktura na školu, splatnost 14 dní).
+
+- **1 třída v jednom dni:** 5 000 Kč / třída → 5 000 Kč
+- **2 třídy:** 4 500 Kč / třída → 9 000 Kč
+- **3 třídy:** 4 000 Kč / třída → 12 000 Kč
+- **4 třídy:** 3 500 Kč / třída → 14 000 Kč – maximum v jednom dni, v tabulce zvýrazněno zeleně
+- **Víc než 4 třídy:** v kalkulačce nedosažitelné. Anti-merging klauzule: **max 30 žáků na třídu**, spojení dvou tříd se počítá jako dvě přednášky.
+- **Cestovné:** Po Praze zdarma (uživatel zadá 0 km). Mimo Prahu 5 Kč za každý ujetý kilometr, tam i zpět (`travel = distance * 2 * KM_RATE`).
+
+### Struktura stránky (sekce shora dolů)
+
+1. **Hero** – H1 *„Přednáška o češtině, jakou jste ve škole ještě neměli"*. Metadata strip *„Pro 2. stupeň ZŠ, SŠ a knihovny · od 100 Kč na žáka"*. Primární CTA *„Spočítejte si cenu pro školu"* skroluje na `#kalkulacka`, sekundární je přímý `mailto:`.
+2. **Pro koho to je** – 4 audience karty (ZŠ 2. st., SŠ, knihovny, kulturní centra).
+3. **Každá přednáška je jiná** – 2 odstavce: obsah je proměnlivý (příklady: nová slova, překlady neusazených výrazů, slang) a domlouvá se společně předem. Žádné dlaždice ani fixní témata.
+4. **Jak přednáška probíhá** – `<h2>` + 3 bullety (45 až 90 minut / interaktivní prvky / prostor na otázky).
+5. **Kolik to stojí** – tabulka tier cen + 2 callouty (cestovné, max 30 žáků) + h3 „Spočítejte si cenu pro vaši školu" + interaktivní kalkulačka (`#kalkulacka` míří na h3).
+6. **Přednáškou to nekončí** – „Další materiály pro školy (PDF)" (po přednášce, s fakturou, jen školy) + 30 dílů TV seriálu Hacknutá čeština na Streamu.
+7. **Časté otázky** – 4× FAQ (rezervace, co si připravit, storno, faktura).
+8. **Kdo jsem** – bio: foto (`assets/martin-kavka.jpg`) + jméno + řádka credentials s odkazy + věta o médiích (odkazy na ČT, ČRo, DVTV, Respekt).
+9. **CTA panel** (zelený) – závěrečný nudge, tlačítko skroluje na `#kalkulacka` (ne mailto).
+10. **Sticky CTA** (jen mobil) – skok na kalkulačku.
+
+### Kalkulačka – UX detaily
+
+- Tři inputy: počet tříd (slider 1–**4** + plus/minus tlačítka), žáků na třídu (number, default 25, max 30), vzdálenost z Prahy (number, **default prázdný**, placeholder *„např. 35 km"*).
+- Když je vzdálenost prázdná: breakdown ukazuje *„Cestovné: – zadejte vzdálenost"*, celkem *„(bez cestovného)"*, na žáka *„–"*; mailto se přizpůsobí.
+- Pod „Celkem bez DPH" je menším šedým písmem cena s DPH (`VAT_RATE = 0.21`).
+- CTA tlačítko **„Objednat"** otevře předvyplněný `mailto:` (subject *„Objednávka přednášky o češtině"*, body se shrnutím z kalkulačky + prázdná pole Škola / Fakturační adresa / IČO / Kontaktní osoba / Termín / Téma). Pod tlačítkem je vysvětlivka, co se po kliknutí stane – ne „napište mi" fallback.
+- **`box-sizing: border-box`** patří na `<input type=number>` i na full-width tlačítka – téma dává border-box jen `type=text/email/...`, takže bez něj pole/tlačítka přetékají vpravo.
+
+### Heads-up checklist (otevřené úkoly)
+
+- [ ] **Pracovní materiál PDF** – copy ho slibuje („Další materiály pro školy"), je potřeba ho jednou vytvořit (pak použitelný pro všechny školy).
+- [ ] **Schema markup** (FAQPage, Person, Service) – doplnit těsně před launchem.
+- [ ] **Cílový hosting** – subdoména vs. subdir, nerozhodnuto. Po launchi sundat `noindex` a vyndat `prednasky` z `_config.yml` exclude.
+- [ ] **Reference / testimonialy** – sbírat od prvních objednávek; zatím sociální důkaz nepřidávat.
+
+### Co se na stránce záměrně nedělá
+
+- **Money-back guarantee**, **fake scarcity** („zbývají 3 termíny") i **pravidelné follow-up e-maily** – Martin to nechce, učitelé mají na marketingový BS detektor.
 
 ## Tool: Newsletter signup widget (`/prihlaseni-newsletter`)
 

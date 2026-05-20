@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Přednášky o&nbsp;češtině pro školy a&nbsp;knihovny – Čeština 2.0</title>
+    <meta name="description" content="Interaktivní přednáška o češtině pro školy a knihovny. Jak vznikají nová slova a proč některá přežijí – program na míru vaší třídě. Od 100 Kč na žáka.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Přednášky o češtině pro školy a knihovny – Čeština 2.0">
+    <meta property="og:description" content="Interaktivní přednáška o češtině pro vaši školu nebo knihovnu. Program ladím na míru vaší třídě, vy nemusíte nic chystat. Od 100 Kč na žáka.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta property="og:locale" content="cs_CZ">
+    <link rel="stylesheet"
+          href="https://cestina20.cz/wp-content/themes/cestina20/css/style.100.min.css?ver=145"
+          type="text/css">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="https://cestina20.cz/wp-content/themes/cestina20/images/favicon/favicon-32x32.png">
+    <script>
+        document.documentElement.className = document.documentElement.className.replace("no-js", "js");
+    </script>
+    <style>
+        /* Landing page – přidané styly, CSS tématu se nemění. Prefix `pred-`. */
+
+        .pred-hero {
+            background: linear-gradient(135deg, #2d4ea8 0%, #1a2660 100%);
+            color: #fff;
+            padding: 60px 0 50px;
+            text-align: center;
+        }
+
+        .pred-hero__title {
+            font-size: 2.6em;
+            font-weight: 700;
+            margin: 0 0 16px;
+            color: #fff;
+            line-height: 1.15;
+        }
+
+        .pred-hero__subtitle {
+            font-size: 1.15em;
+            margin: 0 auto 32px;
+            color: rgba(255, 255, 255, 0.88);
+            max-width: 640px;
+            line-height: 1.55;
+        }
+
+        .pred-hero__cta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .pred-hero .button {
+            font-size: 1.05em;
+            padding: 14px 28px;
+        }
+
+        .pred-hero__secondary {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.95em;
+            text-decoration: underline;
+            text-decoration-color: rgba(255, 255, 255, 0.4);
+            text-underline-offset: 4px;
+        }
+
+        .pred-hero__secondary:hover {
+            color: #fff;
+            text-decoration-color: #fff;
+        }
+
+        .pred-hero__price {
+            margin: 6px 0 0;
+            font-size: 0.92em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Sekce */
+        .pred-section {
+            margin-top: 26px;
+        }
+
+        .pred-section h2 {
+            margin-top: 0;
+        }
+
+        /* „Pro koho je to" karty */
+        .pred-audience {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .pred-audience__item {
+            background: #f8f6f2;
+            border-radius: 8px;
+            padding: 18px 14px;
+            text-align: center;
+        }
+
+        .pred-audience__icon {
+            display: block;
+            font-size: 1.8em;
+            margin-bottom: 6px;
+        }
+
+        .pred-audience__name {
+            font-weight: 600;
+            color: #223276;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 600px) {
+            .pred-audience { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* Témata */
+        .pred-topics {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 16px 0 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .pred-topics li {
+            padding: 14px 18px !important;
+            background: #f8f6f2;
+            border-left: 3px solid #15851d;
+            border-radius: 4px;
+            font-size: 0.97em;
+            line-height: 1.5;
+        }
+
+        .pred-topics li::before,
+        .pred-topics li::after {
+            display: none !important;
+        }
+
+        .pred-topics strong {
+            color: #223276;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* Ceník tabulka */
+        .pred-pricing {
+            margin-top: 16px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .pred-pricing th, .pred-pricing td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .pred-pricing th {
+            background: #223276;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.92em;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .pred-pricing tr:last-child td { border-bottom: none; }
+
+        .pred-pricing tr:nth-child(even) td { background: #fafafa; }
+
+        .pred-pricing__per {
+            color: #15851d;
+            font-weight: 600;
+        }
+
+        .pred-pricing__vat,
+        .pred-calc__vat {
+            display: block;
+            font-size: 0.78em;
+            color: #888;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .pred-calc__vat--total {
+            font-size: 0.85em;
+            color: #555;
+            margin-top: 4px;
+        }
+
+        .pred-pricing__highlight td {
+            background: #eef6ee !important;
+            font-weight: 600;
+        }
+
+        /* Kalkulačka */
+        .pred-calc-heading {
+            margin: 32px 0 8px;
+            font-size: 1.25em;
+            font-weight: 700;
+            color: #223276;
+            scroll-margin-top: 80px;
+        }
+
+        .pred-calc {
+            margin-top: 16px;
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 24px;
+        }
+
+        .pred-email-fallback {
+            margin: 10px 0 0;
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        .pred-email-fallback a {
+            color: #555;
+            text-decoration: underline;
+        }
+
+        .pred-email-fallback a:hover {
+            color: #15851d;
+        }
+
+        .pred-calc__row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 18px;
+        }
+
+        .pred-calc__label {
+            font-size: 0.92em;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .pred-calc__label strong {
+            font-size: 1.1em;
+            color: #223276;
+            font-weight: 700;
+        }
+
+        .pred-calc__slider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pred-calc__btn-step {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            background: #fff;
+            color: #555;
+            font-size: 18px;
+            line-height: 1;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .pred-calc__btn-step:hover { background: #f5f5f5; }
+
+        .pred-calc__range {
+            flex: 1;
+            accent-color: #15851d;
+        }
+
+        .pred-calc__input-num {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 9px 12px;
+            font-size: 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: #fff;
+            color: #223276;
+        }
+
+        .pred-calc__input-num:focus {
+            outline: none;
+            border-color: #15851d;
+            box-shadow: 0 0 0 2px rgba(21, 133, 29, 0.2);
+        }
+
+        .pred-calc__hint {
+            font-size: 0.83em;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .pred-calc__breakdown {
+            margin-top: 18px;
+            padding: 16px 18px;
+            background: #f8f6f2;
+            border-radius: 8px;
+        }
+
+        .pred-calc__line {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.97em;
+            color: #333;
+        }
+
+        .pred-calc__line--total {
+            border-top: 1px solid #d1d5db;
+            margin-top: 8px;
+            padding-top: 10px;
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #223276;
+        }
+
+        .pred-calc__line--total .pred-calc__line-value {
+            color: #15851d;
+        }
+
+        .pred-calc__per-student {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 0.95em;
+            color: #555;
+        }
+
+        .pred-calc__per-student strong {
+            font-size: 1.15em;
+            color: #15851d;
+        }
+
+        .pred-calc__cta {
+            margin-top: 18px;
+            text-align: center;
+        }
+
+        /* Callout */
+        .pred-callout {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: #eef6ee;
+            border: 1px solid #c4dfc4;
+            border-radius: 6px;
+            padding: 20px 24px;
+            margin-top: 20px;
+        }
+
+        .pred-callout__icon {
+            font-size: 1.8em;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .pred-callout__title {
+            font-weight: 700;
+            color: #1a5c1a;
+            margin: 0 0 4px;
+            font-size: 1.05em;
+        }
+
+        .pred-callout__text {
+            margin: 0;
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .pred-callout--note {
+            background: #fff8e6;
+            border-color: #f0d68a;
+        }
+
+        .pred-callout--note .pred-callout__title { color: #8a6500; }
+
+        /* FAQ */
+        .pred-faq {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 14px 0 0;
+        }
+
+        .pred-faq li {
+            padding: 12px 0 !important;
+            border-bottom: 1px solid #eee;
+        }
+
+        .pred-faq li::before,
+        .pred-faq li::after { display: none !important; }
+
+        .pred-faq__q {
+            font-weight: 600;
+            color: #223276;
+            margin: 0 0 4px;
+        }
+
+        .pred-faq__a {
+            margin: 0;
+            color: #444;
+            font-size: 0.95em;
+            line-height: 1.55;
+        }
+
+        /* Bio sekce – kdo přednášku vede */
+        .pred-bio__inner {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 28px;
+            align-items: start;
+            margin-top: 14px;
+        }
+
+        .pred-bio__photo {
+            width: 200px;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f0eee8;
+        }
+
+        .pred-bio__photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 65% center;
+            display: block;
+        }
+
+        .pred-bio__intro {
+            margin: 0 0 14px;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .pred-bio__inner {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+            .pred-bio__photo {
+                max-width: 160px;
+                margin: 0 auto;
+            }
+        }
+
+        /* CTA panel na konci */
+        .pred-cta-panel {
+            background: linear-gradient(135deg, #15851d 0%, #319f39 100%);
+            color: #fff;
+            border-radius: 10px;
+            padding: 32px 28px;
+            text-align: center;
+            margin-top: 28px;
+        }
+
+        .pred-cta-panel h2 {
+            color: #fff;
+            margin: 0 0 10px;
+        }
+
+        .pred-cta-panel p {
+            margin: 0 auto 22px;
+            max-width: 520px;
+            color: rgba(255, 255, 255, 0.92);
+            line-height: 1.55;
+        }
+
+        .pred-cta-panel .button {
+            background: #fff;
+            color: #15851d;
+            font-size: 1.05em;
+            padding: 14px 30px;
+        }
+
+        .pred-cta-panel .button:hover { background: #f0f9f0; }
+
+        /* Sticky CTA – jen mobil */
+        .pred-sticky-cta {
+            display: none;
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-top: 1px solid #ddd;
+            padding: 10px 14px;
+            text-align: center;
+            transform: translateY(110%);
+            transition: transform 0.25s ease-out;
+        }
+
+        @media (max-width: 600px) {
+            .pred-sticky-cta { display: block; }
+            .pred-sticky-cta .button { width: 100%; box-sizing: border-box; padding: 12px; font-size: 1em; }
+            .pred-sticky-cta.is-visible { transform: translateY(0); }
+            .pred-hero__title { font-size: 1.8em; }
+            .pred-hero { padding: 40px 15px 36px; }
+            body { padding-bottom: 70px; }
+        }
+    </style>
+</head>
+<body class="archive paged page-template-default page page-id-2 wp-custom-logo wp-embed-responsive js no-js-active">
+
+<header class="header">
+    <div class="container">
+        <a class="header__go_to_content" href="#content" title="Přejít na obsah">Přejít na obsah</a>
+        <a href="https://cestina20.cz/pridat-slovo/" class="header__add__mobile"><span>Přidat slovo</span></a>
+        <a class="header__logo" href="https://cestina20.cz">
+            <img src="https://cestina20.cz/wp-content/themes/cestina20/images/logo-new.svg" alt="Logo">
+        </a>
+        <div class="header__claim">Slovník, který tvoříte vy</div>
+        <form role="search" method="get" class="header__search header__search--desktop" action="https://cestina20.cz/">
+            <label for="header__search--desktop--s">Vyhledávání:</label>
+            <input type="text" value="" name="s" id="header__search--desktop--s" placeholder="Najít slovo..." autocomplete="off">
+            <button class="header__search__button">&nbsp;<span class="header__search__button__label">Hledat</span><span class="header__search__button__icon"></span></button>
+            <div class="header__search__result">
+                <div class="spinner">
+                    <div class="spinner__rect spinner__rect--1"></div>
+                    <div class="spinner__rect spinner__rect--2"></div>
+                    <div class="spinner__rect spinner__rect--3"></div>
+                    <div class="spinner__rect spinner__rect--4"></div>
+                    <div class="spinner__rect spinner__rect--5"></div>
+                </div>
+                <ul class="header__search__result__data"></ul>
+            </div>
+        </form>
+        <span id="header__menu__button" class="header__menu__button"><span>Menu</span></span>
+        <a href="https://cestina20.cz/pridat-slovo/" class="header__add button button--add">Přidat slovo<span>&nbsp;</span></a>
+    </div>
+</header>
+
+<div id="menu__wrap" class="menu__wrap">
+    <div class="container">
+        <div class="menu__inner">
+            <nav id="header__menu__inner" class="header__menu__inner">
+                <ul class="menu">
+                    <li class="menu-item"><a href="https://cestina20.cz/">Slovo dne</a></li>
+                    <li class="menu-item-has-children menu__letters menu-item">
+                        <a>Dle abecedy</a>
+                        <ul class="sub-menu">
+                            <li><a href="https://cestina20.cz/pismeno/ostatni/">#</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/a/">A</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/b/">B</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/c/">C</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/d/">D</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/e/">E</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/f/">F</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/g/">G</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/h/">H</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/ch/">CH</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/i/">I</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/j/">J</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/k/">K</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/l/">L</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/m/">M</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/n/">N</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/o/">O</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/p/">P</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/q/">Q</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/r/">R</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/s/">S</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/t/">T</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/u/">U</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/v/">V</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/w/">W</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/x/">X</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/y/">Y</a></li>
+                            <li><a href="https://cestina20.cz/pismeno/z/">Z</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item"><a href="https://cestina20.cz/zebricek/nejoblibenejsi/">Nejoblíbenější</a></li>
+                    <li class="menu-item"><a href="https://cestina20.cz/zebricek/nove-pridana/">Nově přidaná</a></li>
+                </ul>
+            </nav>
+            <nav id="header__menu__inner__right" class="header__menu__inner__right">
+                <ul class="menu">
+                    <li class="menu-item menu-item-has-children">
+                        <a href="#">Kniha a TV pořad</a>
+                        <ul class="sub-menu">
+                            <li class="menu-item"><a href="https://cestina20.cz/kniha/">Kniha Hacknutá čeština</a></li>
+                            <li class="menu-item"><a href="https://cestina20.cz/televize-seznam/">TV pořad Hacknutá čeština</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item"><a href="https://cestina20.cz/o-cestine-2-0/">O Češtině 2.0</a></li>
+                    <li class="menu-item"><a href="https://cestina20.cz/kontakt/">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div id="submenu__wrap" class="submenu__wrap" style="display: none;">
+    <div class="container">
+        <ul class="submenu">
+            <li><a href="https://cestina20.cz/pismeno/ostatni/">#</a></li>
+            <li><a href="https://cestina20.cz/pismeno/a/">A</a></li>
+            <li><a href="https://cestina20.cz/pismeno/b/">B</a></li>
+            <li><a href="https://cestina20.cz/pismeno/c/">C</a></li>
+            <li><a href="https://cestina20.cz/pismeno/d/">D</a></li>
+            <li><a href="https://cestina20.cz/pismeno/e/">E</a></li>
+            <li><a href="https://cestina20.cz/pismeno/f/">F</a></li>
+            <li><a href="https://cestina20.cz/pismeno/g/">G</a></li>
+            <li><a href="https://cestina20.cz/pismeno/h/">H</a></li>
+            <li><a href="https://cestina20.cz/pismeno/ch/">CH</a></li>
+            <li><a href="https://cestina20.cz/pismeno/i/">I</a></li>
+            <li><a href="https://cestina20.cz/pismeno/j/">J</a></li>
+            <li><a href="https://cestina20.cz/pismeno/k/">K</a></li>
+            <li><a href="https://cestina20.cz/pismeno/l/">L</a></li>
+            <li><a href="https://cestina20.cz/pismeno/m/">M</a></li>
+            <li><a href="https://cestina20.cz/pismeno/n/">N</a></li>
+            <li><a href="https://cestina20.cz/pismeno/o/">O</a></li>
+            <li><a href="https://cestina20.cz/pismeno/p/">P</a></li>
+            <li><a href="https://cestina20.cz/pismeno/q/">Q</a></li>
+            <li><a href="https://cestina20.cz/pismeno/r/">R</a></li>
+            <li><a href="https://cestina20.cz/pismeno/s/">S</a></li>
+            <li><a href="https://cestina20.cz/pismeno/t/">T</a></li>
+            <li><a href="https://cestina20.cz/pismeno/u/">U</a></li>
+            <li><a href="https://cestina20.cz/pismeno/v/">V</a></li>
+            <li><a href="https://cestina20.cz/pismeno/w/">W</a></li>
+            <li><a href="https://cestina20.cz/pismeno/x/">X</a></li>
+            <li><a href="https://cestina20.cz/pismeno/y/">Y</a></li>
+            <li><a href="https://cestina20.cz/pismeno/z/">Z</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="header__search__wrap--mobile">
+    <div class="container">
+        <form role="search" method="get" class="header__search header__search--mobile" action="https://cestina20.cz/">
+            <label for="header__search--mobile--s">Vyhledávání:</label>
+            <input type="text" value="" name="s" id="header__search--mobile--s" placeholder="Najít slovo..." autocomplete="off">
+            <button class="header__search__button">&nbsp;<span class="header__search__button__label">Hledat</span><span class="header__search__button__icon"></span></button>
+            <div class="header__search__result">
+                <div class="spinner">
+                    <div class="spinner__rect spinner__rect--1"></div>
+                    <div class="spinner__rect spinner__rect--2"></div>
+                    <div class="spinner__rect spinner__rect--3"></div>
+                    <div class="spinner__rect spinner__rect--4"></div>
+                    <div class="spinner__rect spinner__rect--5"></div>
+                </div>
+                <ul class="header__search__result__data"></ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Hero -->
+<div class="pred-hero">
+    <div class="container">
+        <h1 class="pred-hero__title">Přednáška o&nbsp;češtině,<br>jakou jste ve&nbsp;škole ještě neměli</h1>
+        <p class="pred-hero__subtitle">S&nbsp;Martinem Kavkou, zakladatelem slovníku Čeština&nbsp;2.0 a&nbsp;spoluautorem knihy <em>Hacknutá čeština</em>.</p>
+        <div class="pred-hero__cta">
+            <a class="button" href="#kalkulacka">Spočítejte si cenu pro školu</a>
+            <a class="pred-hero__secondary" href="mailto:jsem@martinkavka.cz">Nebo mi napište na jsem@martinkavka.cz&nbsp;&rarr;</a>
+        </div>
+        <p class="pred-hero__price">Pro 2.&nbsp;stupeň ZŠ, SŠ a&nbsp;knihovny&nbsp;· od 100&nbsp;Kč na žáka</p>
+    </div>
+</div>
+
+<div class="container">
+    <div id="content" class="content">
+        <div id="content__inner" class="content__inner" style="padding-right: 0;">
+            <div class="content__list">
+
+                <!-- Pro koho je to -->
+                <section class="pred-section">
+                    <h2>Pro koho to je</h2>
+                    <p>Mluvím o&nbsp;češtině s&nbsp;žáky, studenty i&nbsp;dospělými. Přednášku přizpůsobuju publiku – jiný tón volím pro 2.&nbsp;stupeň základní školy, jiný pro maturitní ročník, jiný pro veřejnost v&nbsp;knihovně.</p>
+                    <div class="pred-audience">
+                        <div class="pred-audience__item">
+                            <span class="pred-audience__icon">&#128218;</span>
+                            <div class="pred-audience__name">Základní školy<br>(2. stupeň)</div>
+                        </div>
+                        <div class="pred-audience__item">
+                            <span class="pred-audience__icon">&#127979;</span>
+                            <div class="pred-audience__name">Střední školy<br>a&nbsp;gymnázia</div>
+                        </div>
+                        <div class="pred-audience__item">
+                            <span class="pred-audience__icon">&#128214;</span>
+                            <div class="pred-audience__name">Knihovny</div>
+                        </div>
+                        <div class="pred-audience__item">
+                            <span class="pred-audience__icon">&#127914;</span>
+                            <div class="pred-audience__name">Kulturní centra,<br>spolky</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Každá přednáška je jiná -->
+                <section class="pred-section">
+                    <h2>Každá přednáška je jiná</h2>
+                    <p>Můžeme se bavit o&nbsp;tom, jak vznikají nová slova a&nbsp;proč některá zapadnou a&nbsp;jiná se chytnou. Vymýšlet české překlady výrazů, které u&nbsp;nás ještě nejsou usazené – třeba <em>carsharing</em>, <em>vibecoding</em> nebo <em>binge watching</em>. Podívat se, odkud se bere slang. Nebo si nová slova rovnou společně tvořit.</p>
+                    <p>Co z&nbsp;toho a&nbsp;v&nbsp;jakém poměru, vybíráme společně. Napíšete mi, čeho chcete víc a&nbsp;čeho míň – a&nbsp;když je toho k&nbsp;probrání víc, můžeme si před akcí krátce zavolat (stačí 20&nbsp;minut). Přednášku pak připravím na míru vaší třídě.</p>
+                </section>
+
+                <!-- Jak to probíhá -->
+                <section class="pred-section">
+                    <h2>Jak přednáška probíhá</h2>
+                    <ul class="pred-topics">
+                        <li><strong>45 až 90 minut</strong>Pro školy 45&nbsp;minut, jedna vyučovací hodina. Knihovny a&nbsp;spolky si obvykle volí 60 nebo 90&nbsp;minut, když chtějí prostor na hlubší diskuzi.</li>
+                        <li><strong>Interaktivní prvky</strong>Anketní otázky, hádání nových slov, příklady, které publikum samo komentuje. Žádný dlouhý monolog.</li>
+                        <li><strong>Prostor na otázky</strong>Ptejte se klidně už během přednášky, nejen na konci. Otázky od publika mám rád, bývá z&nbsp;nich ta nejživější část.</li>
+                    </ul>
+                </section>
+
+                <!-- Cena + kalkulačka -->
+                <section class="pred-section" id="cena">
+                    <h2>Kolik to stojí</h2>
+                    <p>Cenu určuju podle počtu tříd, do kterých během jednoho dne přijdu. Platí jednoduché pravidlo: čím víc tříd ve škole na jeden den domluvíte, tím méně stojí jedna přednáška. Cesta i&nbsp;čas se rozloží na víc skupin a&nbsp;víc žáků. Proto se vyplatí domluvit víc tříd najednou.</p>
+
+                    <table class="pred-pricing">
+                        <thead>
+                            <tr>
+                                <th>Počet tříd v&nbsp;jednom dni</th>
+                                <th>Cena za třídu</th>
+                                <th>Celkem bez DPH</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1 třída</td>
+                                <td><span class="pred-pricing__per">5&nbsp;000&nbsp;Kč</span><span class="pred-pricing__vat">6&nbsp;050&nbsp;Kč s&nbsp;DPH</span></td>
+                                <td>5&nbsp;000&nbsp;Kč<span class="pred-pricing__vat">6&nbsp;050&nbsp;Kč s&nbsp;DPH</span></td>
+                            </tr>
+                            <tr>
+                                <td>2 třídy</td>
+                                <td><span class="pred-pricing__per">4&nbsp;500&nbsp;Kč</span><span class="pred-pricing__vat">5&nbsp;445&nbsp;Kč s&nbsp;DPH</span></td>
+                                <td>9&nbsp;000&nbsp;Kč<span class="pred-pricing__vat">10&nbsp;890&nbsp;Kč s&nbsp;DPH</span></td>
+                            </tr>
+                            <tr>
+                                <td>3 třídy</td>
+                                <td><span class="pred-pricing__per">4&nbsp;000&nbsp;Kč</span><span class="pred-pricing__vat">4&nbsp;840&nbsp;Kč s&nbsp;DPH</span></td>
+                                <td>12&nbsp;000&nbsp;Kč<span class="pred-pricing__vat">14&nbsp;520&nbsp;Kč s&nbsp;DPH</span></td>
+                            </tr>
+                            <tr class="pred-pricing__highlight">
+                                <td>4 třídy</td>
+                                <td><span class="pred-pricing__per">3&nbsp;500&nbsp;Kč</span><span class="pred-pricing__vat">4&nbsp;235&nbsp;Kč s&nbsp;DPH</span></td>
+                                <td>14&nbsp;000&nbsp;Kč<span class="pred-pricing__vat">16&nbsp;940&nbsp;Kč s&nbsp;DPH</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p style="margin-top: 12px; font-size: 0.92em; color: #666;">Jsem plátce DPH, proto k&nbsp;základní ceně připočítávám DPH ve výši 21&nbsp;%.</p>
+
+                    <div class="pred-callout">
+                        <span class="pred-callout__icon">&#128205;</span>
+                        <div>
+                            <p class="pred-callout__title">Cestovné z&nbsp;Prahy</p>
+                            <p class="pred-callout__text">Po&nbsp;Praze zdarma. Při výjezdu mimo Prahu účtuju 5&nbsp;Kč za&nbsp;každý ujetý kilometr (tam i&nbsp;zpět). Příklad: škola 50&nbsp;km od&nbsp;Prahy = 100&nbsp;km&nbsp;×&nbsp;5&nbsp;Kč = 500&nbsp;Kč.</p>
+                        </div>
+                    </div>
+
+                    <div class="pred-callout pred-callout--note">
+                        <span class="pred-callout__icon">&#9888;&#65039;</span>
+                        <div>
+                            <p class="pred-callout__title">Maximálně 30&nbsp;žáků na třídu</p>
+                            <p class="pred-callout__text">Cenu počítám podle počtu tříd. Takže i&nbsp;když dvě třídy spojíte do jedné velké skupiny, pořád to beru jako dvě přednášky – 9&nbsp;000&nbsp;Kč.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="pred-calc-heading" id="kalkulacka">Spočítejte si cenu pro vaši školu</h3>
+                    <div class="pred-calc">
+                        <div class="pred-calc__row">
+                            <div class="pred-calc__label">Počet tříd v&nbsp;jednom dni <strong id="pred-classes-val">1</strong></div>
+                            <div class="pred-calc__slider-row">
+                                <button type="button" class="pred-calc__btn-step" id="pred-classes-minus" aria-label="Méně">&minus;</button>
+                                <input type="range" class="pred-calc__range" id="pred-classes" min="1" max="4" value="1">
+                                <button type="button" class="pred-calc__btn-step" id="pred-classes-plus" aria-label="Více">+</button>
+                            </div>
+                            <div class="pred-calc__hint">Víc než 4&nbsp;třídy v&nbsp;jednom dni už nezvládnu – domluvme se na dvou termínech.</div>
+                        </div>
+
+                        <div class="pred-calc__row">
+                            <div class="pred-calc__label">Žáků na třídu <strong id="pred-students-val">25</strong></div>
+                            <input type="number" class="pred-calc__input-num" id="pred-students" min="1" max="30" value="25">
+                            <div class="pred-calc__hint">Maximálně 30&nbsp;žáků na třídu.</div>
+                        </div>
+
+                        <div class="pred-calc__row">
+                            <div class="pred-calc__label">Vzdálenost z&nbsp;Prahy <strong><span id="pred-distance-val">–</span></strong></div>
+                            <input type="number" class="pred-calc__input-num" id="pred-distance" min="0" max="500" value="" placeholder="např. 35 km">
+                            <div class="pred-calc__hint">Zadejte vzdálenost po silnici z&nbsp;Prahy. Po&nbsp;Praze bez cestovného (zadejte&nbsp;0).</div>
+                        </div>
+
+                        <div class="pred-calc__breakdown">
+                            <div class="pred-calc__line">
+                                <span>Přednáška (<span id="pred-classes-out">1</span>&nbsp;×&nbsp;<span id="pred-per-class-out">5&nbsp;000</span>&nbsp;Kč)</span>
+                                <span class="pred-calc__line-value" id="pred-base-out">5&nbsp;000&nbsp;Kč</span>
+                            </div>
+                            <div class="pred-calc__line">
+                                <span>Cestovné</span>
+                                <span class="pred-calc__line-value" id="pred-travel-out">– zadejte vzdálenost</span>
+                            </div>
+                            <div class="pred-calc__line pred-calc__line--total">
+                                <span>Celkem bez DPH</span>
+                                <span class="pred-calc__line-value" id="pred-total-out">5&nbsp;000&nbsp;Kč <small style="font-weight:400;font-size:0.75em;color:#888;">(bez cestovného)</small></span>
+                            </div>
+                            <div class="pred-calc__vat pred-calc__vat--total" id="pred-vat-out">6&nbsp;050&nbsp;Kč s&nbsp;DPH</div>
+                        </div>
+
+                        <p class="pred-calc__per-student">To je <strong id="pred-per-student-out">200&nbsp;Kč</strong> na žáka.</p>
+
+                        <div class="pred-calc__cta">
+                            <a class="button" href="#" id="pred-mailto-cta">Objednat</a>
+                            <p class="pred-email-fallback">Po kliknutí se vám otevře předvyplněný e-mail se shrnutím objednávky. Doplníte do něj fakturační a&nbsp;další údaje, zkontrolujete a&nbsp;odešlete.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Přednáškou to nekončí -->
+                <section class="pred-section">
+                    <h2>Přednáškou to nekončí</h2>
+                    <ul class="pred-topics">
+                        <li><strong>Další materiály pro školy (PDF)</strong>Po přednášce vám je pošlu spolu s&nbsp;fakturou. Může to být sada úloh s&nbsp;novými slovy, anketa pro žáky nebo podklad pro nějakou další práci v&nbsp;hodině.</li>
+                        <li><strong>30&nbsp;dílů TV seriálu Hacknutá čeština</strong>Volně k&nbsp;vidění na <a href="https://www.stream.cz/hacknuta-cestina" target="_blank" rel="noopener">Streamu</a>. Pár dílů můžete žákům pustit už před přednáškou jako naladění, nebo po ní jako rozšíření tématu.</li>
+                    </ul>
+                </section>
+
+                <!-- FAQ -->
+                <section class="pred-section">
+                    <h2>Časté otázky</h2>
+                    <ul class="pred-faq">
+                        <li>
+                            <p class="pred-faq__q">Jak daleko dopředu si máme rezervovat termín?</p>
+                            <p class="pred-faq__a">Ideálně 4–6&nbsp;týdnů předem, ať mám čas připravit program na míru vaší třídě.</p>
+                        </li>
+                        <li>
+                            <p class="pred-faq__q">Co si máme připravit?</p>
+                            <p class="pred-faq__a">Stačí projektor nebo velká obrazovka a&nbsp;místnost pro celou skupinu – běžná třída, učebna nebo sál. Ostatní doladíme předem e-mailem.</p>
+                        </li>
+                        <li>
+                            <p class="pred-faq__q">Jak řeším storno?</p>
+                            <p class="pred-faq__a">Plány se mění. Když vám termín nevyjde, dejte mi prosím co nejdřív vědět – najdeme jiný a&nbsp;žádný storno poplatek neúčtuju. Výjimkou jsou jen konkrétní výdaje, které mi kvůli původnímu termínu už vznikly (například zaplacený hotel) – ty vám vyúčtuju.</p>
+                        </li>
+                        <li>
+                            <p class="pred-faq__q">Vystavujete fakturu na školu?</p>
+                            <p class="pred-faq__a">Ano, fakturu vám vystavím. Běžná splatnost je 14&nbsp;dní (případně podle dohody), platba převodem na účet.</p>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Kdo přednášku vede -->
+                <section class="pred-section pred-bio">
+                    <h2>Kdo jsem</h2>
+                    <div class="pred-bio__inner">
+                        <div class="pred-bio__photo">
+                            <!-- TODO: vlož foto Martina do prednasky/assets/martin-kavka.jpg (čtverec, ideálně 600×600 px nebo větší). Doporučený sips příkaz: sips -Z 600 puvodni.jpg --out martin-kavka.jpg -s format jpeg -s formatOptions 85 -->
+                            <img src="assets/martin-kavka.jpg" alt="Martin Kavka, zakladatel slovníku Čeština 2.0 a spoluautor knihy Hacknutá čeština">
+                        </div>
+                        <div class="pred-bio__text">
+                            <p class="pred-bio__intro"><strong>Martin Kavka</strong></p>
+                            <p>Zakladatel slovníku <a href="https://cestina20.cz/o-cestine-2-0/">Čeština 2.0</a>, spoluautor knihy <a href="https://www.melvil.cz/kniha-hacknuta-cestina/" target="_blank" rel="noopener">Hacknutá čeština</a> a&nbsp;spolutvůrce <a href="https://www.stream.cz/hacknuta-cestina" target="_blank" rel="noopener">televizního seriálu Hacknutá čeština</a>.</p>
+                            <p>Znáte mě i&nbsp;z&nbsp;médií – třeba z&nbsp;<a href="https://www.ceskatelevize.cz/porady/10435049455-dobre-rano/319291310020011/" target="_blank" rel="noopener">České televize</a>, <a href="https://www.youtube.com/watch?v=jXZ7E2FyVqI" target="_blank" rel="noopener">Českého rozhlasu</a>, <a href="https://video.aktualne.cz/dvtv/zemandrtalec-nebo-debobrizace-lide-si-radi-hraji-se-slovy-ri/r~090a8eb2b6ab11e890620cc47ab5f122/" target="_blank" rel="noopener">DVTV</a> nebo <a href="https://www.respekt.cz/spolecnost/cinitel-zcapit-salinosexual-nova-slova-jsou-jako-fejetony" target="_blank" rel="noopener">Respektu</a>.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CTA panel -->
+                <div class="pred-cta-panel">
+                    <h2>Pojďme se domluvit</h2>
+                    <p>Stačí vyplnit kalkulačku a&nbsp;poslat objednávku. Odpovím obvykle do 24&nbsp;hodin.</p>
+                    <a class="button" href="#kalkulacka">Spočítejte si cenu</a>
+                </div>
+
+            </div><!-- .content__list -->
+        </div><!-- .content__inner -->
+    </div><!-- .content -->
+</div><!-- .container -->
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer__inner">
+            <p>Čeština 2.0 – slovník, který tvoříte vy od roku 2008. Obsah slovníku můžete volně citovat či dále publikovat s uvedením zdroje.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Sticky CTA – jen mobil -->
+<div class="pred-sticky-cta">
+    <a class="button" href="#kalkulacka">Spočítejte si cenu pro vaši školu</a>
+</div>
+
+<script type="text/javascript">
+var ef_string = {"ajax_url":"https:\/\/cestina20.cz\/wp-admin\/admin-ajax.php","template_directory":"https:\/\/cestina20.cz\/wp-content\/themes\/cestina20"};
+</script>
+<script src="https://cestina20.cz/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script src="https://cestina20.cz/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<script src="https://cestina20.cz/wp-includes/js/hoverintent-js.min.js?ver=2.2.1"></script>
+<script src="https://cestina20.cz/wp-content/themes/cestina20/js/min/script.100.min.js?ver=145"></script>
+
+<script>
+    /* Sticky CTA visibility */
+    (function () {
+        var hero = document.querySelector('.pred-hero');
+        var sticky = document.querySelector('.pred-sticky-cta');
+        if (!hero || !sticky) return;
+        var observer = new IntersectionObserver(function (entries) {
+            sticky.classList.toggle('is-visible', !entries[0].isIntersecting);
+        }, { threshold: 0 });
+        observer.observe(hero);
+    })();
+
+    /* Cenová kalkulačka */
+    (function () {
+        var rangeClasses = document.getElementById('pred-classes');
+        var inputStudents = document.getElementById('pred-students');
+        var inputDistance = document.getElementById('pred-distance');
+        var btnMinus = document.getElementById('pred-classes-minus');
+        var btnPlus = document.getElementById('pred-classes-plus');
+        if (!rangeClasses) return;
+
+        var perClassPrice = { 1: 5000, 2: 4500, 3: 4000, 4: 3500 };
+        var KM_RATE = 5; /* Kč za km, násobí se 2× tam i zpět */
+        var VAT_RATE = 0.21;
+        var EMAIL = 'jsem@martinkavka.cz';
+
+        function fmt(kc) {
+            return kc.toLocaleString('cs-CZ').replace(/\s/g, ' ') + ' Kč';
+        }
+
+        function calc() {
+            var classes = parseInt(rangeClasses.value, 10) || 1;
+            var students = parseInt(inputStudents.value, 10);
+            if (isNaN(students) || students < 1) students = 1;
+            if (students > 30) students = 30;
+
+            var rawDist = inputDistance.value.trim();
+            var distanceFilled = rawDist !== '';
+            var distance = parseInt(rawDist, 10);
+            if (isNaN(distance) || distance < 0) {
+                distance = 0;
+                distanceFilled = false;
+            }
+
+            var perClass = perClassPrice[classes] || 5000;
+            var base = classes * perClass;
+            var travel = distance * 2 * KM_RATE;
+            var total = base + travel;
+            var totalStudents = classes * students;
+            var perStudent = totalStudents > 0 ? Math.round(total / totalStudents) : 0;
+
+            document.getElementById('pred-classes-val').textContent = classes;
+            document.getElementById('pred-students-val').textContent = students;
+            document.getElementById('pred-distance-val').textContent = distanceFilled ? distance + ' km' : '–';
+            document.getElementById('pred-classes-out').textContent = classes;
+            document.getElementById('pred-per-class-out').textContent = perClass.toLocaleString('cs-CZ').replace(/\s/g, ' ');
+            document.getElementById('pred-base-out').textContent = fmt(base);
+            document.getElementById('pred-travel-out').textContent = distanceFilled ? fmt(travel) : '– zadejte vzdálenost';
+            document.getElementById('pred-total-out').innerHTML = distanceFilled
+                ? fmt(total)
+                : fmt(base) + ' <small style="font-weight:400;font-size:0.75em;color:#888;">(bez cestovného)</small>';
+            document.getElementById('pred-per-student-out').textContent = distanceFilled ? fmt(perStudent) : '–';
+            var displayedTotal = distanceFilled ? total : base;
+            var vatTotal = Math.round(displayedTotal * (1 + VAT_RATE));
+            document.getElementById('pred-vat-out').textContent = fmt(vatTotal) + ' s\u00a0DPH';
+
+            updateMailto(classes, students, totalStudents, distanceFilled ? distance : null, displayedTotal, vatTotal);
+        }
+
+        function updateMailto(classes, students, totalStudents, distance, total, vatTotal) {
+            var subject = 'Objednávka přednášky o češtině';
+            var distanceLine = distance === null
+                ? 'Vzdálenost z Prahy: nezadáno (cestovné dořešíme e-mailem)'
+                : 'Vzdálenost z Prahy: ' + distance + ' km';
+            var totalStr = total.toLocaleString('cs-CZ') + ' Kč bez DPH (' + vatTotal.toLocaleString('cs-CZ') + ' Kč s DPH)';
+            var priceLine = distance === null
+                ? 'Předběžná cena (bez cestovného): ' + totalStr
+                : 'Předběžná cena: ' + totalStr;
+            var body =
+                'Dobrý den, Martine,\n\n' +
+                'rádi bychom si u vás objednali přednášku o češtině. Tady je shrnutí z kalkulačky:\n\n' +
+                'Počet tříd: ' + classes + '\n' +
+                'Žáků na třídu: ' + students + ' (celkem ' + totalStudents + ')\n' +
+                distanceLine + '\n' +
+                priceLine + '\n\n' +
+                'Naše údaje:\n' +
+                'Škola / knihovna: \n' +
+                'Fakturační adresa: \n' +
+                'IČO: \n' +
+                'Kontaktní osoba a telefon: \n' +
+                'Preferovaný termín: \n' +
+                'Téma, které nás zajímá: \n\n' +
+                'Děkuji a těším se na odpověď.';
+            var url = 'mailto:' + EMAIL +
+                '?subject=' + encodeURIComponent(subject) +
+                '&body=' + encodeURIComponent(body);
+            var top = document.getElementById('pred-mailto-cta');
+            if (top) top.href = url;
+        }
+
+        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+        rangeClasses.addEventListener('input', calc);
+        inputStudents.addEventListener('input', calc);
+        inputDistance.addEventListener('input', calc);
+        btnMinus.addEventListener('click', function () {
+            rangeClasses.value = clamp(parseInt(rangeClasses.value, 10) - 1, 1, 4);
+            calc();
+        });
+        btnPlus.addEventListener('click', function () {
+            rangeClasses.value = clamp(parseInt(rangeClasses.value, 10) + 1, 1, 4);
+            calc();
+        });
+        calc();
+    })();
+</script>
+
+</body>
+</html>
