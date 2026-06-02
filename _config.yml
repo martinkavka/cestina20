@@ -5,3 +5,5 @@
 exclude:
   - prihlaseni-newsletter
   - prednasky
+  - README.md
+  - CLAUDE.md
