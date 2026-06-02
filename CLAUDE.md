@@ -254,7 +254,7 @@ POST na `https://cestina20.substack.com/api/v1/free` – stejný endpoint, kter�
 ## Contacts & branding
 
 - **`ja@cestina20.cz`** – veřejná adresa Čeština 2.0. Používej v kontaktních blocích a marketingových materiálech.
-- **`kavka.martin@gmail.com`** – osobní git identity pro Vercel, **ne na veřejné materiály**.
+- **`kavka.martin@gmail.com`** – osobní git identity pro commity (autorství na GitHubu), **ne na veřejné materiály**. (Tenhle repo jede přes **GitHub Pages**, ne Vercel — e-mail s deployem nesouvisí.)
 - **`info@hados.cz`** – kontakt pro PLK.
 - **Kniha:** *Hacknutá čeština* (zmiňuj jako výstup projektu).
 - **ČUNDR** je finální český překlad modelu FUDGE (Frequency, Unobtrusiveness, Diversity, Generation of forms, Endurance). Starší zkratka ČPOTR – nepoužívat.
