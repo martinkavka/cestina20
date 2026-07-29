@@ -95,8 +95,8 @@ The theme JS (`script.100.min.js`) depends on jQuery and hoverintent. The `ef_st
 
 ## Image optimization
 
-- Do not serve original full-size assets directly. Resize images with `sips` to the needed display size (2x for retina) and convert to JPEG with quality 85%.
-- Example: `sips -Z 1000 original.png --out optimized.jpg -s format jpeg -s formatOptions 85`
+- Do not serve original full-size assets directly. Resize to the needed display size (2x for retina) and convert to JPEG with quality 85%.
+- Preferred: global skill `/fotopipeline` — `python3 ~/.claude/skills/fotopipeline/fotopipeline.py original.png -o assets/<projekt>/optimized --max 1000 --jpeg-q 85 --formats jpg` (handles HEIC and EXIF rotation; `sips -Z 1000 … -s formatOptions 85` still works as fallback).
 - Each project's `assets/` directory holds both originals and optimized versions. Reference the optimized versions in HTML/CSS.
 
 ## Video optimization
