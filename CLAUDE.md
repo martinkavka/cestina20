@@ -170,7 +170,7 @@ Do NOT override `.header` padding globally — the theme manages header padding 
 
 ## Product: Přednášky o češtině (`/prednasky`)
 
-Landing page pro objednávání **interaktivních přednášek o češtině** pro ZŠ, SŠ, knihovny a kulturní centra. Cílovka = **učitelé** (oni rozhodují a objednávají), ne studenti. Stránka je **rozpracovaná** – drží `<meta name="robots" content="noindex, nofollow">` a je v `_config.yml` exclude listu, dokud nebude finální. Cílový URL po launchi: nejspíš `prednasky.cestina20.cz` (custom doména) nebo `cestina20.cz/prednasky/` (přes WP) – nerozhodnuto. Page-specific CSS prefix: `pred-`.
+Landing page pro objednávání **interaktivních přednášek o češtině** pro ZŠ, SŠ, knihovny a kulturní centra. Cílovka = **učitelé** (oni rozhodují a objednávají), ne studenti. Stránka **běží na `prednasky.cestina20.cz`** (Apache hosting mimo GitHub Pages, nahrává Martin ručně), proto zůstává v `_config.yml` exclude listu. `noindex` odstraněn 29. 9. 2026 – po spuštění v něm omylem zůstal. Page-specific CSS prefix: `pred-`.
 
 **Kontaktní e-mail je `jsem@martinkavka.cz`** (ne `ja@cestina20.cz` jako zbytek webu) – přednášky jsou Martinova osobní služba. Adresa je v hero odkazu a v JS proměnné `EMAIL`.
 
@@ -216,7 +216,7 @@ Ceny jsou **bez DPH**; u každé hodnoty v tabulce i v kalkulačce je menším �
 
 - [ ] **Pracovní materiál PDF** – copy ho slibuje („Další materiály pro školy"), je potřeba ho jednou vytvořit (pak použitelný pro všechny školy).
 - [ ] **Schema markup** (FAQPage, Person, Service) – doplnit těsně před launchem.
-- [ ] **Cílový hosting** – subdoména vs. subdir, nerozhodnuto. Po launchi sundat `noindex` a vyndat `prednasky` z `_config.yml` exclude.
+- [x] **Cílový hosting** – subdoména `prednasky.cestina20.cz`; `noindex` sundán 29. 9. 2026.
 - [ ] **Reference / testimonialy** – sbírat od prvních objednávek; zatím sociální důkaz nepřidávat.
 
 ### Co se na stránce záměrně nedělá
